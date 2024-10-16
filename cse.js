@@ -22,15 +22,8 @@ let albers, rndcolor, complementary, blackcorner, tinted, saturated, secondchanc
 let corner;
 
 function setup() {
-    const container = document.getElementById('sketch-holder');
-    const containerStyle = window.getComputedStyle(container);
-    const containerWidth = container.clientWidth - parseFloat(containerStyle.paddingLeft) - parseFloat(containerStyle.paddingRight);
-    const containerHeight = container.clientHeight - parseFloat(containerStyle.paddingTop) - parseFloat(containerStyle.paddingBottom);
-    
-    smalldim = Math.min(containerWidth, containerHeight);
-    canvas = createCanvas(smalldim, smalldim);
-    canvas.parent('sketch-holder');
-    
+    smalldim = initialSmallDim;
+    createCanvas(smalldim, smalldim);
     colorMode(RGB);
     background(255);
     noFill();
@@ -38,6 +31,7 @@ function setup() {
 }
 
 function draw() {
+	smalldim = initialSmallDim;
 	// number of rectangles
 	hdiv = divs[floor(map(hashPairs[0], 0, 255, 0, divs.length - .0000000001))];
 	vdiv = divs[floor(map(hashPairs[1], 0, 255, 0, divs.length - .0000000001))];
