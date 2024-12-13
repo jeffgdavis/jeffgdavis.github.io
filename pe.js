@@ -15,6 +15,12 @@ function setup() {
 	noStroke();
 	colorMode(HSB);
 	angleMode(DEGREES);
+        if (!tokenData) {
+          console.error("tokenData not defined. Ensure it is passed via the URL or initialized globally.");
+          return;
+        }
+
+  console.log("Token Data in setup:", tokenData);
 	R = new Random();
 	sp = [2, 3, 3, 4, 4, 4, 5, 5, 5, 6, 6, 6, 8, 8, 12];
 	s = sp[R.random_int(0, sp.length - 1)];
