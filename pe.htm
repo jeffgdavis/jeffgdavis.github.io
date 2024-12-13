@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PE Visualization</title>
+  <title>Progression Explorer</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
   <style>
     body, html { margin: 0; height: 100%; overflow: hidden; }
@@ -12,12 +12,11 @@
 </head>
 <body>
   <script>
-    var tokenData = "";
     window.onload = function() {
       const urlParams = new URLSearchParams(window.location.search);
       const tokenData = urlParams.get('tokenData');
       if (tokenData) {
-        console.log("Loaded tokenData:", tokenData);
+        updateCanvas(tokenData);
       } else {
         console.error("No tokenData provided in URL");
       }

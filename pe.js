@@ -15,7 +15,10 @@ function setup() {
 	noStroke();
 	colorMode(HSB);
 	angleMode(DEGREES);
-	console.log("Token Data used:", tokenData);
+}
+
+function draw() {
+
 	R = new Random();
 	sp = [2, 3, 3, 4, 4, 4, 5, 5, 5, 6, 6, 6, 8, 8, 12];
 	s = sp[R.random_int(0, sp.length - 1)];
@@ -164,9 +167,6 @@ function setup() {
 			}
 		}
 	}
-}
-
-function draw() {
 	
 	// reverse direction
 	if (reverse) {
@@ -378,6 +378,12 @@ function scramble(arr) {
     [arr[i], arr[j]] = [arr[j], arr[i]];
   }
   return arr;
+}
+
+function updateCanvas(input) {
+  tokenData = input;
+  background(0);
+  redraw(); // Redraw the canvas if the input is valid
 }
 
 class Random {
