@@ -11,13 +11,14 @@
   </style>
 </head>
 <body>
+  <input type="hidden" id="userInput">
   <script src="pe.js"></script>
   <script>
     window.onload = function() {
       const urlParams = new URLSearchParams(window.location.search);
-      const tokenData = urlParams.get('tokenData');
-      if (tokenData) {
-        updateCanvas(tokenData);
+      const input = urlParams.get('input');
+      if (input) {
+        updateCanvas(input);
       } else {
         console.error("No tokenData provided in URL");
       }
