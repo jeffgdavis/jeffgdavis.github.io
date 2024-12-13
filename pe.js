@@ -1,11 +1,4 @@
-// sample token hash/id - REMOVE
-let tokenData = "";
-for (let i = 0; i < 66; i++) {
-	tokenData = tokenData + (Math.floor(Math.random() * 16)).toString(16);
-}
-//tokenData = tokenData.hash;
-
-let R, w, h, sp, s, seg, tint, shade, hdif, vdif, colors, hu, sa, br, cy, motif, dbl, bm, bmcolor, hd, vd, steps;
+let tokenData, R, w, h, sp, s, seg, tint, shade, hdif, vdif, colors, hu, sa, br, cy, motif, dbl, bm, bmcolor, hd, vd, steps;
 let minseg, compprob, cyclprob, tintprob, satuprob, doubprob, beamprob, fhueprob, hmin, vmin;
 let monochromatic, complementary, cycle, tinted, saturated, double, beam, reverse, horizontal, smooth, stepped;
 let segments = [];
