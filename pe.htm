@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Progression Explorer</title>
+  <title>PE Visualization</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
   <style>
     body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; }
@@ -11,17 +11,22 @@
   </style>
 </head>
 <body>
-  <script src="pe.js"></script>
+  <input type="hidden" id="tokenDataInput">
   <script>
+    let tokenData = ""; // Declare globally
+
     window.onload = function() {
       const urlParams = new URLSearchParams(window.location.search);
       const passedTokenData = urlParams.get('tokenData');
       if (passedTokenData) {
         tokenData = passedTokenData;
+        console.log("Token Data from URL:", tokenData);
       } else {
-        console.error("No tokenData provided. Using default.");
+        console.warn("No tokenData provided. Using default.");
         tokenData = generateRandomTokenData();
       }
+      document.title = "PE Visualization - " + tokenData; // Dynamic title update
+      document.getElementById('tokenDataInput').value = tokenData; // Debug
     };
 
     function generateRandomTokenData() {
@@ -32,5 +37,6 @@
       return randomToken;
     }
   </script>
+  <script src="pe.js" defer></script>
 </body>
 </html>
