@@ -1,4 +1,4 @@
-let R, w, h, sp, s, seg, tint, shade, hdif, vdif, colors, hu, sa, br, cy, motif, dbl, bm, bmcolor, hd, vd, steps;
+let tokenData, R, w, h, sp, s, seg, tint, shade, hdif, vdif, colors, hu, sa, br, cy, motif, dbl, bm, bmcolor, hd, vd, steps;
 let minseg, compprob, cyclprob, tintprob, satuprob, doubprob, beamprob, fhueprob, hmin, vmin, maxsteps, smoothsteps;
 let monochromatic, complementary, cycle, tinted, saturated, double, beam, reverse, horizontal, smooth, stepped;
 let segments = [];
