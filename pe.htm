@@ -11,9 +11,8 @@
   </style>
 </head>
 <body>
-  <script src="pe.js"></script>
   <script>
-    let tokenData = "";
+    var tokenData = "";
     window.onload = function() {
       const urlParams = new URLSearchParams(window.location.search);
       const tokenData = urlParams.get('tokenData');
@@ -24,5 +23,6 @@
       }
     }
   </script>
+  <script src="pe.js"></script>
 </body>
 </html>
