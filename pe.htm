@@ -2,41 +2,27 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PE Visualization</title>
+  <title>Progression Explorer</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
   <style>
-    body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; }
-    canvas { display: block; }
+    body, html { margin: 0; height: 100%; overflow: hidden; }
+    canvas { width: 100%; height: auto; }
   </style>
 </head>
 <body>
-  <input type="hidden" id="tokenDataInput">
+  <input type="hidden" id="userInput">
+  <script src="pe.js"></script>
   <script>
-    let tokenData = ""; // Declare globally
-
-    window.onload = function() {
-      const urlParams = new URLSearchParams(window.location.search);
-      const passedTokenData = urlParams.get('tokenData');
-      if (passedTokenData) {
-        tokenData = passedTokenData;
-        console.log("Token Data from URL:", tokenData);
-      } else {
-        console.warn("No tokenData provided. Using default.");
-        tokenData = generateRandomTokenData();
-      }
-      document.title = "PE Visualization - " + tokenData; // Dynamic title update
-      document.getElementById('tokenDataInput').value = tokenData; // Debug
-    };
-
-    function generateRandomTokenData() {
-      let randomToken = "0x";
-      for (let i = 0; i < 64; i++) {
-        randomToken += Math.floor(Math.random() * 16).toString(16);
-      }
-      return randomToken;
-    }
-  </script>
-  <script src="pe.js" defer></script>
+window.onload = function() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const input = urlParams.get('tokenData'); // Retrieve input from URL query parameter
+  if (tokenData) {
+    document.title = "Progression Explorer: " + tokenData;  // Set the tab's title dynamically
+    updateCanvas(input);
+  } else {
+    console.error("No input value received from URL");
+  }
+};
+</script>
 </body>
 </html>
