@@ -10,15 +10,10 @@
   </style>
 </head>
 <body>
-  <script src="pre.js"></script>
   <script>
-window.onload = function() {
-  const urlParams = new URLSearchParams(window.location.search);
-  const tokenData = urlParams.get('tokenData');
-  if (tokenData) {
-    updateCanvas(tokenData);
-  }
-};
-</script>
+    const urlParams = new URLSearchParams(window.location.search);
+    window.tokenData = urlParams.get('tokenData') || "0x0000000000000000000000000000000000000000000000000000000000000000";
+  </script>
+  <script src="pre.js"></script>
 </body>
 </html> 
