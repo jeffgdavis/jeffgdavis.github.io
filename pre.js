@@ -340,6 +340,9 @@ function scramble(arr) {
 
 function updateCanvas(input) {
   tokenData = input;
+  w = window.innerWidth;
+  h = window.innerHeight;
+  createCanvas(w, h);
   background(0);
   redraw();
 }
