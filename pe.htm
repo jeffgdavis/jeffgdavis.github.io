@@ -14,9 +14,9 @@
   <script>
 window.onload = function() {
   const urlParams = new URLSearchParams(window.location.search);
-  const input = urlParams.get('input'); // Retrieve input from URL query parameter
-  if (input) {
-    updateCanvas(input);
+  const tokenData = urlParams.get('tokenData'); // Retrieve input from URL query parameter
+  if (tokenData) {
+    updateCanvas(tokenData);
   } else {
     console.error("No input value received from URL");
   }
