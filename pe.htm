@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Progression Explorer</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
   <style>
@@ -11,18 +10,17 @@
   </style>
 </head>
 <body>
-  <input type="hidden" id="userInput">
   <script src="pe.js"></script>
   <script>
-    window.onload = function() {
-      const urlParams = new URLSearchParams(window.location.search);
-      const input = urlParams.get('input');
-      if (input) {
-        updateCanvas(input);
-      } else {
-        console.error("No tokenData provided in URL");
-      }
-    }
-  </script>
+window.onload = function() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const input = urlParams.get('input'); // Retrieve input from URL query parameter
+  if (input) {
+    updateCanvas(input);
+  } else {
+    console.error("No input value received from URL");
+  }
+};
+</script>
 </body>
 </html>
