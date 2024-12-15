@@ -7,7 +7,6 @@ let segments = [];
 let hues= [];
 let saturations= [];
 let brightnesses= [];
-let printcolors, printfeatures;
 
 function setup() {
 	w = window.innerWidth;
@@ -38,8 +37,6 @@ function draw() {
 	vmin = 40;
 	maxsteps = 10;
 	smoothsteps = 1000;
-	printcolors = false;
-	printfeatures = false;
 	
 	// set features
 	complementary = cycle = tinted = saturated = double = beam = reverse = horizontal = smooth = stepped = false;
@@ -203,53 +200,6 @@ function draw() {
 	
 	noLoop();
 	
-	// print colors
-	if (printcolors) {
-		print("hue difference: " + hdif);
-		print("value difference: " + vdif);
-	}
-	
-	// print features
-	if (printfeatures) {
-		if (horizontal) {
-			print('orientation: horizontal');
-		} else {
-			print('orientation: vertical');
-		}
-		print('segments: ' + s);
-		if (smooth && stepped) {
-			print('style: mixed');
-		}
-		if (smooth && !stepped) {
-			print('style: smooth');
-		}
-		if (!smooth && stepped) {
-			print('style: stepped');
-		}
-		if (tinted) {
-			print('modification: tinted');
-		}
-		if (saturated) {
-			print('modification: saturated');
-		}
-		if (!tinted && !saturated) {
-			print('modification: none');
-		}
-		if (complementary) {
-			print('override: complementary');
-		}
-		if (cycle) {
-			print('override: 3-cycle');
-		}
-		if (!monochromatic && !complementary && !cycle) {
-			print('override: none');
-		}
-		if (beam) {
-			print('injection: ' + bmcolor + " beam");
-		} else {
-			print('injection: none');
-		}
-	}
 }
 
 function keyPressed() {
@@ -257,6 +207,12 @@ function keyPressed() {
 		saveCanvas(tokenData, 'png');
 	}
 }
+
+window.addEventListener('message', function(event) {
+    if (event.data.type === 'triggerSave') {
+		saveCanvas(tokenData, 'png');
+    }
+});
 
 function drawProgression(p1, p2, a, b, n) {
 	colorMode(RGB);
@@ -385,7 +341,7 @@ function scramble(arr) {
 function updateCanvas(input) {
   tokenData = input;
   background(0);
-  redraw(); // Redraw the canvas if the input is valid
+  redraw();
 }
 
 class Random {
