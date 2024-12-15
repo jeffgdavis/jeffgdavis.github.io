@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Progression Explorer</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+  <style>
+    body, html { margin: 0; height: 100%; overflow: hidden; }
+    canvas { width: 100%; height: auto; }
+  </style>
+</head>
+<body>
+  <script src="pre.js"></script>
+  <script>
+window.onload = function() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const tokenData = urlParams.get('tokenData');
+  if (tokenData) {
+    updateCanvas(tokenData);
+  } else {
+    console.error("No input value received from URL");
+  }
+};
+</script>
+</body>
+</html> 
