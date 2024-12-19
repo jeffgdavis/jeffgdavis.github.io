@@ -6,8 +6,8 @@ var g_period
 var b_period
 const sync_probs = [0.01, 0.05, 0.1, 0.5]
 var all_period_sync_prob 
-var WIDTH = 3840; //window.innerWidth
-var HEIGHT = 2160; //window.innerHeight
+var WIDTH = window.innerWidth
+var HEIGHT = window.innerHeight
 var img
 var x_offset = 0
 var y_offset = 0
