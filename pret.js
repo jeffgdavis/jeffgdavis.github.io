@@ -10,7 +10,7 @@ function generateTokenData() {
 // Update the global tokenData declaration
 let tokenData = generateTokenData();
 let R, w, h, sp, s, seg, tint, shade, hdif, vdif, colors, hu, sa, br, cy, motif, dbl, bm, bmcolor, hd, vd, steps;
-let minseg, compprob, cyclprob, tintprob, satuprob, doubprob, beamprob, fhueprob, hmin, vmin, maxsteps, smoothsteps;
+let minseg, compprob, cyclprob, tintprob, satuprob, doubprob, beamprob, fhueprob, smooprob, hmin, vmin, maxsteps, smoothsteps;
 let monochromatic, complementary, cycle, tinted, saturated, double, beam, reverse, horizontal, smooth, stepped;
 let segments = [];
 let hues= [];
@@ -29,7 +29,7 @@ function setup() {
 	colorMode(HSB);
 	angleMode(DEGREES);
 	R = new Random();
-	sp = [2, 3, 3, 4, 4, 4, 5, 5, 5, 6, 6, 6, 8, 8, 12];
+	sp = [2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 6, 6, 6, 8, 8, 12];
 	s = sp[R.random_int(0, sp.length - 1)];
 
 	// settings
@@ -41,6 +41,7 @@ function setup() {
 	doubprob = s / 8; // reduced by s < 3 and cycleprob
 	beamprob = 0.11; // reduced by s < 3
 	fhueprob = 0.2;
+	smooprob = 0.6;
 	hmin = 100;
 	vmin = 40;
 	maxsteps = 10;
@@ -189,7 +190,7 @@ function setup() {
 	// Calculate initial steps array
 	stepsArray = [];
 	for (let i = 0; i < s; i++) {
-		if (R.random_bool(0.5)) {
+		if (R.random_bool(smooprob)) {
 			stepsArray.push(smoothsteps);
 		} else {
 			stepsArray.push(R.random_int(3, maxsteps));
