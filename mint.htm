@@ -168,10 +168,17 @@
     }
   </style>
   <script>
-    // Initialize Web3Modal
+    // Initialize variables
     let web3Modal;
     let actionButton;
-    window.addEventListener('load', function() {
+    let provider;
+    let web3Provider;
+    let signer;
+    let contract;
+    let isWalletConnected = false;
+
+    // Initialize Web3Modal
+    function initializeWeb3Modal() {
         const providerOptions = {
             walletconnect: {
                 package: WalletConnectProvider.default,
@@ -196,11 +203,118 @@
             providerOptions,
             theme: "dark"
         });
+    }
 
-        // Check if there's a cached provider
+    // Wait for everything to be loaded
+    window.addEventListener('load', async function() {
+        // Initialize Web3Modal
+        initializeWeb3Modal();
+        
+        // Initialize UI elements
+        actionButton = document.getElementById("actionButton");
+        
+        // Check for cached provider
         if (web3Modal.cachedProvider) {
-            connectWallet();
+            try {
+                await connectWallet();
+            } catch (error) {
+                console.error("Error connecting to cached provider:", error);
+            }
         }
+    });
+
+    // Update the DOMContentLoaded listener
+    document.addEventListener('DOMContentLoaded', function() {
+        actionButton = document.getElementById("actionButton");
+        const lookupButton = document.getElementById("lookupToken");
+        const tokenInput = document.getElementById("tokenIdInput");
+
+        if (!actionButton || !lookupButton || !tokenInput) {
+            console.error("Could not find required elements");
+            return;
+        }
+
+        // Initialize Web3Modal first
+        initializeWeb3Modal();
+
+        actionButton.addEventListener("click", async () => {
+            if (!isWalletConnected) {
+                try {
+                    await connectWallet();
+                } catch (error) {
+                    console.error("Connection error:", error);
+                    document.getElementById("status").innerText = "Connection failed: " + error.message;
+                }
+            } else {
+                // Mint NFT Logic
+                if (!contract) return;
+
+                try {
+                    document.getElementById("status").innerText = "Minting in progress...";
+                    const tx = await contract.purchase(projectId, coreContractAddress, { 
+                        value: ethers.utils.parseEther("0.0015")
+                    });
+                    
+                    document.getElementById("status").innerText = "Transaction submitted. Waiting for confirmation...";
+                    const receipt = await tx.wait();
+                    
+                    const coreInterface = new ethers.utils.Interface([
+                        "event Transfer(address indexed from, address indexed to, uint256 indexed tokenId)"
+                    ]);
+                    
+                    const transferEvent = receipt.logs
+                        .map(log => {
+                            try {
+                                return coreInterface.parseLog(log);
+                            } catch (e) {
+                                return null;
+                            }
+                        })
+                        .find(event => event && event.name === 'Transfer');
+
+                    if (transferEvent) {
+                        const tokenId = transferEvent.args.tokenId.toString();
+                        document.getElementById("status").innerText = "Mint successful! Token ID: " + tokenId;
+                        await displayNFT(tokenId);
+                    } else {
+                        document.getElementById("status").innerText = "Mint successful, but couldn't find token ID";
+                    }
+                } catch (error) {
+                    console.error("Minting error:", error);
+                    document.getElementById("status").innerText = "Mint failed: " + error.message;
+                }
+            }
+        });
+
+        // Token lookup button logic
+        lookupButton.addEventListener("click", async () => {
+            console.log("Lookup button clicked");
+            const tokenId = tokenInput.value.trim();
+            
+            if (!tokenId) {
+                document.getElementById("status").innerText = "Please enter a token ID";
+                return;
+            }
+            
+            try {
+                const tokenNumber = parseInt(tokenId);
+                if (isNaN(tokenNumber) || tokenNumber < 0) {
+                    throw new Error("Please enter a valid token ID");
+                }
+                
+                await displayNFT(tokenId);
+            } catch (error) {
+                document.getElementById("status").innerText = error.message;
+            }
+        });
+
+        // Enter key support
+        tokenInput.addEventListener("keypress", (event) => {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                lookupButton.click();
+            }
+        });
     });
 
     // --- Fixed-Price Minter Contract Details ---
@@ -275,92 +389,6 @@
             document.getElementById("status").innerText = "Connection failed: " + error.message;
         }
     }
-
-    // Update the action button click handler
-    document.addEventListener('DOMContentLoaded', function() {
-        actionButton = document.getElementById("actionButton");
-        const lookupButton = document.getElementById("lookupToken");
-        const tokenInput = document.getElementById("tokenIdInput");
-
-        if (!actionButton || !lookupButton || !tokenInput) {
-            console.error("Could not find required elements");
-            return;
-        }
-
-        actionButton.addEventListener("click", async () => {
-            if (!isWalletConnected) {
-                await connectWallet();
-            } else {
-                // Mint NFT Logic
-                if (!contract) return;
-
-                try {
-                    document.getElementById("status").innerText = "Minting in progress...";
-                    const tx = await contract.purchase(projectId, coreContractAddress, { 
-                        value: ethers.utils.parseEther("0.0015")
-                    });
-                    
-                    document.getElementById("status").innerText = "Transaction submitted. Waiting for confirmation...";
-                    const receipt = await tx.wait();
-                    
-                    const coreInterface = new ethers.utils.Interface([
-                        "event Transfer(address indexed from, address indexed to, uint256 indexed tokenId)"
-                    ]);
-                    
-                    const transferEvent = receipt.logs
-                        .map(log => {
-                            try {
-                                return coreInterface.parseLog(log);
-                            } catch (e) {
-                                return null;
-                            }
-                        })
-                        .find(event => event && event.name === 'Transfer');
-
-                    if (transferEvent) {
-                        const tokenId = transferEvent.args.tokenId.toString();
-                        document.getElementById("status").innerText = "Mint successful! Token ID: " + tokenId;
-                        await displayNFT(tokenId);
-                    } else {
-                        document.getElementById("status").innerText = "Mint successful, but couldn't find token ID";
-                    }
-                } catch (error) {
-                    console.error("Minting error:", error);
-                    document.getElementById("status").innerText = "Mint failed: " + error.message;
-                }
-            }
-        });
-
-        // Token lookup button logic
-        lookupButton.addEventListener("click", async () => {
-            console.log("Lookup button clicked");
-            const tokenId = tokenInput.value.trim();
-            
-            if (!tokenId) {
-                document.getElementById("status").innerText = "Please enter a token ID";
-                return;
-            }
-            
-            try {
-                const tokenNumber = parseInt(tokenId);
-                if (isNaN(tokenNumber) || tokenNumber < 0) {
-                    throw new Error("Please enter a valid token ID");
-                }
-                
-                await displayNFT(tokenId);
-            } catch (error) {
-                document.getElementById("status").innerText = error.message;
-            }
-        });
-
-        // Enter key support
-        tokenInput.addEventListener("keypress", (event) => {
-            if (event.key === "Enter") {
-                event.preventDefault();
-                lookupButton.click();
-            }
-        });
-    });
 
     // Add handler for account changes
     async function handleAccountsChanged(accounts) {
