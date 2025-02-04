@@ -395,4 +395,44 @@
                             `<li><strong>${key}:</strong> ${value}</li>`
                         ).join('')}
                     </ul>
-                `
+                ` : ''}
+            `;
+        } catch (error) {
+            console.error("Error displaying NFT:", error);
+            document.getElementById("status").innerText = "Error: " + error.message;
+        }
+    }
+
+    // Add back the token lookup functionality
+    document.getElementById("lookupToken").addEventListener("click", async () => {
+        const tokenInput = document.getElementById("tokenIdInput");
+        const tokenId = tokenInput.value.trim();
+        
+        if (!tokenId) {
+            document.getElementById("status").innerText = "Please enter a token ID";
+            return;
+        }
+        
+        try {
+            // Convert to number and check if valid
+            const tokenNumber = parseInt(tokenId);
+            if (isNaN(tokenNumber) || tokenNumber < 0) {
+                throw new Error("Please enter a valid token ID");
+            }
+            
+            await displayNFT(tokenId);
+        } catch (error) {
+            document.getElementById("status").innerText = error.message;
+        }
+    });
+
+    // Add back the enter key support
+    document.getElementById("tokenIdInput").addEventListener("keypress", (event) => {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            document.getElementById("lookupToken").click();
+        }
+    });
+  </script>
+</body>
+</html>
