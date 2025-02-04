@@ -5,6 +5,7 @@
   <title>Framework Minting</title>
   <!-- Replace the old ethers.js script with these -->
   <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script>
     // Fallback if the CDN fails
     window.addEventListener('error', function(e) {
@@ -87,6 +88,83 @@
         background: #333;
         border-radius: 5px;
     }
+    
+    .token-lookup {
+        margin: 20px 0;
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .token-lookup input {
+        padding: 10px;
+        font-size: 1em;
+        border: 1px solid #333;
+        border-radius: 5px;
+        background: #222;
+        color: #fff;
+        width: 150px;
+    }
+
+    .token-lookup input:focus {
+        outline: none;
+        border-color: #f90;
+    }
+
+    /* Remove spinner buttons from number input */
+    .token-lookup input::-webkit-outer-spin-button,
+    .token-lookup input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+    .token-lookup input[type=number] {
+        -moz-appearance: textfield;
+    }
+    
+    .description {
+        margin: 1em 0;
+        line-height: 1.6;
+    }
+    
+    .description p {
+        margin: 0.5em 0;
+    }
+    
+    .description a {
+        color: #f90;
+        text-decoration: none;
+    }
+    
+    .description a:hover {
+        text-decoration: underline;
+    }
+    
+    .description code {
+        background: #444;
+        padding: 2px 4px;
+        border-radius: 3px;
+        font-family: monospace;
+    }
+    
+    .description pre {
+        background: #444;
+        padding: 1em;
+        border-radius: 5px;
+        overflow-x: auto;
+    }
+    
+    .description blockquote {
+        border-left: 3px solid #f90;
+        margin: 1em 0;
+        padding-left: 1em;
+        color: #ccc;
+    }
+    
+    .description ul, .description ol {
+        padding-left: 2em;
+        margin: 0.5em 0;
+    }
   </style>
 </head>
 <body>
@@ -95,13 +173,15 @@
   </header>
   
   <div class="container">
-    <button id="connectWallet">Connect Wallet</button>
+    <button id="actionButton">Connect Wallet</button>
     <div id="walletAddress"></div>
-    <button id="mintButton" disabled>Mint NFT</button>
-    <button id="testDisplay">Test Display Token 2000010</button>
+    <div class="token-lookup">
+        <input type="number" id="tokenIdInput" placeholder="Enter Token ID" min="0">
+        <button id="lookupToken">Look Up Token</button>
+    </div>
     <div id="status"></div>
     <div id="nftDisplay" style="display: none;">
-        <h2>Your Minted NFT</h2>
+        <h2>Your NFT</h2>
         <div id="nftImage" style="margin: 20px 0;"></div>
         <div id="nftInfo"></div>
     </div>
@@ -144,31 +224,85 @@
     let signer;
     let contract;
 
-    // Connect Wallet button logic
-    document.getElementById("connectWallet").addEventListener("click", async () => {
-      if (window.ethereum) {
-        try {
-          // Request wallet connection via MetaMask
-          await window.ethereum.request({ method: "eth_requestAccounts" });
-          // Create a provider from MetaMask for signing transactions
-          const metamaskProvider = new ethers.providers.Web3Provider(window.ethereum);
-          signer = metamaskProvider.getSigner();
-          const address = await signer.getAddress();
-          document.getElementById("walletAddress").innerText = "Connected: " + address;
-          
-          // Initialize the contract instance with the signer for writing transactions
-          contract = new ethers.Contract(contractAddress, contractABI, signer);
-          
-          // Enable the mint button now that the wallet is connected
-          document.getElementById("mintButton").disabled = false;
-          document.getElementById("status").innerText = "";
-        } catch (error) {
-          console.error("Wallet connection error:", error);
-          document.getElementById("status").innerText = "Wallet connection failed.";
+    const actionButton = document.getElementById("actionButton");
+    let isWalletConnected = false;
+
+    // Combined button logic
+    actionButton.addEventListener("click", async () => {
+        if (!isWalletConnected) {
+            // Connect Wallet Logic
+            if (window.ethereum) {
+                try {
+                    await window.ethereum.request({ method: "eth_requestAccounts" });
+                    const metamaskProvider = new ethers.providers.Web3Provider(window.ethereum);
+                    signer = metamaskProvider.getSigner();
+                    const address = await signer.getAddress();
+                    document.getElementById("walletAddress").innerText = "Connected: " + address;
+                    
+                    contract = new ethers.Contract(contractAddress, contractABI, signer);
+                    
+                    // Update button state
+                    isWalletConnected = true;
+                    actionButton.textContent = "Mint NFT";
+                    document.getElementById("status").innerText = "";
+
+                    // Listen for account changes
+                    window.ethereum.on('accountsChanged', function (accounts) {
+                        if (accounts.length === 0) {
+                            // User disconnected wallet
+                            isWalletConnected = false;
+                            actionButton.textContent = "Connect Wallet";
+                            document.getElementById("walletAddress").innerText = "";
+                            document.getElementById("status").innerText = "Wallet disconnected";
+                        }
+                    });
+
+                } catch (error) {
+                    console.error("Wallet connection error:", error);
+                    document.getElementById("status").innerText = "Wallet connection failed.";
+                }
+            } else {
+                alert("MetaMask is not installed. Please install it to use this feature.");
+            }
+        } else {
+            // Mint NFT Logic
+            if (!contract) return;
+
+            try {
+                document.getElementById("status").innerText = "Minting in progress...";
+                const tx = await contract.purchase(projectId, coreContractAddress, { 
+                    value: ethers.utils.parseEther("0.0015")
+                });
+                
+                document.getElementById("status").innerText = "Transaction submitted. Waiting for confirmation...";
+                const receipt = await tx.wait();
+                
+                const coreInterface = new ethers.utils.Interface([
+                    "event Transfer(address indexed from, address indexed to, uint256 indexed tokenId)"
+                ]);
+                
+                const transferEvent = receipt.logs
+                    .map(log => {
+                        try {
+                            return coreInterface.parseLog(log);
+                        } catch (e) {
+                            return null;
+                        }
+                    })
+                    .find(event => event && event.name === 'Transfer');
+
+                if (transferEvent) {
+                    const tokenId = transferEvent.args.tokenId.toString();
+                    document.getElementById("status").innerText = "Mint successful! Token ID: " + tokenId;
+                    await displayNFT(tokenId);
+                } else {
+                    document.getElementById("status").innerText = "Mint successful, but couldn't find token ID";
+                }
+            } catch (error) {
+                console.error("Minting error:", error);
+                document.getElementById("status").innerText = "Mint failed: " + error.message;
+            }
         }
-      } else {
-        alert("MetaMask is not installed. Please install it to use this feature.");
-      }
     });
 
     // Update the displayNFT function to better handle the response
@@ -213,28 +347,20 @@
                 nftImage.innerHTML = `<img src="${metadata.image}" alt="Your NFT" />`;
             }
             
-            // Display all available metadata
+            // Display simplified metadata with markdown parsing
             const nftInfo = document.getElementById('nftInfo');
             nftInfo.innerHTML = `
                 <h3>${metadata.name || 'Untitled'}</h3>
-                <p>${metadata.description || ''}</p>
+                <div class="description">
+                    ${marked.parse(metadata.description || '')}
+                </div>
                 <p><strong>Token ID:</strong> ${tokenId}</p>
-                <p><strong>Project:</strong> ${metadata.project?.name || 'Unknown'}</p>
                 <p><strong>Artist:</strong> ${metadata.artist || 'Unknown'}</p>
-                <p><strong>Platform:</strong> ${metadata.platform || 'Unknown'}</p>
                 ${metadata.features ? `
                     <h4>Features:</h4>
                     <ul>
                         ${Object.entries(metadata.features).map(([key, value]) => 
                             `<li><strong>${key}:</strong> ${value}</li>`
-                        ).join('')}
-                    </ul>
-                ` : ''}
-                ${metadata.traits ? `
-                    <h4>Traits:</h4>
-                    <ul>
-                        ${metadata.traits.map(trait => 
-                            `<li><strong>${trait.trait_type}:</strong> ${trait.value}</li>`
                         ).join('')}
                     </ul>
                 ` : ''}
@@ -245,53 +371,35 @@
         }
     }
 
-    // Modify the mint button logic to include NFT display
-    document.getElementById("mintButton").addEventListener("click", async () => {
-        if (!contract) return;
-
+    // Replace the test display button listener with this new one
+    document.getElementById("lookupToken").addEventListener("click", async () => {
+        const tokenInput = document.getElementById("tokenIdInput");
+        const tokenId = tokenInput.value.trim();
+        
+        if (!tokenId) {
+            document.getElementById("status").innerText = "Please enter a token ID";
+            return;
+        }
+        
         try {
-            document.getElementById("status").innerText = "Minting in progress...";
-            const tx = await contract.purchase(projectId, coreContractAddress, { 
-                value: ethers.utils.parseEther("0.0015")
-            });
-            
-            // Wait for transaction to be mined
-            document.getElementById("status").innerText = "Transaction submitted. Waiting for confirmation...";
-            const receipt = await tx.wait();
-            
-            // Find the transfer event to get the token ID
-            const coreInterface = new ethers.utils.Interface([
-                "event Transfer(address indexed from, address indexed to, uint256 indexed tokenId)"
-            ]);
-            
-            const transferEvent = receipt.logs
-                .map(log => {
-                    try {
-                        return coreInterface.parseLog(log);
-                    } catch (e) {
-                        return null;
-                    }
-                })
-                .find(event => event && event.name === 'Transfer');
-
-            if (transferEvent) {
-                const tokenId = transferEvent.args.tokenId.toString();
-                document.getElementById("status").innerText = "Mint successful! Token ID: " + tokenId;
-                
-                // Display the NFT
-                await displayNFT(tokenId);
-            } else {
-                document.getElementById("status").innerText = "Mint successful, but couldn't find token ID";
+            // Convert to number and check if valid
+            const tokenNumber = parseInt(tokenId);
+            if (isNaN(tokenNumber) || tokenNumber < 0) {
+                throw new Error("Please enter a valid token ID");
             }
+            
+            await displayNFT(tokenId);
         } catch (error) {
-            console.error("Minting error:", error);
-            document.getElementById("status").innerText = "Mint failed: " + error.message;
+            document.getElementById("status").innerText = error.message;
         }
     });
 
-    // Add this event listener to your script section
-    document.getElementById("testDisplay").addEventListener("click", async () => {
-        await displayNFT('2000010');
+    // Add enter key support for the input field
+    document.getElementById("tokenIdInput").addEventListener("keypress", (event) => {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            document.getElementById("lookupToken").click();
+        }
     });
   </script>
 </body>
