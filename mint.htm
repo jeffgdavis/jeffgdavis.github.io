@@ -6,158 +6,65 @@
   <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <style>
-    /* Basic styling – adjust to mimic the Art Blocks aesthetic */
-    body {
-      background: #111;
-      color: #fff;
-      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-height: 100vh;
+    /* Keep minimal container styles */
+    .mint-container {
+        text-align: center;
     }
-    header {
-      width: 100%;
-      padding: 20px;
-      background: #222;
-      text-align: center;
-      border-bottom: 1px solid #333;
-    }
-    h1 {
-      margin: 0;
-      font-size: 2em;
-    }
-    .container {
-      margin: 40px auto;
-      text-align: center;
-      max-width: 600px;
-      padding: 20px;
-    }
-    button {
-      background: #f90;
-      border: none;
-      padding: 15px 30px;
-      font-size: 1em;
-      cursor: pointer;
-      border-radius: 5px;
-      margin: 10px;
-    }
-    button:disabled {
-      background: #555;
-      cursor: not-allowed;
-    }
-    #status {
-      margin-top: 20px;
-      font-size: 1.2em;
-    }
-    #walletAddress {
-      margin-top: 10px;
-      font-size: 0.9em;
-      color: #ccc;
-      cursor: pointer;
-    }
-    #walletAddress:hover {
-      color: #f90;
-      text-decoration: underline;
-    }
+
     #nftDisplay {
-        margin-top: 30px;
-        padding: 20px;
-        background: #222;
-        border-radius: 10px;
-        max-width: 500px;
+        position: relative;
+        padding-top: 100%;
+        overflow: hidden;
     }
-    
+
+    #nftImage iframe,
     #nftImage img {
-        max-width: 100%;
-        border-radius: 8px;
+        border: none;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
     }
-    
-    #nftInfo {
-        text-align: left;
+
+    /* Input field - keep only essential styles */
+    #tokenIdInput {
         margin-top: 15px;
-        padding: 10px;
-        background: #333;
-        border-radius: 5px;
-    }
-    
-    .token-lookup {
-        margin: 20px 0;
-        display: flex;
-        gap: 10px;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .token-lookup input {
-        padding: 10px;
-        font-size: 1em;
-        border: 1px solid #333;
-        border-radius: 5px;
-        background: #222;
-        color: #fff;
-        width: 150px;
-    }
-
-    .token-lookup input:focus {
+        text-align: center;
+        padding: 15px;
+        border: 1px solid #000;
         outline: none;
-        border-color: #f90;
+        width: 100%;
+        box-sizing: border-box;
     }
 
-    /* Remove spinner buttons from number input */
-    .token-lookup input::-webkit-outer-spin-button,
-    .token-lookup input::-webkit-inner-spin-button {
+    /* Buttons - keep only essential styles */
+    button {
+        margin-top: 10px;
+        cursor: pointer;
+        width: 100%;
+    }
+
+    /* Status and wallet info */
+    #status,
+    #walletAddress {
+        margin-top: 10px;
+        text-align: center;
+    }
+
+    /* Hide metadata by default */
+    #nftInfo {
+        display: none;
+    }
+
+    /* Remove number input spinners */
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
         -webkit-appearance: none;
         margin: 0;
     }
-    .token-lookup input[type=number] {
-        -moz-appearance: textfield;
-    }
-    
-    .description {
-        margin: 1em 0;
-        line-height: 1.6;
-    }
-    
-    .description p {
-        margin: 0.5em 0;
-    }
-    
-    .description a {
-        color: #f90;
-        text-decoration: none;
-    }
-    
-    .description a:hover {
-        text-decoration: underline;
-    }
-    
-    .description code {
-        background: #444;
-        padding: 2px 4px;
-        border-radius: 3px;
-        font-family: monospace;
-    }
-    
-    .description pre {
-        background: #444;
-        padding: 1em;
-        border-radius: 5px;
-        overflow-x: auto;
-    }
-    
-    .description blockquote {
-        border-left: 3px solid #f90;
-        margin: 1em 0;
-        padding-left: 1em;
-        color: #ccc;
-    }
-    
-    .description ul, .description ol {
-        padding-left: 2em;
-        margin: 0.5em 0;
+
+    input[type="number"] {
+        -moz-appearance: textfield; /* Firefox */
     }
   </style>
   <script>
@@ -182,7 +89,7 @@
       {"inputs":[{"internalType":"uint256","name":"projectId","type":"uint256"},{"internalType":"address","name":"coreContract","type":"address"},{"internalType":"uint248","name":"pricePerTokenInWei","type":"uint248"}],"name":"updatePricePerTokenInWei","outputs":[],"stateMutability":"nonpayable","type":"function"}
     ];
     const contractAddress = "0xf5733268d28DDe96fC32f2bA8E1267Eb64120875";
-    const projectId = 2;
+    const projectId = 0;
     const coreContractAddress = "0x000009bb1740eea484f7db00000a9227e578bf96";
 
     // Global Variables
@@ -195,7 +102,7 @@
     async function connectWallet() {
         try {
             if (!window.ethereum) {
-                throw new Error("Please install MetaMask");
+                throw new Error("Please install MetaMask or use a Web3-enabled browser");
             }
 
             // Request account access
@@ -223,8 +130,9 @@
             window.ethereum.on('accountsChanged', handleAccountsChanged);
             window.ethereum.on('chainChanged', () => window.location.reload());
         } catch (error) {
-            console.error("Connection error:", error);
-            document.getElementById("status").innerText = "Connection failed: " + error.message;
+            console.error("Wallet connection error:", error);
+            document.getElementById("status").innerText = 
+                `Connection failed: ${error.message}. Please refresh the page to try again.`;
         }
     }
 
@@ -288,14 +196,15 @@
                     <iframe 
                         src="${metadata.animation_url}" 
                         frameborder="0" 
-                        width="100%" 
-                        height="400px"
-                        style="border-radius: 8px;"
+                        width="1008"
+                        height="1008"
+                        style="width: 504px; height: 504px;"
                         allowfullscreen
+                        allow="accelerometer; gyroscope"
                     ></iframe>`;
             } else if (metadata.image) {
                 console.log('Static image found:', metadata.image);
-                nftImage.innerHTML = `<img src="${metadata.image}" alt="Your NFT" />`;
+                nftImage.innerHTML = `<img src="${metadata.image}" alt="Your NFT" style="width: 504px; height: 504px;" />`;
             }
             
             // Display simplified metadata with markdown parsing
@@ -316,9 +225,13 @@
                     </ul>
                 ` : ''}
             `;
+
+            // Show expand button after successful load
+            document.getElementById('expandButton').style.display = 'block';
         } catch (error) {
             console.error("Error displaying NFT:", error);
             document.getElementById("status").innerText = "Error: " + error.message;
+            document.getElementById('expandButton').style.display = 'none';
         }
     }
 
@@ -407,26 +320,116 @@
             }
         });
     });
+
+    // Make functions globally available for Squarespace
+    window.connectWallet = connectWallet;
+    window.disconnectWallet = disconnectWallet;
+    window.displayNFT = displayNFT;
+
+    // Add initialization check function
+    function initializeElements() {
+        const required = [
+            "actionButton",
+            "tokenIdInput",
+            "lookupToken",
+            "status",
+            "walletAddress",
+            "nftDisplay",
+            "nftImage",
+            "nftInfo"
+        ];
+        
+        const missing = required.filter(id => !document.getElementById(id));
+        if (missing.length > 0) {
+            console.error('Missing required elements:', missing);
+            return false;
+        }
+        return true;
+    }
+
+    // Update the initialization logic
+    window.addEventListener('load', function() {
+        if (!initializeElements()) {
+            console.error('Required elements not found. Initialization cancelled.');
+            return;
+        }
+
+        try {
+            const actionButton = document.getElementById("actionButton");
+            const lookupButton = document.getElementById("lookupToken");
+            const tokenInput = document.getElementById("tokenIdInput");
+
+            // Setup action button
+            actionButton.addEventListener("click", async () => {
+                if (!isWalletConnected) {
+                    await connectWallet();
+                } else {
+                    // Existing mint logic...
+                }
+            });
+
+            // Setup lookup button
+            lookupButton.addEventListener("click", async () => {
+                const tokenId = tokenInput.value.trim();
+                if (!tokenId) {
+                    document.getElementById("status").innerText = "Please enter a token ID";
+                    return;
+                }
+                try {
+                    await displayNFT(tokenId);
+                } catch (error) {
+                    document.getElementById("status").innerText = error.message;
+                }
+            });
+
+            // Setup enter key support
+            tokenInput.addEventListener("keypress", (event) => {
+                if (event.key === "Enter") {
+                    event.preventDefault();
+                    lookupButton.click();
+                }
+            });
+
+            // Display token #0 on load but don't fill the input
+            displayNFT('0');
+
+        } catch (error) {
+            console.error('Error during initialization:', error);
+        }
+    });
+
+    // Update the expand function
+    function expandView() {
+        // Get token ID from input or use '0' if empty
+        const tokenId = document.getElementById('tokenIdInput').value.trim() || '0';
+        window.open(`https://generator.artblocks.io/${coreContractAddress}/${tokenId}`, '_blank');
+    }
   </script>
 </head>
 <body>
-  <header>
-    <h1>Framework Minting</h1>
-  </header>
-  
-  <div class="container">
-    <button id="actionButton">Connect Wallet</button>
-    <div id="walletAddress"></div>
-    <div class="token-lookup">
-        <input type="number" id="tokenIdInput" placeholder="Enter Token ID" min="0">
-        <button id="lookupToken">Look Up Token</button>
+  <div class="mint-container">
+    <!-- Square display container -->
+    <div id="nftDisplay">
+        <div id="nftImage"></div>
     </div>
+
+    <!-- Input field -->
+    <input 
+        type="number" 
+        id="tokenIdInput" 
+        placeholder="Enter a value from 0-100" 
+        min="0"
+        max="100">
+
+    <!-- Buttons -->
+    <button id="lookupToken" class="sqs-button-element--secondary">FIND</button>
+    <button id="expandButton" onclick="expandView()" class="sqs-button-element--secondary" style="display: none;">EXPAND</button>
+    <button id="actionButton" class="sqs-button-element--secondary">CONNECT WALLET</button>
+
+    <!-- Status and info -->
     <div id="status"></div>
-    <div id="nftDisplay" style="display: none;">
-        <h2>Your NFT</h2>
-        <div id="nftImage" style="margin: 20px 0;"></div>
-        <div id="nftInfo"></div>
-    </div>
+    <div id="walletAddress"></div>
+    <div id="nftInfo"></div>
   </div>
 </body>
 </html>
