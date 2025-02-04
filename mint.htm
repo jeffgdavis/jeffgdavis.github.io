@@ -169,55 +169,40 @@
   </style>
   <script>
     // Initialize Web3Modal
+    let web3Modal;
+    let actionButton;
     window.addEventListener('load', function() {
-      const providerOptions = {
-        walletconnect: {
-          package: WalletConnectProvider.default,
-          options: {
-            infuraId: "a404456e666b4865a385110e7637555e"
-          }
-        },
-        coinbasewallet: {
-          package: CoinbaseWallet, // Changed from CoinbaseWalletSDK
-          options: {
-            appName: "Framework Minting",
-            infuraId: "a404456e666b4865a385110e7637555e",
-            darkMode: true,
-            chainId: 1
-          }
+        const providerOptions = {
+            walletconnect: {
+                package: WalletConnectProvider.default,
+                options: {
+                    infuraId: "a404456e666b4865a385110e7637555e"
+                }
+            },
+            coinbasewallet: {
+                package: CoinbaseWallet,
+                options: {
+                    appName: "Framework Minting",
+                    infuraId: "a404456e666b4865a385110e7637555e",
+                    darkMode: true,
+                    chainId: 1
+                }
+            }
+        };
+
+        web3Modal = new Web3Modal({
+            network: "mainnet",
+            cacheProvider: true,
+            providerOptions,
+            theme: "dark"
+        });
+
+        // Check if there's a cached provider
+        if (web3Modal.cachedProvider) {
+            connectWallet();
         }
-      };
-
-      window.web3Modal = new Web3Modal({
-        network: "mainnet",
-        cacheProvider: true,
-        providerOptions,
-        theme: "dark"
-      });
     });
-  </script>
-</head>
-<body>
-  <header>
-    <h1>Framework Minting</h1>
-  </header>
-  
-  <div class="container">
-    <button id="actionButton">Connect Wallet</button>
-    <div id="walletAddress"></div>
-    <div class="token-lookup">
-        <input type="number" id="tokenIdInput" placeholder="Enter Token ID" min="0">
-        <button id="lookupToken">Look Up Token</button>
-    </div>
-    <div id="status"></div>
-    <div id="nftDisplay" style="display: none;">
-        <h2>Your NFT</h2>
-        <div id="nftImage" style="margin: 20px 0;"></div>
-        <div id="nftInfo"></div>
-    </div>
-  </div>
 
-  <script>
     // --- Fixed-Price Minter Contract Details ---
     // The ABI for your fixed-price minter contract, as provided:
     const contractABI = [
@@ -256,9 +241,44 @@
     let contract;
     let isWalletConnected = false;
 
-    // Wait for DOM to be fully loaded
+    // Add this function to handle wallet connection
+    async function connectWallet() {
+        try {
+            const instance = await web3Modal.connect();
+            
+            web3Provider = new ethers.providers.Web3Provider(instance);
+            signer = web3Provider.getSigner();
+            const address = await signer.getAddress();
+
+            // Setup event listeners
+            instance.on('accountsChanged', handleAccountsChanged);
+            instance.on('chainChanged', () => window.location.reload());
+            instance.on('disconnect', disconnectWallet);
+
+            // Update UI
+            const displayName = await getEnsOrAddress(address);
+            const walletAddressDiv = document.getElementById("walletAddress");
+            walletAddressDiv.innerText = `Connected: ${displayName}`;
+            walletAddressDiv.onclick = disconnectWallet;
+            walletAddressDiv.title = "Click to disconnect wallet";
+
+            // Initialize contract
+            contract = new ethers.Contract(contractAddress, contractABI, signer);
+            
+            isWalletConnected = true;
+            if (actionButton) {
+                actionButton.textContent = "Mint NFT";
+            }
+            document.getElementById("status").innerText = "Wallet connected successfully!";
+        } catch (error) {
+            console.error("Connection error:", error);
+            document.getElementById("status").innerText = "Connection failed: " + error.message;
+        }
+    }
+
+    // Update the action button click handler
     document.addEventListener('DOMContentLoaded', function() {
-        const actionButton = document.getElementById("actionButton");
+        actionButton = document.getElementById("actionButton");
         const lookupButton = document.getElementById("lookupToken");
         const tokenInput = document.getElementById("tokenIdInput");
 
@@ -267,43 +287,9 @@
             return;
         }
 
-        // Connect/Mint button logic
         actionButton.addEventListener("click", async () => {
-            console.log("Action button clicked, wallet connected:", isWalletConnected);
             if (!isWalletConnected) {
-                try {
-                    // Open Web3Modal for wallet selection
-                    const instance = await web3Modal.connect();
-                    
-                    // Create Web3Provider from the selected wallet
-                    web3Provider = new ethers.providers.Web3Provider(instance);
-                    signer = web3Provider.getSigner();
-                    const address = await signer.getAddress();
-
-                    // Setup event listeners for the selected wallet
-                    instance.on('accountsChanged', handleAccountsChanged);
-                    instance.on('chainChanged', () => window.location.reload());
-                    instance.on('disconnect', disconnectWallet);
-
-                    // Update UI
-                    const displayName = await getEnsOrAddress(address);
-                    const walletAddressDiv = document.getElementById("walletAddress");
-                    walletAddressDiv.innerText = `Connected: ${displayName}`;
-                    walletAddressDiv.onclick = disconnectWallet;
-                    walletAddressDiv.title = "Click to disconnect wallet";
-
-                    // Initialize contract
-                    contract = new ethers.Contract(contractAddress, contractABI, signer);
-                    
-                    isWalletConnected = true;
-                    actionButton.textContent = "Mint NFT";
-                    document.getElementById("status").innerText = "Wallet connected successfully!";
-
-                } catch (error) {
-                    console.error("Wallet connection error:", error);
-                    document.getElementById("status").innerText = "Wallet connection failed: " + error.message;
-                    await disconnectWallet();
-                }
+                await connectWallet();
             } else {
                 // Mint NFT Logic
                 if (!contract) return;
@@ -458,21 +444,19 @@
     async function disconnectWallet() {
         if (confirm("Are you sure you want to disconnect your wallet?")) {
             try {
-                // Clear Web3Modal cached provider
                 await web3Modal.clearCachedProvider();
                 
-                // Reset all state
                 isWalletConnected = false;
                 web3Provider = null;
                 signer = null;
                 contract = null;
 
-                // Clear UI
-                actionButton.textContent = "Connect Wallet";
+                if (actionButton) {
+                    actionButton.textContent = "Connect Wallet";
+                }
                 document.getElementById("walletAddress").innerText = "";
                 document.getElementById("status").innerText = "Wallet disconnected";
                 
-                // Force page reload to clear any cached wallet state
                 window.location.reload();
             } catch (error) {
                 console.error("Error during disconnect:", error);
@@ -495,5 +479,25 @@
         }
     }
   </script>
+</head>
+<body>
+  <header>
+    <h1>Framework Minting</h1>
+  </header>
+  
+  <div class="container">
+    <button id="actionButton">Connect Wallet</button>
+    <div id="walletAddress"></div>
+    <div class="token-lookup">
+        <input type="number" id="tokenIdInput" placeholder="Enter Token ID" min="0">
+        <button id="lookupToken">Look Up Token</button>
+    </div>
+    <div id="status"></div>
+    <div id="nftDisplay" style="display: none;">
+        <h2>Your NFT</h2>
+        <div id="nftImage" style="margin: 20px 0;"></div>
+        <div id="nftInfo"></div>
+    </div>
+  </div>
 </body>
 </html>
