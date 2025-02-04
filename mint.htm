@@ -67,6 +67,26 @@
       font-size: 0.9em;
       color: #ccc;
     }
+    #nftDisplay {
+        margin-top: 30px;
+        padding: 20px;
+        background: #222;
+        border-radius: 10px;
+        max-width: 500px;
+    }
+    
+    #nftImage img {
+        max-width: 100%;
+        border-radius: 8px;
+    }
+    
+    #nftInfo {
+        text-align: left;
+        margin-top: 15px;
+        padding: 10px;
+        background: #333;
+        border-radius: 5px;
+    }
   </style>
 </head>
 <body>
@@ -78,7 +98,13 @@
     <button id="connectWallet">Connect Wallet</button>
     <div id="walletAddress"></div>
     <button id="mintButton" disabled>Mint NFT</button>
+    <button id="testDisplay">Test Display Token 2000010</button>
     <div id="status"></div>
+    <div id="nftDisplay" style="display: none;">
+        <h2>Your Minted NFT</h2>
+        <div id="nftImage" style="margin: 20px 0;"></div>
+        <div id="nftInfo"></div>
+    </div>
   </div>
 
   <script>
@@ -145,23 +171,127 @@
       }
     });
 
-    // Mint NFT button logic
-    document.getElementById("mintButton").addEventListener("click", async () => {
-      if (!contract) return;
+    // Update the displayNFT function to better handle the response
+    async function displayNFT(tokenId) {
+        try {
+            document.getElementById("status").innerText = "Fetching token metadata...";
+            
+            // Construct Art Blocks token URI
+            const tokenURI = `https://token.artblocks.io/0x000009bb1740eea484f7db00000a9227e578bf96/${tokenId}`;
+            
+            // Fetch the metadata
+            const response = await fetch(tokenURI);
+            if (!response.ok) {
+                throw new Error(`Failed to fetch token metadata: ${response.status} ${response.statusText}`);
+            }
+            
+            const metadata = await response.json();
+            console.log('Raw Art Blocks Metadata:', metadata); // Detailed logging
+            
+            // Show the container
+            const nftDisplay = document.getElementById('nftDisplay');
+            nftDisplay.style.display = 'block';
+            
+            // Update status
+            document.getElementById("status").innerText = "Metadata retrieved successfully!";
+            
+            // Display the NFT (handle both live render and static image)
+            const nftImage = document.getElementById('nftImage');
+            if (metadata.animation_url) {
+                console.log('Animation URL found:', metadata.animation_url);
+                nftImage.innerHTML = `
+                    <iframe 
+                        src="${metadata.animation_url}" 
+                        frameborder="0" 
+                        width="100%" 
+                        height="400px"
+                        style="border-radius: 8px;"
+                        allowfullscreen
+                    ></iframe>`;
+            } else if (metadata.image) {
+                console.log('Static image found:', metadata.image);
+                nftImage.innerHTML = `<img src="${metadata.image}" alt="Your NFT" />`;
+            }
+            
+            // Display all available metadata
+            const nftInfo = document.getElementById('nftInfo');
+            nftInfo.innerHTML = `
+                <h3>${metadata.name || 'Untitled'}</h3>
+                <p>${metadata.description || ''}</p>
+                <p><strong>Token ID:</strong> ${tokenId}</p>
+                <p><strong>Project:</strong> ${metadata.project?.name || 'Unknown'}</p>
+                <p><strong>Artist:</strong> ${metadata.artist || 'Unknown'}</p>
+                <p><strong>Platform:</strong> ${metadata.platform || 'Unknown'}</p>
+                ${metadata.features ? `
+                    <h4>Features:</h4>
+                    <ul>
+                        ${Object.entries(metadata.features).map(([key, value]) => 
+                            `<li><strong>${key}:</strong> ${value}</li>`
+                        ).join('')}
+                    </ul>
+                ` : ''}
+                ${metadata.traits ? `
+                    <h4>Traits:</h4>
+                    <ul>
+                        ${metadata.traits.map(trait => 
+                            `<li><strong>${trait.trait_type}:</strong> ${trait.value}</li>`
+                        ).join('')}
+                    </ul>
+                ` : ''}
+            `;
+        } catch (error) {
+            console.error("Error displaying NFT:", error);
+            document.getElementById("status").innerText = "Error: " + error.message;
+        }
+    }
 
-      try {
-        document.getElementById("status").innerText = "Minting in progress...";
-        // Call the purchase function.
-        // Adjust the ETH value below as required by your pricing (here, 0.05 ETH is sent as an example).
-        const tx = await contract.purchase(projectId, coreContractAddress, { 
-          value: ethers.utils.parseEther("0.0015")
-        });
-        await tx.wait();
-        document.getElementById("status").innerText = "Mint successful! Token minted.";
-      } catch (error) {
-        console.error("Minting error:", error);
-        document.getElementById("status").innerText = "Mint failed: " + error.message;
-      }
+    // Modify the mint button logic to include NFT display
+    document.getElementById("mintButton").addEventListener("click", async () => {
+        if (!contract) return;
+
+        try {
+            document.getElementById("status").innerText = "Minting in progress...";
+            const tx = await contract.purchase(projectId, coreContractAddress, { 
+                value: ethers.utils.parseEther("0.0015")
+            });
+            
+            // Wait for transaction to be mined
+            document.getElementById("status").innerText = "Transaction submitted. Waiting for confirmation...";
+            const receipt = await tx.wait();
+            
+            // Find the transfer event to get the token ID
+            const coreInterface = new ethers.utils.Interface([
+                "event Transfer(address indexed from, address indexed to, uint256 indexed tokenId)"
+            ]);
+            
+            const transferEvent = receipt.logs
+                .map(log => {
+                    try {
+                        return coreInterface.parseLog(log);
+                    } catch (e) {
+                        return null;
+                    }
+                })
+                .find(event => event && event.name === 'Transfer');
+
+            if (transferEvent) {
+                const tokenId = transferEvent.args.tokenId.toString();
+                document.getElementById("status").innerText = "Mint successful! Token ID: " + tokenId;
+                
+                // Display the NFT
+                await displayNFT(tokenId);
+            } else {
+                document.getElementById("status").innerText = "Mint successful, but couldn't find token ID";
+            }
+        } catch (error) {
+            console.error("Minting error:", error);
+            document.getElementById("status").innerText = "Mint failed: " + error.message;
+        }
+    });
+
+    // Add this event listener to your script section
+    document.getElementById("testDisplay").addEventListener("click", async () => {
+        await displayNFT('2000010');
     });
   </script>
 </body>
