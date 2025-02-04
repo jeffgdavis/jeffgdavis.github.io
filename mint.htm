@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Framework Minting</title>
+  <!-- Replace the old ethers.js script with these -->
+  <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+  <script>
+    // Fallback if the CDN fails
+    window.addEventListener('error', function(e) {
+      if (e.target.src && e.target.src.indexOf('ethers') > -1) {
+        const fallbackScript = document.createElement('script');
+        fallbackScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js';
+        document.head.appendChild(fallbackScript);
+      }
+    }, true);
+  </script>
+  <style>
+    /* Basic styling – adjust to mimic the Art Blocks aesthetic */
+    body {
+      background: #111;
+      color: #fff;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+    header {
+      width: 100%;
+      padding: 20px;
+      background: #222;
+      text-align: center;
+      border-bottom: 1px solid #333;
+    }
+    h1 {
+      margin: 0;
+      font-size: 2em;
+    }
+    .container {
+      margin: 40px auto;
+      text-align: center;
+      max-width: 600px;
+      padding: 20px;
+    }
+    button {
+      background: #f90;
+      border: none;
+      padding: 15px 30px;
+      font-size: 1em;
+      cursor: pointer;
+      border-radius: 5px;
+      margin: 10px;
+    }
+    button:disabled {
+      background: #555;
+      cursor: not-allowed;
+    }
+    #status {
+      margin-top: 20px;
+      font-size: 1.2em;
+    }
+    #walletAddress {
+      margin-top: 10px;
+      font-size: 0.9em;
+      color: #ccc;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Framework Minting</h1>
+  </header>
+  
+  <div class="container">
+    <button id="connectWallet">Connect Wallet</button>
+    <div id="walletAddress"></div>
+    <button id="mintButton" disabled>Mint NFT</button>
+    <div id="status"></div>
+  </div>
+
+  <script>
+    // --- Fixed-Price Minter Contract Details ---
+    // The ABI for your fixed-price minter contract, as provided:
+    const contractABI = [
+      {"inputs":[{"internalType":"address","name":"minterFilter","type":"address"},{"internalType":"uint256","name":"minMintFee_","type":"uint256"}],"stateMutability":"nonpayable","type":"constructor"},
+      {"inputs":[{"internalType":"uint256","name":"projectId","type":"uint256"},{"internalType":"address","name":"coreContract","type":"address"}],"name":"getPriceInfo","outputs":[{"internalType":"bool","name":"isConfigured","type":"bool"},{"internalType":"uint256","name":"tokenPriceInWei","type":"uint256"},{"internalType":"string","name":"currencySymbol","type":"string"},{"internalType":"address","name":"currencyAddress","type":"address"}],"stateMutability":"view","type":"function"},
+      {"inputs":[{"internalType":"address","name":"coreContract","type":"address"}],"name":"isEngineView","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},
+      {"inputs":[{"internalType":"uint256","name":"projectId","type":"uint256"},{"internalType":"address","name":"coreContract","type":"address"},{"internalType":"uint24","name":"maxInvocations","type":"uint24"}],"name":"manuallyLimitProjectMaxInvocations","outputs":[],"stateMutability":"nonpayable","type":"function"},
+      {"inputs":[{"internalType":"uint256","name":"projectId","type":"uint256"},{"internalType":"address","name":"coreContract","type":"address"}],"name":"maxInvocationsProjectConfig","outputs":[{"components":[{"internalType":"bool","name":"maxHasBeenInvoked","type":"bool"},{"internalType":"uint24","name":"maxInvocations","type":"uint24"}],"internalType":"struct MaxInvocationsLib.MaxInvocationsProjectConfig","name":"","type":"tuple"}],"stateMutability":"view","type":"function"},
+      {"inputs":[],"name":"minMintFee","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+      {"inputs":[],"name":"minterFilterAddress","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},
+      {"inputs":[],"name":"minterType","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},
+      {"inputs":[],"name":"minterVersion","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},
+      {"inputs":[{"internalType":"uint256","name":"projectId","type":"uint256"},{"internalType":"address","name":"coreContract","type":"address"}],"name":"projectMaxHasBeenInvoked","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},
+      {"inputs":[{"internalType":"uint256","name":"projectId","type":"uint256"},{"internalType":"address","name":"coreContract","type":"address"}],"name":"projectMaxInvocations","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+      {"inputs":[{"internalType":"uint256","name":"projectId","type":"uint256"},{"internalType":"address","name":"coreContract","type":"address"}],"name":"purchase","outputs":[{"internalType":"uint256","name":"tokenId","type":"uint256"}],"stateMutability":"payable","type":"function"},
+      {"inputs":[{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"projectId","type":"uint256"},{"internalType":"address","name":"coreContract","type":"address"}],"name":"purchaseTo","outputs":[{"internalType":"uint256","name":"tokenId","type":"uint256"}],"stateMutability":"payable","type":"function"},
+      {"inputs":[{"internalType":"uint256","name":"projectId","type":"uint256"},{"internalType":"address","name":"coreContract","type":"address"}],"name":"setPriceProjectConfig","outputs":[{"components":[{"internalType":"uint248","name":"pricePerToken","type":"uint248"},{"internalType":"bool","name":"priceIsConfigured","type":"bool"}],"internalType":"struct SetPriceLib.SetPriceProjectConfig","name":"","type":"tuple"}],"stateMutability":"view","type":"function"},
+      {"inputs":[{"internalType":"uint256","name":"projectId","type":"uint256"},{"internalType":"address","name":"coreContract","type":"address"}],"name":"syncProjectMaxInvocationsToCore","outputs":[],"stateMutability":"nonpayable","type":"function"},
+      {"inputs":[{"internalType":"uint256","name":"newMinMintFee","type":"uint256"}],"name":"updateMinMintFee","outputs":[],"stateMutability":"nonpayable","type":"function"},
+      {"inputs":[{"internalType":"uint256","name":"projectId","type":"uint256"},{"internalType":"address","name":"coreContract","type":"address"},{"internalType":"uint248","name":"pricePerTokenInWei","type":"uint248"}],"name":"updatePricePerTokenInWei","outputs":[],"stateMutability":"nonpayable","type":"function"}
+    ];
+
+    // Fixed-Price Minter Contract Address (the one you're using)
+    const contractAddress = "0xf5733268d28DDe96fC32f2bA8E1267Eb64120875";
+
+    // Example parameters:
+    // Set your project ID (adjust this as needed for your project)
+    const projectId = 2;  
+    // Set your core contract address (here we use your project contract address)
+    const coreContractAddress = "0x000009bb1740eea484f7db00000a9227e578bf96";
+
+    // Initialize an Infura provider using your Infura key
+    const provider = new ethers.providers.InfuraProvider("mainnet", "a404456e666b4865a385110e7637555e");
+    let signer;
+    let contract;
+
+    // Connect Wallet button logic
+    document.getElementById("connectWallet").addEventListener("click", async () => {
+      if (window.ethereum) {
+        try {
+          // Request wallet connection via MetaMask
+          await window.ethereum.request({ method: "eth_requestAccounts" });
+          // Create a provider from MetaMask for signing transactions
+          const metamaskProvider = new ethers.providers.Web3Provider(window.ethereum);
+          signer = metamaskProvider.getSigner();
+          const address = await signer.getAddress();
+          document.getElementById("walletAddress").innerText = "Connected: " + address;
+          
+          // Initialize the contract instance with the signer for writing transactions
+          contract = new ethers.Contract(contractAddress, contractABI, signer);
+          
+          // Enable the mint button now that the wallet is connected
+          document.getElementById("mintButton").disabled = false;
+          document.getElementById("status").innerText = "";
+        } catch (error) {
+          console.error("Wallet connection error:", error);
+          document.getElementById("status").innerText = "Wallet connection failed.";
+        }
+      } else {
+        alert("MetaMask is not installed. Please install it to use this feature.");
+      }
+    });
+
+    // Mint NFT button logic
+    document.getElementById("mintButton").addEventListener("click", async () => {
+      if (!contract) return;
+
+      try {
+        document.getElementById("status").innerText = "Minting in progress...";
+        // Call the purchase function.
+        // Adjust the ETH value below as required by your pricing (here, 0.05 ETH is sent as an example).
+        const tx = await contract.purchase(projectId, coreContractAddress, { 
+          value: ethers.utils.parseEther("0.0015")
+        });
+        await tx.wait();
+        document.getElementById("status").innerText = "Mint successful! Token minted.";
+      } catch (error) {
+        console.error("Minting error:", error);
+        document.getElementById("status").innerText = "Mint failed: " + error.message;
+      }
+    });
+  </script>
+</body>
+</html>
