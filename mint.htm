@@ -168,7 +168,31 @@
     }
   </style>
   <script>
-    // Initialize variables
+    // Contract Details
+    const contractABI = [
+      {"inputs":[{"internalType":"address","name":"minterFilter","type":"address"},{"internalType":"uint256","name":"minMintFee_","type":"uint256"}],"stateMutability":"nonpayable","type":"constructor"},
+      {"inputs":[{"internalType":"uint256","name":"projectId","type":"uint256"},{"internalType":"address","name":"coreContract","type":"address"}],"name":"getPriceInfo","outputs":[{"internalType":"bool","name":"isConfigured","type":"bool"},{"internalType":"uint256","name":"tokenPriceInWei","type":"uint256"},{"internalType":"string","name":"currencySymbol","type":"string"},{"internalType":"address","name":"currencyAddress","type":"address"}],"stateMutability":"view","type":"function"},
+      {"inputs":[{"internalType":"address","name":"coreContract","type":"address"}],"name":"isEngineView","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},
+      {"inputs":[{"internalType":"uint256","name":"projectId","type":"uint256"},{"internalType":"address","name":"coreContract","type":"address"},{"internalType":"uint24","name":"maxInvocations","type":"uint24"}],"name":"manuallyLimitProjectMaxInvocations","outputs":[],"stateMutability":"nonpayable","type":"function"},
+      {"inputs":[{"internalType":"uint256","name":"projectId","type":"uint256"},{"internalType":"address","name":"coreContract","type":"address"}],"name":"maxInvocationsProjectConfig","outputs":[{"components":[{"internalType":"bool","name":"maxHasBeenInvoked","type":"bool"},{"internalType":"uint24","name":"maxInvocations","type":"uint24"}],"internalType":"struct MaxInvocationsLib.MaxInvocationsProjectConfig","name":"","type":"tuple"}],"stateMutability":"view","type":"function"},
+      {"inputs":[],"name":"minMintFee","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+      {"inputs":[],"name":"minterFilterAddress","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},
+      {"inputs":[],"name":"minterType","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},
+      {"inputs":[],"name":"minterVersion","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},
+      {"inputs":[{"internalType":"uint256","name":"projectId","type":"uint256"},{"internalType":"address","name":"coreContract","type":"address"}],"name":"projectMaxHasBeenInvoked","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},
+      {"inputs":[{"internalType":"uint256","name":"projectId","type":"uint256"},{"internalType":"address","name":"coreContract","type":"address"}],"name":"projectMaxInvocations","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+      {"inputs":[{"internalType":"uint256","name":"projectId","type":"uint256"},{"internalType":"address","name":"coreContract","type":"address"}],"name":"purchase","outputs":[{"internalType":"uint256","name":"tokenId","type":"uint256"}],"stateMutability":"payable","type":"function"},
+      {"inputs":[{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"projectId","type":"uint256"},{"internalType":"address","name":"coreContract","type":"address"}],"name":"purchaseTo","outputs":[{"internalType":"uint256","name":"tokenId","type":"uint256"}],"stateMutability":"payable","type":"function"},
+      {"inputs":[{"internalType":"uint256","name":"projectId","type":"uint256"},{"internalType":"address","name":"coreContract","type":"address"}],"name":"setPriceProjectConfig","outputs":[{"components":[{"internalType":"uint248","name":"pricePerToken","type":"uint248"},{"internalType":"bool","name":"priceIsConfigured","type":"bool"}],"internalType":"struct SetPriceLib.SetPriceProjectConfig","name":"","type":"tuple"}],"stateMutability":"view","type":"function"},
+      {"inputs":[{"internalType":"uint256","name":"projectId","type":"uint256"},{"internalType":"address","name":"coreContract","type":"address"}],"name":"syncProjectMaxInvocationsToCore","outputs":[],"stateMutability":"nonpayable","type":"function"},
+      {"inputs":[{"internalType":"uint256","name":"newMinMintFee","type":"uint256"}],"name":"updateMinMintFee","outputs":[],"stateMutability":"nonpayable","type":"function"},
+      {"inputs":[{"internalType":"uint256","name":"projectId","type":"uint256"},{"internalType":"address","name":"coreContract","type":"address"},{"internalType":"uint248","name":"pricePerTokenInWei","type":"uint248"}],"name":"updatePricePerTokenInWei","outputs":[],"stateMutability":"nonpayable","type":"function"}
+    ];
+    const contractAddress = "0xf5733268d28DDe96fC32f2bA8E1267Eb64120875";
+    const projectId = 2;
+    const coreContractAddress = "0x000009bb1740eea484f7db00000a9227e578bf96";
+
+    // Global Variables - declare these only once
     let web3Modal;
     let actionButton;
     let provider;
@@ -177,7 +201,7 @@
     let contract;
     let isWalletConnected = false;
 
-    // Initialize Web3Modal
+    // Move the initialization function here
     function initializeWeb3Modal() {
         const providerOptions = {
             walletconnect: {
@@ -205,15 +229,11 @@
         });
     }
 
-    // Wait for everything to be loaded
+    // Initialize when the page loads
     window.addEventListener('load', async function() {
-        // Initialize Web3Modal
         initializeWeb3Modal();
+        setupEventListeners();
         
-        // Initialize UI elements
-        actionButton = document.getElementById("actionButton");
-        
-        // Check for cached provider
         if (web3Modal.cachedProvider) {
             try {
                 await connectWallet();
@@ -223,8 +243,8 @@
         }
     });
 
-    // Update the DOMContentLoaded listener
-    document.addEventListener('DOMContentLoaded', function() {
+    // Setup all event listeners
+    function setupEventListeners() {
         actionButton = document.getElementById("actionButton");
         const lookupButton = document.getElementById("lookupToken");
         const tokenInput = document.getElementById("tokenIdInput");
@@ -233,9 +253,6 @@
             console.error("Could not find required elements");
             return;
         }
-
-        // Initialize Web3Modal first
-        initializeWeb3Modal();
 
         actionButton.addEventListener("click", async () => {
             if (!isWalletConnected) {
@@ -315,45 +332,7 @@
                 lookupButton.click();
             }
         });
-    });
-
-    // --- Fixed-Price Minter Contract Details ---
-    // The ABI for your fixed-price minter contract, as provided:
-    const contractABI = [
-      {"inputs":[{"internalType":"address","name":"minterFilter","type":"address"},{"internalType":"uint256","name":"minMintFee_","type":"uint256"}],"stateMutability":"nonpayable","type":"constructor"},
-      {"inputs":[{"internalType":"uint256","name":"projectId","type":"uint256"},{"internalType":"address","name":"coreContract","type":"address"}],"name":"getPriceInfo","outputs":[{"internalType":"bool","name":"isConfigured","type":"bool"},{"internalType":"uint256","name":"tokenPriceInWei","type":"uint256"},{"internalType":"string","name":"currencySymbol","type":"string"},{"internalType":"address","name":"currencyAddress","type":"address"}],"stateMutability":"view","type":"function"},
-      {"inputs":[{"internalType":"address","name":"coreContract","type":"address"}],"name":"isEngineView","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},
-      {"inputs":[{"internalType":"uint256","name":"projectId","type":"uint256"},{"internalType":"address","name":"coreContract","type":"address"},{"internalType":"uint24","name":"maxInvocations","type":"uint24"}],"name":"manuallyLimitProjectMaxInvocations","outputs":[],"stateMutability":"nonpayable","type":"function"},
-      {"inputs":[{"internalType":"uint256","name":"projectId","type":"uint256"},{"internalType":"address","name":"coreContract","type":"address"}],"name":"maxInvocationsProjectConfig","outputs":[{"components":[{"internalType":"bool","name":"maxHasBeenInvoked","type":"bool"},{"internalType":"uint24","name":"maxInvocations","type":"uint24"}],"internalType":"struct MaxInvocationsLib.MaxInvocationsProjectConfig","name":"","type":"tuple"}],"stateMutability":"view","type":"function"},
-      {"inputs":[],"name":"minMintFee","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
-      {"inputs":[],"name":"minterFilterAddress","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},
-      {"inputs":[],"name":"minterType","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},
-      {"inputs":[],"name":"minterVersion","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},
-      {"inputs":[{"internalType":"uint256","name":"projectId","type":"uint256"},{"internalType":"address","name":"coreContract","type":"address"}],"name":"projectMaxHasBeenInvoked","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},
-      {"inputs":[{"internalType":"uint256","name":"projectId","type":"uint256"},{"internalType":"address","name":"coreContract","type":"address"}],"name":"projectMaxInvocations","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
-      {"inputs":[{"internalType":"uint256","name":"projectId","type":"uint256"},{"internalType":"address","name":"coreContract","type":"address"}],"name":"purchase","outputs":[{"internalType":"uint256","name":"tokenId","type":"uint256"}],"stateMutability":"payable","type":"function"},
-      {"inputs":[{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"projectId","type":"uint256"},{"internalType":"address","name":"coreContract","type":"address"}],"name":"purchaseTo","outputs":[{"internalType":"uint256","name":"tokenId","type":"uint256"}],"stateMutability":"payable","type":"function"},
-      {"inputs":[{"internalType":"uint256","name":"projectId","type":"uint256"},{"internalType":"address","name":"coreContract","type":"address"}],"name":"setPriceProjectConfig","outputs":[{"components":[{"internalType":"uint248","name":"pricePerToken","type":"uint248"},{"internalType":"bool","name":"priceIsConfigured","type":"bool"}],"internalType":"struct SetPriceLib.SetPriceProjectConfig","name":"","type":"tuple"}],"stateMutability":"view","type":"function"},
-      {"inputs":[{"internalType":"uint256","name":"projectId","type":"uint256"},{"internalType":"address","name":"coreContract","type":"address"}],"name":"syncProjectMaxInvocationsToCore","outputs":[],"stateMutability":"nonpayable","type":"function"},
-      {"inputs":[{"internalType":"uint256","name":"newMinMintFee","type":"uint256"}],"name":"updateMinMintFee","outputs":[],"stateMutability":"nonpayable","type":"function"},
-      {"inputs":[{"internalType":"uint256","name":"projectId","type":"uint256"},{"internalType":"address","name":"coreContract","type":"address"},{"internalType":"uint248","name":"pricePerTokenInWei","type":"uint248"}],"name":"updatePricePerTokenInWei","outputs":[],"stateMutability":"nonpayable","type":"function"}
-    ];
-
-    // Fixed-Price Minter Contract Address (the one you're using)
-    const contractAddress = "0xf5733268d28DDe96fC32f2bA8E1267Eb64120875";
-
-    // Example parameters:
-    // Set your project ID (adjust this as needed for your project)
-    const projectId = 2;  
-    // Set your core contract address (here we use your project contract address)
-    const coreContractAddress = "0x000009bb1740eea484f7db00000a9227e578bf96";
-
-    // Add this right after the contract details
-    let provider;
-    let web3Provider;
-    let signer;
-    let contract;
-    let isWalletConnected = false;
+    }
 
     // Add this function to handle wallet connection
     async function connectWallet() {
