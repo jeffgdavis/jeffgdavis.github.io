@@ -3,22 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <title>Framework Minting</title>
-  <!-- Update script imports -->
+  <!-- Update script imports with correct browser versions -->
   <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <!-- Update WalletConnect -->
   <script src="https://unpkg.com/@walletconnect/web3-provider@1.8.0/dist/umd/index.min.js"></script>
+  <!-- Update Web3Modal -->
   <script src="https://unpkg.com/web3modal@1.9.12/dist/index.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@coinbase/wallet-sdk@3.6.0/dist/index.min.js"></script>
-  <script>
-    // Fallback if the CDN fails
-    window.addEventListener('error', function(e) {
-      if (e.target.src && e.target.src.indexOf('ethers') > -1) {
-        const fallbackScript = document.createElement('script');
-        fallbackScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js';
-        document.head.appendChild(fallbackScript);
-      }
-    }, true);
-  </script>
+  <!-- Update Coinbase Wallet SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@coinbase/wallet-sdk@3.6.0/dist/index.umd.min.js"></script>
   <style>
     /* Basic styling – adjust to mimic the Art Blocks aesthetic */
     body {
@@ -174,6 +167,35 @@
         margin: 0.5em 0;
     }
   </style>
+  <script>
+    // Initialize Web3Modal
+    window.addEventListener('load', function() {
+      const providerOptions = {
+        walletconnect: {
+          package: WalletConnectProvider.default,
+          options: {
+            infuraId: "a404456e666b4865a385110e7637555e"
+          }
+        },
+        coinbasewallet: {
+          package: CoinbaseWallet, // Changed from CoinbaseWalletSDK
+          options: {
+            appName: "Framework Minting",
+            infuraId: "a404456e666b4865a385110e7637555e",
+            darkMode: true,
+            chainId: 1
+          }
+        }
+      };
+
+      window.web3Modal = new Web3Modal({
+        network: "mainnet",
+        cacheProvider: true,
+        providerOptions,
+        theme: "dark"
+      });
+    });
+  </script>
 </head>
 <body>
   <header>
@@ -233,32 +255,6 @@
     let signer;
     let contract;
     let isWalletConnected = false;
-
-    // Initialize Web3Modal
-    const providerOptions = {
-        walletconnect: {
-            package: WalletConnectProvider.default,
-            options: {
-                infuraId: "a404456e666b4865a385110e7637555e"
-            }
-        },
-        coinbasewallet: {
-            package: CoinbaseWalletSDK,
-            options: {
-                appName: "Framework Minting",
-                infuraId: "a404456e666b4865a385110e7637555e",
-                darkMode: true,
-                chainId: 1
-            }
-        }
-    };
-
-    const web3Modal = new Web3Modal({
-        network: "mainnet",
-        cacheProvider: true,
-        providerOptions,
-        theme: "dark"
-    });
 
     // Wait for DOM to be fully loaded
     document.addEventListener('DOMContentLoaded', function() {
