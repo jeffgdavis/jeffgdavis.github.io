@@ -19,6 +19,7 @@ let brightnesses= [];
 let stepsArray = [];
 let drawWidth, drawHeight;
 let rt;
+let rothko, davis;
 
 function setup() {
 	w = window.innerWidth;
@@ -34,21 +35,24 @@ function setup() {
 
 	// settings
 	minseg = 0.05;
-	compprob = 0.01;
-	cyclprob = 0.017; // reduced by s < 5 and compprob
-	tintprob = 0.01;
-	satuprob = 0.01;
-	doubprob = s / 8; // reduced by s < 3 and cycleprob
-	beamprob = 0.11; // reduced by s < 3
+	rareprob = 0;
+	compprob = 0.02;
+	cyclprob = 0.11;
+	tintprob = 0.04;
+	satuprob = 0.03;
+	doubprob = s/8;
+	beamprob = 0.11;
 	fhueprob = 0.2;
 	smooprob = 0.6;
+	rothmin = 0.55;
+	rothmax = 0.85;
 	hmin = 100;
 	vmin = 40;
 	maxsteps = 10;
 	smoothsteps = 1000;
 	rt = 60;
 	
-	// Start the interval timer after setting rt
+	// Start the interval timer
 	setInterval(regenerate, rt * 1000);
 
 	// set features
@@ -202,31 +206,41 @@ function draw() {
 	// Reset transformations at start of each draw
 	resetMatrix();
 	
-	// Apply transformations
+	// reverse direction
 	if (reverse) {
-		translate(w / 2, h / 2);
+		translate(w/2, h/2);
 		rotate(180);
-		translate(-w / 2, -h / 2);
+		translate(-w/2, -h/2);
 	}
 	
+	// horizontal
 	if (horizontal) {
-		// Translate to center of window first
-		translate(w / 2, h / 2);
-		// Rotate
+		translate(w/2, h/2);
 		rotate(-90);
-		// Translate back by the swapped dimensions to center the rotated content
-		translate(-h / 2, -w / 2);
+		[drawWidth, drawHeight] = [h, w];
+		translate(-drawWidth/2, -drawHeight/2);
 	}
 	
-	// Draw progressions
+	background(colors[0]);
+	let prev1, prev2;
+	let dfactor = R.random_int(1, 2);
+	
 	for (let i = 0; i < s; i++) {
 		steps = stepsArray[i];
-		if (steps === smoothsteps && (dbl == null || i != dbl - 1)) {
-				smooth = true;
-		} else if (dbl == null || i != dbl - 1) {
-				stepped = true;
+		
+		// Draw progressions based on style
+		if (rothko) {
+			let sh = (segments[i + 1] - segments[i]) * drawHeight;
+			let gs1 = R.random_num(0.15, 0.45) * (1 - (sh/drawHeight));
+			let gs2 = R.random_num(0.15, 0.45) * (1 - (sh/drawHeight));
+			drawProgression(colors[0], colors[i + 1], segments[i], segments[i] + gs1 * (segments[i + 1] - segments[i]), steps);
+			drawProgression(colors[i + 1], colors[i + 1], segments[i] + gs1 * (segments[i + 1] - segments[i]), segments[i] + (1 - gs2) * (segments[i + 1] - segments[i]), steps);
+			drawProgression(colors[i + 1], colors[0], segments[i] + (1 - gs2) * (segments[i + 1] - segments[i]), segments[i] + (segments[i + 1] - segments[i]), steps);
+		} else if (davis) {
+			drawProgression(colors[i], colors[i + 1], 0, 1, 20 * dfactor);
+		} else {
+			drawProgression(colors[i], colors[i + 1], segments[i], segments[i + 1], steps);
 		}
-		drawProgression(colors[i], colors[i + 1], segments[i], segments[i + 1], steps);
 	}
 }
 
@@ -239,8 +253,20 @@ function keyPressed() {
 function drawProgression(p1, p2, a, b, n) {
 	colorMode(RGB);
 	for (let i = 0; i < n; i++) {
-		fill(betterLerp(p1, p2, i / n));
-		rect(0, Math.floor((a * drawHeight) + i * ((b - a) * drawHeight) / n), drawWidth, Math.ceil(((b - a) * drawHeight) / n));
+		if (davis) {
+			newColor = betterLerp(colors[R.random_int(0, s)], colors[R.random_int(0, s)], R.random_int(0, n)/n);
+			while (lastColor && 
+				   (Math.abs(red(lastColor) - red(newColor)) + 
+				   Math.abs(green(lastColor) - green(newColor)) + 
+				   Math.abs(blue(lastColor) - blue(newColor))) < 45) {
+				newColor = betterLerp(colors[R.random_int(0, s)], colors[R.random_int(0, s)], R.random_int(0, n)/n);
+			}
+			fill(newColor);
+			lastColor = newColor;
+		} else {
+			fill(betterLerp(p1, p2, i/n));
+		}
+		rect(0, Math.floor((a * drawHeight) + i * ((b - a) * drawHeight)/n), drawWidth, Math.ceil(((b - a) * drawHeight)/n));
 	}
 	colorMode(HSB);
 }
@@ -575,4 +601,22 @@ function regenerate() {
 	
 	// Force a redraw
 	redraw();
+
+	// Add new feature flags from pre.js
+	rothko = davis = false;
+	if (R.random_bool(rareprob)) {
+		if (R.random_bool(0.5)) {
+			rothko = true;
+			s = sp[R.random_int(0, 13)];
+			minseg = 0.1;
+			cyclprob = 0;
+			doubprob = 0;
+			smooprob = 1;
+		} else {
+			davis = true;
+			cyclprob = 0;
+			doubprob = 0;
+			smooprob = 0;
+		}
+	}
 }
