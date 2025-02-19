@@ -1,10 +1,12 @@
 let R, w, h, sp, s, seg, tint, shade, hdif, vdif, colors, hu, sa, br, cy, motif, dbl, bm, bmcolor, hd, vd, steps;
-let minseg, compprob, cyclprob, tintprob, satuprob, doubprob, beamprob, fhueprob, smooprob, hmin, vmin, maxsteps, smoothsteps;
-let monochromatic, complementary, cycle, tinted, saturated, double, beam, reverse, horizontal, smooth, stepped;
+let minseg, rareprob, compprob, cyclprob, tintprob, satuprob, doubprob, beamprob, fhueprob, smooprob, rothmin, rothmax, hmin, vmin, maxsteps, smoothsteps;
+let rothko, davis, complementary, cycle, tinted, saturated, double, beam, reverse, horizontal, smooth, stepped;
+let lastColor, newColor;
 let segments = [];
 let hues= [];
 let saturations= [];
 let brightnesses= [];
+let printcolors, printfeatures;
 
 function setup() {
 	w = window.innerWidth;
@@ -14,43 +16,61 @@ function setup() {
 	noStroke();
 	colorMode(HSB);
 	angleMode(DEGREES);
-}
-
-function draw() {
-
 	R = new Random();
 	sp = [2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 6, 6, 6, 8, 8, 12];
 	s = sp[R.random_int(0, sp.length - 1)];
 
 	// settings
 	minseg = 0.05;
-	compprob = 0.01;
-	cyclprob = 0.017; // reduced by s < 5 and compprob
-	tintprob = 0.01;
-	satuprob = 0.01;
-	doubprob = s / 8; // reduced by s < 3 and cycleprob
-	beamprob = 0.11; // reduced by s < 3
+	rareprob = 0;
+	compprob = 0.02;
+	cyclprob = 0.11; // reduced by s < 5 and compprob, rothko, davis
+	tintprob = 0.04;
+	satuprob = 0.03;
+	doubprob = s/8; // reduced by s < 3 and cyclprob, rothko, davis
+	beamprob = 0.11; // reduced by s < 3 and tintprob, satuprob, cyclprob
 	fhueprob = 0.2;
 	smooprob = 0.6;
+	rothmin = 0.55;
+	rothmax = 0.85;
 	hmin = 100;
 	vmin = 40;
 	maxsteps = 10;
 	smoothsteps = 1000;
+	printcolors = false;
+	printfeatures = false;
 	
 	// set features
-	complementary = cycle = tinted = saturated = double = beam = reverse = horizontal = smooth = stepped = false;
+	rothko = davis = complementary = cycle = tinted = saturated = double = beam = reverse = horizontal = smooth = stepped = false;
+	if (R.random_bool(rareprob)) {
+		if (R.random_bool(0.5)) {
+			rothko = true;
+			s = sp[R.random_int(0, 13)];
+			minseg = 0.1;
+			cyclprob = 0;
+			doubprob = 0;
+			smooprob = 1;
+		} else {
+			davis = true;
+			cyclprob = 0;
+			doubprob = 0;
+			smooprob = 0;
+		}
+	}
 	if (R.random_bool(compprob)) {
 		complementary = true;
 	}
 	if (R.random_bool(cyclprob) && s > 4 && !complementary) {
 		cycle = true;
+		beamprob = 0;
 	}
 	if (R.random_bool(tintprob + satuprob)) {
-		if (R.random_bool(tintprob / (tintprob + satuprob))) {
+		if (R.random_bool(tintprob/(tintprob + satuprob))) {
 			tinted = true;
 		} else {
 			saturated = true;
 		}
+		beamprob = 0;
 	}
 	if (R.random_bool(doubprob) && s > 2 && !cycle) {
 		double = true;
@@ -61,17 +81,29 @@ function draw() {
 	if (R.random_bool(0.5)) {
 		reverse = true;
 	}
-	if (R.random_bool(0.5)) {
+	if (R.random_bool(0.5) || davis) {
 		horizontal = true;
+	}
+	if (rothko) {
+		horizontal = false;
 	}
 
 	// build segments
-	segments.push(0);
-	for (let i = 1; i < s; i ++) {
-		seg = segments[i - 1] + (1 / s) + R.random_num(minseg - (1 / s), ((1 - minseg) / (s - 1)) - (1 / s));
-		segments.push(seg);
-	}
+	if (davis){
+		segments.push(0);
+		for (let i = 1; i < s; i++) {
+			seg = segments[i - 1] + R.random_int(1, ((1 - segments[i - 1])/minseg)/(s - i + 1)) * minseg;
+			segments.push(seg);
+		}	
+		segments.push(1);
+	} else {
+		segments.push(0);
+		for (let i = 1; i < s; i ++) {
+			seg = segments[i - 1] + (1/s) + R.random_num(minseg - (1/s), ((1 - minseg)/(s - 1)) - (1/s));
+			segments.push(seg);
+		}
 	segments.push(1);
+	}
 	
 	// build colors
 	hdif = 0;
@@ -158,31 +190,39 @@ function draw() {
 				if (hd > hdif) {
 					hdif = hd;
 				}
-				vd = (Math.abs(saturations[j] - saturations[i]) + Math.abs(brightnesses[j] - brightnesses[i])) / 2;
+				vd = (Math.abs(saturations[j] - saturations[i]) + Math.abs(brightnesses[j] - brightnesses[i]))/2;
 				if (vd > vdif) {
 					vdif = vd;
 				}
 			}
 		}
 	}
+}
+
+function draw() {
 	
 	// reverse direction
 	if (reverse) {
-		translate(w / 2, h / 2);
+		translate(w/2, h/2);
 		rotate(180);
-		translate(-w / 2, -h / 2);
+		translate(-w/2, -h/2);
 	}
 	
 	// horizontal
 	if (horizontal) {
-		translate(w / 2, h / 2);
+		translate(w/2, h/2);
 		rotate(-90);
 		[w, h] = [h, w];
-		translate(-w / 2, -h / 2);
+		translate(-w/2, -h/2);
 	}
 	
-	// progressions
+	background(colors[0]);
+	let prev1, prev2;
+	let dfactor = R.random_int(1, 2);
+	
 	for (let i = 0; i < s; i++) {
+		
+		// smooth/stepped
 		if (R.random_bool(smooprob)) {
 			steps = smoothsteps;
 			if (dbl == null || i != dbl - 1) {
@@ -194,11 +234,77 @@ function draw() {
 				stepped = true;
 			}
 		}
-		drawProgression(colors[i], colors[i + 1], segments[i], segments[i + 1], steps);
+
+		// draw progressions
+		if (rothko) {
+			let sh = (segments[i + 1] - segments[i]) * h;
+			let gs1 = R.random_num(0.15, 0.45) * (1 - (sh/h));
+			let gs2 = R.random_num(0.15, 0.45) * (1 - (sh/h));
+			drawProgression(colors[0], colors[i + 1], segments[i], segments[i] + gs1 * (segments[i + 1] - segments[i]), steps);
+			drawProgression(colors[i + 1], colors[i + 1], segments[i] + gs1 * (segments[i + 1] - segments[i]), segments[i] + (1 - gs2) * (segments[i + 1] - segments[i]), steps);
+			drawProgression(colors[i + 1], colors[0], segments[i] + (1 - gs2) * (segments[i + 1] - segments[i]), segments[i] + (segments[i + 1] - segments[i]), steps);
+		} else if (davis) {
+			drawProgression(colors[i], colors[i + 1], 0, 1, 20 * dfactor);
+		} else {
+			drawProgression(colors[i], colors[i + 1], segments[i], segments[i + 1], steps);
+		}
 	}
 	
 	noLoop();
 	
+	// print colors
+	if (printcolors) {
+		print("hue difference: " + hdif);
+		print("value difference: " + vdif);
+	}
+	
+	// print features
+	if (printfeatures) {
+		if (horizontal) {
+			print('orientation: horizontal');
+		} else {
+			print('orientation: vertical');
+		}
+		print('segments: ' + s);
+		if (rothko) {
+			print('style: rothko');
+		}
+		if (davis) {
+			print('style: davis');
+		}
+		if (smooth && stepped) {
+			print('style: mixed');
+		}
+		if (smooth && !stepped && !rothko) {
+			print('style: smooth');
+		}
+		if (!smooth && stepped && !davis) {
+			print('style: stepped');
+		}
+		if (tinted) {
+			print('modification: tinted');
+		}
+		if (saturated) {
+			print('modification: saturated');
+		}
+		if (!tinted && !saturated) {
+			print('modification: none');
+		}
+		if (complementary) {
+			print('override: complementary');
+		}
+		if (cycle) {
+			print('override: 3-cycle');
+		}
+		if (!complementary && !cycle) {
+			print('override: none');
+		}
+		if (beam) {
+			print('injection: ' + bmcolor + " beam");
+		} else {
+			print('injection: none');
+		}
+	}
 }
 
 function keyPressed() {
@@ -216,8 +322,20 @@ window.addEventListener('message', function(event) {
 function drawProgression(p1, p2, a, b, n) {
 	colorMode(RGB);
 	for (let i = 0; i < n; i++) {
-		fill(betterLerp(p1, p2, i / n));
-		rect(0, Math.floor((a * h) + i * ((b - a) * h) / n), w, Math.ceil(((b - a) * h) / n));
+		if (davis) {
+			newColor = betterLerp(colors[R.random_int(0, s)], colors[R.random_int(0, s)], R.random_int(0, n)/n);
+			while (lastColor && 
+				   (Math.abs(red(lastColor) - red(newColor)) + 
+				   Math.abs(green(lastColor) - green(newColor)) + 
+				   Math.abs(blue(lastColor) - blue(newColor))) < 45) {
+				newColor = betterLerp(colors[R.random_int(0, s)], colors[R.random_int(0, s)], R.random_int(0, n)/n);
+			}
+			fill(newColor);
+			lastColor = newColor;
+		} else {
+			fill(betterLerp(p1, p2, i/n));
+		}
+		rect(0, Math.floor((a * h) + i * ((b - a) * h)/n), w, Math.ceil(((b - a) * h)/n));
 	}
 	colorMode(HSB);
 }
@@ -327,14 +445,6 @@ function betterLerp(col1, col2, t) {
 	lab[1] = arr1[1] + t * (arr2[1] - arr1[1]);
 	lab[2] = arr1[2] + t * (arr2[2] - arr1[2]);
   return labToRgb(lab);
-}
-
-function scramble(arr) {
-  for (let i = arr.length - 1; i > 0; i--) {
-    let j = R.random_int(0, i);
-    [arr[i], arr[j]] = [arr[j], arr[i]];
-  }
-  return arr;
 }
 
 class Random {
