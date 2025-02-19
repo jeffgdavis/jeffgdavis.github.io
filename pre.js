@@ -218,7 +218,7 @@ function draw() {
 	
 	background(colors[0]);
 	let prev1, prev2;
-	let dfactor = R.random_int(1, 2);
+	let dfactor = R.random_int(1, 4);
 	
 	for (let i = 0; i < s; i++) {
 		
