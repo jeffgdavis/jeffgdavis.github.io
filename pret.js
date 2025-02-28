@@ -9,17 +9,15 @@ function generateTokenData() {
 
 // Update the global tokenData declaration
 let tokenData = generateTokenData();
-let R, w, h, sp, s, seg, tint, shade, hdif, vdif, colors, hu, sa, br, cy, motif, dbl, bm, bmcolor, hd, vd, steps;
-let minseg, compprob, cyclprob, tintprob, satuprob, doubprob, beamprob, fhueprob, smooprob, hmin, vmin, maxsteps, smoothsteps;
-let monochromatic, complementary, cycle, tinted, saturated, double, beam, reverse, horizontal, smooth, stepped;
+let R, w, h, sp, s, seg, hdif, vdif, colors, hu, sa, br, dbl, bm, bmcolor, hd, vd, steps;
+let minseg, rareprob, compprob, cyclprob, tintprob, satuprob, doubprob, beamprob, fhueprob, smooprob, rothmin, rothmax, hmin, vmin, maxsteps, smoothsteps;
+let rothko, davis, complementary, cycle, tinted, saturated, double, beam, reverse, horizontal, smooth, stepped;
+let lastColor, newColor;
 let segments = [];
-let hues= [];
-let saturations= [];
-let brightnesses= [];
-let stepsArray = [];
-let drawWidth, drawHeight;
-let rt;
-let rothko, davis;
+let hues = [];
+let saturations = [];
+let brightnesses = [];
+let rt; // Regeneration time in seconds
 
 function setup() {
 	w = window.innerWidth;
@@ -32,36 +30,55 @@ function setup() {
 	R = new Random();
 	sp = [2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 6, 6, 6, 8, 8, 12];
 	s = sp[R.random_int(0, sp.length - 1)];
-
+	
 	// settings
 	minseg = 0.05;
-	rareprob = 0;
+	rareprob = 0.02; // Match pre.js
 	compprob = 0.02;
-	cyclprob = 0.11;
-	tintprob = 0.04;
+	cyclprob = 0.10; // Match pre.js
+	tintprob = 0.045; // Match pre.js
 	satuprob = 0.03;
 	doubprob = s/8;
-	beamprob = 0.11;
+	beamprob = 0.135; // Match pre.js
 	fhueprob = 0.2;
-	smooprob = 0.6;
+	smooprob = 0.55; // Match pre.js
 	rothmin = 0.55;
 	rothmax = 0.85;
 	hmin = 100;
 	vmin = 40;
 	maxsteps = 10;
 	smoothsteps = 1000;
-	rt = 60;
+	rt = 60; // Regenerate every 60 seconds
 	
 	// Start the interval timer
 	setInterval(regenerate, rt * 1000);
 
-	// set features
-	complementary = cycle = tinted = saturated = double = beam = reverse = horizontal = smooth = stepped = false;
+	// Initialize all feature flags
+	rothko = davis = complementary = cycle = tinted = saturated = double = beam = reverse = horizontal = smooth = stepped = false;
+	
+	// Add rare features from pre.js
+	if (R.random_bool(rareprob)) {
+		if (R.random_bool(0.5)) {
+			rothko = true;
+			s = sp[R.random_int(0, 13)];
+			minseg = 0.1;
+			cyclprob = 0;
+			doubprob = 0;
+			smooprob = 1;
+		} else {
+			davis = true;
+			cyclprob = 0;
+			doubprob = 0;
+			smooprob = 0;
+		}
+	}
+	
 	if (R.random_bool(compprob)) {
 		complementary = true;
 	}
 	if (R.random_bool(cyclprob) && s > 4 && !complementary) {
 		cycle = true;
+		beamprob = 0; // Disable beam probability when cycle is true
 	}
 	if (R.random_bool(tintprob + satuprob)) {
 		if (R.random_bool(tintprob / (tintprob + satuprob))) {
@@ -69,6 +86,7 @@ function setup() {
 		} else {
 			saturated = true;
 		}
+		beamprob = 0; // Disable beam probability when tinted or saturated
 	}
 	if (R.random_bool(doubprob) && s > 2 && !cycle) {
 		double = true;
@@ -79,17 +97,29 @@ function setup() {
 	if (R.random_bool(0.5)) {
 		reverse = true;
 	}
-	if (R.random_bool(0.5)) {
+	if (R.random_bool(0.5) || davis) {
 		horizontal = true;
+	}
+	if (rothko) {
+		horizontal = false;
 	}
 
 	// build segments
-	segments.push(0);
-	for (let i = 1; i < s; i ++) {
-		seg = segments[i - 1] + (1 / s) + R.random_num(minseg - (1 / s), ((1 - minseg) / (s - 1)) - (1 / s));
-		segments.push(seg);
+	if (davis) {
+		segments.push(0);
+		for (let i = 1; i < s; i++) {
+			seg = segments[i - 1] + R.random_int(1, ((1 - segments[i - 1]) / minseg) / (s - i + 1)) * minseg;
+			segments.push(seg);
+		}
+		segments.push(1);
+	} else {
+		segments.push(0);
+		for (let i = 1; i < s; i++) {
+			seg = segments[i - 1] + (1 / s) + R.random_num(minseg - (1 / s), ((1 - minseg) / (s - 1)) - (1 / s));
+			segments.push(seg);
+		}
+		segments.push(1);
 	}
-	segments.push(1);
 	
 	// build colors
 	hdif = 0;
@@ -151,7 +181,7 @@ function setup() {
 		// beams
 		if (beam) {
 			bm = R.random_int(1, colors.length - 2);
-			if (R.random_bool(0.5) || tinted) {
+			if (R.random_bool(0.485) || tinted) { // Match pre.js
 				colors[bm] = color(0, 0, 100);
 				bmcolor = "white";
 			} else {
@@ -183,23 +213,6 @@ function setup() {
 			}
 		}
 	}
-
-	// Handle transformations
-	drawWidth = w;
-	drawHeight = h;
-	if (horizontal) {
-		[drawWidth, drawHeight] = [h, w];
-	}
-	
-	// Calculate initial steps array
-	stepsArray = [];
-	for (let i = 0; i < s; i++) {
-		if (R.random_bool(smooprob)) {
-			stepsArray.push(smoothsteps);
-		} else {
-			stepsArray.push(R.random_int(3, maxsteps));
-		}
-	}
 }
 
 function draw() {
@@ -217,22 +230,31 @@ function draw() {
 	if (horizontal) {
 		translate(w/2, h/2);
 		rotate(-90);
-		[drawWidth, drawHeight] = [h, w];
-		translate(-drawWidth/2, -drawHeight/2);
+		[w, h] = [h, w];
+		translate(-w/2, -h/2);
 	}
 	
 	background(colors[0]);
-	let prev1, prev2;
 	let dfactor = R.random_int(1, 4);
 	
 	for (let i = 0; i < s; i++) {
-		steps = stepsArray[i];
+		if (R.random_bool(smooprob)) {
+			steps = smoothsteps;
+			if (dbl == null || i != dbl - 1) {
+				smooth = true;
+			}
+		} else {
+			steps = R.random_int(3, maxsteps);
+			if (dbl == null || i != dbl - 1) {
+				stepped = true;
+			}
+		}
 		
 		// Draw progressions based on style
 		if (rothko) {
-			let sh = (segments[i + 1] - segments[i]) * drawHeight;
-			let gs1 = R.random_num(0.15, 0.45) * (1 - (sh/drawHeight));
-			let gs2 = R.random_num(0.15, 0.45) * (1 - (sh/drawHeight));
+			let sh = (segments[i + 1] - segments[i]) * h;
+			let gs1 = R.random_num(0.15, 0.45) * (1 - (sh/h));
+			let gs2 = R.random_num(0.15, 0.45) * (1 - (sh/h));
 			drawProgression(colors[0], colors[i + 1], segments[i], segments[i] + gs1 * (segments[i + 1] - segments[i]), steps);
 			drawProgression(colors[i + 1], colors[i + 1], segments[i] + gs1 * (segments[i + 1] - segments[i]), segments[i] + (1 - gs2) * (segments[i + 1] - segments[i]), steps);
 			drawProgression(colors[i + 1], colors[0], segments[i] + (1 - gs2) * (segments[i + 1] - segments[i]), segments[i] + (segments[i + 1] - segments[i]), steps);
@@ -241,12 +263,6 @@ function draw() {
 		} else {
 			drawProgression(colors[i], colors[i + 1], segments[i], segments[i + 1], steps);
 		}
-	}
-}
-
-function keyPressed() {
-	if (key === 's' || key === 'S') {
-		saveCanvas(tokenData, 'png');
 	}
 }
 
@@ -266,7 +282,7 @@ function drawProgression(p1, p2, a, b, n) {
 		} else {
 			fill(betterLerp(p1, p2, i/n));
 		}
-		rect(0, Math.floor((a * drawHeight) + i * ((b - a) * drawHeight)/n), drawWidth, Math.ceil(((b - a) * drawHeight)/n));
+		rect(0, Math.floor((a * h) + i * ((b - a) * h)/n), w, Math.ceil(((b - a) * h)/n));
 	}
 	colorMode(HSB);
 }
@@ -430,9 +446,8 @@ class Random {
   }
 }
 
-// Add new regenerate function
+// Add regenerate function
 function regenerate() {
-	
 	// Clear canvas and reset transformations
 	background(0);
 	resetMatrix();
@@ -448,18 +463,35 @@ function regenerate() {
 	brightnesses = [];
 	
 	// Re-run setup logic
-	sp = [2, 3, 3, 4, 4, 4, 5, 5, 5, 6, 6, 6, 8, 8, 12];
+	sp = [2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 6, 6, 6, 8, 8, 12];
 	s = sp[R.random_int(0, sp.length - 1)];
 	
 	// Reset all the boolean flags
-	complementary = cycle = tinted = saturated = double = beam = reverse = horizontal = smooth = stepped = false;
+	rothko = davis = complementary = cycle = tinted = saturated = double = beam = reverse = horizontal = smooth = stepped = false;
 	
-	// Re-run all the setup logic for features and segments
+	// Re-run all the setup logic for features
+	if (R.random_bool(rareprob)) {
+		if (R.random_bool(0.5)) {
+			rothko = true;
+			s = sp[R.random_int(0, 13)];
+			minseg = 0.1;
+			cyclprob = 0;
+			doubprob = 0;
+			smooprob = 1;
+		} else {
+			davis = true;
+			cyclprob = 0;
+			doubprob = 0;
+			smooprob = 0;
+		}
+	}
+	
 	if (R.random_bool(compprob)) {
 		complementary = true;
 	}
 	if (R.random_bool(cyclprob) && s > 4 && !complementary) {
 		cycle = true;
+		beamprob = 0;
 	}
 	if (R.random_bool(tintprob + satuprob)) {
 		if (R.random_bool(tintprob / (tintprob + satuprob))) {
@@ -467,6 +499,7 @@ function regenerate() {
 		} else {
 			saturated = true;
 		}
+		beamprob = 0;
 	}
 	if (R.random_bool(doubprob) && s > 2 && !cycle) {
 		double = true;
@@ -477,17 +510,29 @@ function regenerate() {
 	if (R.random_bool(0.5)) {
 		reverse = true;
 	}
-	if (R.random_bool(0.5)) {
+	if (R.random_bool(0.5) || davis) {
 		horizontal = true;
+	}
+	if (rothko) {
+		horizontal = false;
 	}
 	
 	// Rebuild segments
-	segments.push(0);
-	for (let i = 1; i < s; i++) {
-		seg = segments[i - 1] + (1 / s) + R.random_num(minseg - (1 / s), ((1 - minseg) / (s - 1)) - (1 / s));
-		segments.push(seg);
+	if (davis) {
+		segments.push(0);
+		for (let i = 1; i < s; i++) {
+			seg = segments[i - 1] + R.random_int(1, ((1 - segments[i - 1]) / minseg) / (s - i + 1)) * minseg;
+			segments.push(seg);
+		}
+		segments.push(1);
+	} else {
+		segments.push(0);
+		for (let i = 1; i < s; i++) {
+			seg = segments[i - 1] + (1 / s) + R.random_num(minseg - (1 / s), ((1 - minseg) / (s - 1)) - (1 / s));
+			segments.push(seg);
+		}
+		segments.push(1);
 	}
-	segments.push(1);
 	
 	// Rebuild colors
 	hdif = 0;
@@ -549,7 +594,7 @@ function regenerate() {
 		// beams
 		if (beam) {
 			bm = R.random_int(1, colors.length - 2);
-			if (R.random_bool(0.5) || tinted) {
+			if (R.random_bool(0.485) || tinted) {
 				colors[bm] = color(0, 0, 100);
 				bmcolor = "white";
 			} else {
@@ -582,41 +627,6 @@ function regenerate() {
 		}
 	}
 	
-	// Calculate steps for each segment before the redraw
-	stepsArray = [];
-	for (let i = 0; i < s; i++) {
-		if (R.random_bool(0.5)) {
-			stepsArray.push(smoothsteps);
-		} else {
-			stepsArray.push(R.random_int(3, maxsteps));
-		}
-	}
-	
-	// Handle transformations
-	drawWidth = w;
-	drawHeight = h;
-	if (horizontal) {
-		[drawWidth, drawHeight] = [h, w];
-	}
-	
 	// Force a redraw
 	redraw();
-
-	// Add new feature flags from pre.js
-	rothko = davis = false;
-	if (R.random_bool(rareprob)) {
-		if (R.random_bool(0.5)) {
-			rothko = true;
-			s = sp[R.random_int(0, 13)];
-			minseg = 0.1;
-			cyclprob = 0;
-			doubprob = 0;
-			smooprob = 1;
-		} else {
-			davis = true;
-			cyclprob = 0;
-			doubprob = 0;
-			smooprob = 0;
-		}
-	}
 }
