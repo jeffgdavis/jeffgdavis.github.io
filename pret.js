@@ -18,6 +18,11 @@ let hues = [];
 let saturations = [];
 let brightnesses = [];
 let rt; // Regeneration time in seconds
+let fadeAlpha = 0;
+let fading = false;
+let fadeDirection = 1; // 1 for fade out, -1 for fade in
+let fadeSpeed = 10; // How quickly the fade happens
+let regenerationQueued = false;
 
 function setup() {
 	w = window.innerWidth;
@@ -216,53 +221,90 @@ function setup() {
 }
 
 function draw() {
-	// Reset transformations at start of each draw
-	resetMatrix();
-	
-	// reverse direction
-	if (reverse) {
-		translate(w/2, h/2);
-		rotate(180);
-		translate(-w/2, -h/2);
-	}
-	
-	// horizontal
-	if (horizontal) {
-		translate(w/2, h/2);
-		rotate(-90);
-		[w, h] = [h, w];
-		translate(-w/2, -h/2);
-	}
-	
-	background(colors[0]);
-	let dfactor = R.random_int(1, 4);
-	
-	for (let i = 0; i < s; i++) {
-		if (R.random_bool(smooprob)) {
-			steps = smoothsteps;
-			if (dbl == null || i != dbl - 1) {
-				smooth = true;
-			}
-		} else {
-			steps = R.random_int(3, maxsteps);
-			if (dbl == null || i != dbl - 1) {
-				stepped = true;
+	// If we're fading, update the fade alpha
+	if (fading) {
+		fadeAlpha += fadeDirection * fadeSpeed;
+		
+		// Check if fade out is complete
+		if (fadeDirection > 0 && fadeAlpha >= 255) {
+			fadeAlpha = 255; // Cap at fully black
+			
+			// If regeneration is queued, perform it now
+			if (regenerationQueued) {
+				performRegeneration();
+				regenerationQueued = false;
 			}
 		}
 		
-		// Draw progressions based on style
-		if (rothko) {
-			let sh = (segments[i + 1] - segments[i]) * h;
-			let gs1 = R.random_num(0.15, 0.45) * (1 - (sh/h));
-			let gs2 = R.random_num(0.15, 0.45) * (1 - (sh/h));
-			drawProgression(colors[0], colors[i + 1], segments[i], segments[i] + gs1 * (segments[i + 1] - segments[i]), steps);
-			drawProgression(colors[i + 1], colors[i + 1], segments[i] + gs1 * (segments[i + 1] - segments[i]), segments[i] + (1 - gs2) * (segments[i + 1] - segments[i]), steps);
-			drawProgression(colors[i + 1], colors[0], segments[i] + (1 - gs2) * (segments[i + 1] - segments[i]), segments[i] + (segments[i + 1] - segments[i]), steps);
-		} else if (davis) {
-			drawProgression(colors[i], colors[i + 1], 0, 1, 20 * dfactor);
-		} else {
-			drawProgression(colors[i], colors[i + 1], segments[i], segments[i + 1], steps);
+		// Check if fade in is complete
+		if (fadeDirection < 0 && fadeAlpha <= 0) {
+			fadeAlpha = 0; // Cap at fully transparent
+			fading = false; // End the fade
 		}
+	}
+
+	// Only draw the artwork if we're not completely faded out
+	if (fadeAlpha < 255) {
+		// Reset transformations at start of each draw
+		resetMatrix();
+		
+		// reverse direction
+		if (reverse) {
+			translate(w/2, h/2);
+			rotate(180);
+			translate(-w/2, -h/2);
+		}
+		
+		// horizontal
+		if (horizontal) {
+			translate(w/2, h/2);
+			rotate(-90);
+			[w, h] = [h, w];
+			translate(-w/2, -h/2);
+		}
+		
+		background(colors[0]);
+		let dfactor = R.random_int(1, 4);
+		
+		for (let i = 0; i < s; i++) {
+			if (R.random_bool(smooprob)) {
+				steps = smoothsteps;
+				if (dbl == null || i != dbl - 1) {
+					smooth = true;
+				}
+			} else {
+				steps = R.random_int(3, maxsteps);
+				if (dbl == null || i != dbl - 1) {
+					stepped = true;
+				}
+			}
+			
+			// Draw progressions based on style
+			if (rothko) {
+				let sh = (segments[i + 1] - segments[i]) * h;
+				let gs1 = R.random_num(0.15, 0.45) * (1 - (sh/h));
+				let gs2 = R.random_num(0.15, 0.45) * (1 - (sh/h));
+				drawProgression(colors[0], colors[i + 1], segments[i], segments[i] + gs1 * (segments[i + 1] - segments[i]), steps);
+				drawProgression(colors[i + 1], colors[i + 1], segments[i] + gs1 * (segments[i + 1] - segments[i]), segments[i] + (1 - gs2) * (segments[i + 1] - segments[i]), steps);
+				drawProgression(colors[i + 1], colors[0], segments[i] + (1 - gs2) * (segments[i + 1] - segments[i]), segments[i] + (segments[i + 1] - segments[i]), steps);
+			} else if (davis) {
+				drawProgression(colors[i], colors[i + 1], 0, 1, 20 * dfactor);
+			} else {
+				drawProgression(colors[i], colors[i + 1], segments[i], segments[i + 1], steps);
+			}
+		}
+	}
+	
+	// Draw the fade overlay
+	if (fadeAlpha > 0) {
+		// Save current drawing settings
+		push();
+		resetMatrix(); // Ensure overlay is drawn over the entire canvas
+		colorMode(RGB); // Switch to RGB for the overlay
+		noStroke();
+		fill(0, 0, 0, fadeAlpha); // Black with variable alpha
+		rect(0, 0, width, height); // Draw over the entire canvas
+		pop(); // Restore previous drawing settings
 	}
 }
 
@@ -448,6 +490,17 @@ class Random {
 
 // Add regenerate function
 function regenerate() {
+	// Only start fading if we're not already in a fade
+	if (!fading) {
+		fading = true;
+		fadeDirection = 1; // Start with fade out
+		fadeAlpha = 0; // Start fully visible
+		regenerationQueued = true; // Queue up the regeneration for after fade out
+	}
+}
+
+// Add a new function to handle the actual regeneration
+function performRegeneration() {
 	// Clear canvas and reset transformations
 	background(0);
 	resetMatrix();
@@ -627,6 +680,7 @@ function regenerate() {
 		}
 	}
 	
-	// Force a redraw
-	redraw();
+	// After regeneration, start the fade in
+	fadeDirection = -1; // Set to fade in
+	fadeAlpha = 255; // Start fully black
 }
