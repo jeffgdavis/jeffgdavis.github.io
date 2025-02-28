@@ -14,15 +14,12 @@ let minseg, rareprob, compprob, cyclprob, tintprob, satuprob, doubprob, beamprob
 let rothko, davis, complementary, cycle, tinted, saturated, double, beam, reverse, horizontal, smooth, stepped;
 let lastColor, newColor;
 let segments = [];
-let hues = [];
-let saturations = [];
-let brightnesses = [];
-let rt; // Regeneration time in seconds
-let fadeAlpha = 0;
-let fading = false;
-let fadeDirection = 1; // 1 for fade out, -1 for fade in
-let fadeSpeed = 10; // How quickly the fade happens
-let regenerationQueued = false;
+let hues= [];
+let saturations= [];
+let brightnesses= [];
+let stepsArray = [];
+let drawWidth, drawHeight;
+let rt;
 
 function setup() {
 	w = window.innerWidth;
@@ -35,33 +32,32 @@ function setup() {
 	R = new Random();
 	sp = [2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 6, 6, 6, 8, 8, 12];
 	s = sp[R.random_int(0, sp.length - 1)];
-	
+
 	// settings
 	minseg = 0.05;
-	rareprob = 0.02; // Match pre.js
+	rareprob = 0.02;
 	compprob = 0.02;
-	cyclprob = 0.10; // Match pre.js
-	tintprob = 0.045; // Match pre.js
+	cyclprob = 0.10;
+	tintprob = 0.045;
 	satuprob = 0.03;
 	doubprob = s/8;
-	beamprob = 0.135; // Match pre.js
+	beamprob = 0.135;
 	fhueprob = 0.2;
-	smooprob = 0.55; // Match pre.js
+	smooprob = 0.55;
 	rothmin = 0.55;
 	rothmax = 0.85;
 	hmin = 100;
 	vmin = 40;
 	maxsteps = 10;
 	smoothsteps = 1000;
-	rt = 60; // Regenerate every 60 seconds
+	rt = 60;
 	
 	// Start the interval timer
 	setInterval(regenerate, rt * 1000);
 
-	// Initialize all feature flags
+	// set features
 	rothko = davis = complementary = cycle = tinted = saturated = double = beam = reverse = horizontal = smooth = stepped = false;
 	
-	// Add rare features from pre.js
 	if (R.random_bool(rareprob)) {
 		if (R.random_bool(0.5)) {
 			rothko = true;
@@ -83,7 +79,7 @@ function setup() {
 	}
 	if (R.random_bool(cyclprob) && s > 4 && !complementary) {
 		cycle = true;
-		beamprob = 0; // Disable beam probability when cycle is true
+		beamprob = 0;
 	}
 	if (R.random_bool(tintprob + satuprob)) {
 		if (R.random_bool(tintprob / (tintprob + satuprob))) {
@@ -91,7 +87,7 @@ function setup() {
 		} else {
 			saturated = true;
 		}
-		beamprob = 0; // Disable beam probability when tinted or saturated
+		beamprob = 0;
 	}
 	if (R.random_bool(doubprob) && s > 2 && !cycle) {
 		double = true;
@@ -119,7 +115,7 @@ function setup() {
 		segments.push(1);
 	} else {
 		segments.push(0);
-		for (let i = 1; i < s; i++) {
+		for (let i = 1; i < s; i ++) {
 			seg = segments[i - 1] + (1 / s) + R.random_num(minseg - (1 / s), ((1 - minseg) / (s - 1)) - (1 / s));
 			segments.push(seg);
 		}
@@ -186,7 +182,7 @@ function setup() {
 		// beams
 		if (beam) {
 			bm = R.random_int(1, colors.length - 2);
-			if (R.random_bool(0.485) || tinted) { // Match pre.js
+			if (R.random_bool(0.485) || tinted) {
 				colors[bm] = color(0, 0, 100);
 				bmcolor = "white";
 			} else {
@@ -218,93 +214,70 @@ function setup() {
 			}
 		}
 	}
+
+	// Handle transformations
+	drawWidth = w;
+	drawHeight = h;
+	if (horizontal) {
+		[drawWidth, drawHeight] = [h, w];
+	}
+	
+	// Calculate initial steps array
+	stepsArray = [];
+	for (let i = 0; i < s; i++) {
+		if (R.random_bool(smooprob)) {
+			stepsArray.push(smoothsteps);
+			if (dbl == null || i != dbl - 1) {
+				smooth = true;
+			}
+		} else {
+			stepsArray.push(R.random_int(3, maxsteps));
+			if (dbl == null || i != dbl - 1) {
+				stepped = true;
+			}
+		}
+	}
 }
 
 function draw() {
-	// If we're fading, update the fade alpha
-	if (fading) {
-		fadeAlpha += fadeDirection * fadeSpeed;
-		
-		// Check if fade out is complete
-		if (fadeDirection > 0 && fadeAlpha >= 255) {
-			fadeAlpha = 255; // Cap at fully black
-			
-			// If regeneration is queued, perform it now
-			if (regenerationQueued) {
-				performRegeneration();
-				regenerationQueued = false;
-			}
-		}
-		
-		// Check if fade in is complete
-		if (fadeDirection < 0 && fadeAlpha <= 0) {
-			fadeAlpha = 0; // Cap at fully transparent
-			fading = false; // End the fade
-		}
-	}
-
-	// Only draw the artwork if we're not completely faded out
-	if (fadeAlpha < 255) {
-		// Reset transformations at start of each draw
-		resetMatrix();
-		
-		// reverse direction
-		if (reverse) {
-			translate(w/2, h/2);
-			rotate(180);
-			translate(-w/2, -h/2);
-		}
-		
-		// horizontal
-		if (horizontal) {
-			translate(w/2, h/2);
-			rotate(-90);
-			[w, h] = [h, w];
-			translate(-w/2, -h/2);
-		}
-		
-		background(colors[0]);
-		let dfactor = R.random_int(1, 4);
-		
-		for (let i = 0; i < s; i++) {
-			if (R.random_bool(smooprob)) {
-				steps = smoothsteps;
-				if (dbl == null || i != dbl - 1) {
-					smooth = true;
-				}
-			} else {
-				steps = R.random_int(3, maxsteps);
-				if (dbl == null || i != dbl - 1) {
-					stepped = true;
-				}
-			}
-			
-			// Draw progressions based on style
-			if (rothko) {
-				let sh = (segments[i + 1] - segments[i]) * h;
-				let gs1 = R.random_num(0.15, 0.45) * (1 - (sh/h));
-				let gs2 = R.random_num(0.15, 0.45) * (1 - (sh/h));
-				drawProgression(colors[0], colors[i + 1], segments[i], segments[i] + gs1 * (segments[i + 1] - segments[i]), steps);
-				drawProgression(colors[i + 1], colors[i + 1], segments[i] + gs1 * (segments[i + 1] - segments[i]), segments[i] + (1 - gs2) * (segments[i + 1] - segments[i]), steps);
-				drawProgression(colors[i + 1], colors[0], segments[i] + (1 - gs2) * (segments[i + 1] - segments[i]), segments[i] + (segments[i + 1] - segments[i]), steps);
-			} else if (davis) {
-				drawProgression(colors[i], colors[i + 1], 0, 1, 20 * dfactor);
-			} else {
-				drawProgression(colors[i], colors[i + 1], segments[i], segments[i + 1], steps);
-			}
-		}
+	// Reset transformations at start of each draw
+	resetMatrix();
+	
+	// reverse direction
+	if (reverse) {
+		translate(w/2, h/2);
+		rotate(180);
+		translate(-w/2, -h/2);
 	}
 	
-	// Draw the fade overlay
-	if (fadeAlpha > 0) {
-		// Save current drawing settings
-		push();
-		resetMatrix(); // Ensure overlay is drawn over the entire canvas
-		colorMode(RGB); // Switch to RGB for the overlay
-		noStroke();
-		fill(0, 0, 0, fadeAlpha); // Black with variable alpha
-		rect(0, 0, width, height); // Draw over the entire canvas
-		pop(); // Restore previous drawing settings
+	// horizontal
+	if (horizontal) {
+		translate(w/2, h/2);
+		rotate(-90);
+		drawWidth = h;
+		drawHeight = w;
+		translate(-drawWidth/2, -drawHeight/2);
+	}
+	
+	background(colors[0]);
+	let dfactor = R.random_int(1, 4);
+	
+	for (let i = 0; i < s; i++) {
+		steps = stepsArray[i];
+		
+		// Draw progressions based on style
+		if (rothko) {
+			let sh = (segments[i + 1] - segments[i]) * drawHeight;
+			let gs1 = R.random_num(0.15, 0.45) * (1 - (sh/drawHeight));
+			let gs2 = R.random_num(0.15, 0.45) * (1 - (sh/drawHeight));
+			drawProgression(colors[0], colors[i + 1], segments[i], segments[i] + gs1 * (segments[i + 1] - segments[i]), steps);
+			drawProgression(colors[i + 1], colors[i + 1], segments[i] + gs1 * (segments[i + 1] - segments[i]), segments[i] + (1 - gs2) * (segments[i + 1] - segments[i]), steps);
+			drawProgression(colors[i + 1], colors[0], segments[i] + (1 - gs2) * (segments[i + 1] - segments[i]), segments[i] + (segments[i + 1] - segments[i]), steps);
+		} else if (davis) {
+			drawProgression(colors[i], colors[i + 1], 0, 1, 20 * dfactor);
+		} else {
+			drawProgression(colors[i], colors[i + 1], segments[i], segments[i + 1], steps);
+		}
 	}
 }
 
@@ -324,7 +297,7 @@ function drawProgression(p1, p2, a, b, n) {
 		} else {
 			fill(betterLerp(p1, p2, i/n));
 		}
-		rect(0, Math.floor((a * h) + i * ((b - a) * h)/n), w, Math.ceil(((b - a) * h)/n));
+		rect(0, Math.floor((a * drawHeight) + i * ((b - a) * drawHeight)/n), drawWidth, Math.ceil(((b - a) * drawHeight)/n));
 	}
 	colorMode(HSB);
 }
@@ -436,14 +409,6 @@ function betterLerp(col1, col2, t) {
   return labToRgb(lab);
 }
 
-function scramble(arr) {
-  for (let i = arr.length - 1; i > 0; i--) {
-    let j = R.random_int(0, i);
-    [arr[i], arr[j]] = [arr[j], arr[i]];
-  }
-  return arr;
-}
-
 class Random {
   constructor() {
     this.useA = false;
@@ -490,17 +455,7 @@ class Random {
 
 // Add regenerate function
 function regenerate() {
-	// Only start fading if we're not already in a fade
-	if (!fading) {
-		fading = true;
-		fadeDirection = 1; // Start with fade out
-		fadeAlpha = 0; // Start fully visible
-		regenerationQueued = true; // Queue up the regeneration for after fade out
-	}
-}
-
-// Add a new function to handle the actual regeneration
-function performRegeneration() {
+	
 	// Clear canvas and reset transformations
 	background(0);
 	resetMatrix();
@@ -514,6 +469,7 @@ function performRegeneration() {
 	hues = [];
 	saturations = [];
 	brightnesses = [];
+	stepsArray = [];
 	
 	// Re-run setup logic
 	sp = [2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 6, 6, 6, 8, 8, 12];
@@ -680,7 +636,29 @@ function performRegeneration() {
 		}
 	}
 	
-	// After regeneration, start the fade in
-	fadeDirection = -1; // Set to fade in
-	fadeAlpha = 255; // Start fully black
+	// Handle transformations
+	drawWidth = w;
+	drawHeight = h;
+	if (horizontal) {
+		[drawWidth, drawHeight] = [h, w];
+	}
+	
+	// Calculate steps for each segment before the redraw
+	stepsArray = [];
+	for (let i = 0; i < s; i++) {
+		if (R.random_bool(smooprob)) {
+			stepsArray.push(smoothsteps);
+			if (dbl == null || i != dbl - 1) {
+				smooth = true;
+			}
+		} else {
+			stepsArray.push(R.random_int(3, maxsteps));
+			if (dbl == null || i != dbl - 1) {
+				stepped = true;
+			}
+		}
+	}
+	
+	// Force a redraw
+	redraw();
 }
