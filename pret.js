@@ -1,4 +1,4 @@
-// At the top of the file, update the tokenData generation to be a function
+// Function to generate token data
 function generateTokenData() {
 	let newTokenData = "";
 	for (let i = 0; i < 66; i++) {
@@ -7,19 +7,17 @@ function generateTokenData() {
 	return newTokenData;
 }
 
-// Update the global tokenData declaration
+// Initialize tokenData
 let tokenData = generateTokenData();
+
 let R, w, h, sp, s, seg, hdif, vdif, colors, hu, sa, br, dbl, bm, bmcolor, hd, vd, steps;
 let minseg, rareprob, compprob, cyclprob, tintprob, satuprob, doubprob, beamprob, fhueprob, smooprob, rothmin, rothmax, hmin, vmin, maxsteps, smoothsteps;
 let rothko, davis, complementary, cycle, tinted, saturated, double, beam, reverse, horizontal, smooth, stepped;
 let lastColor, newColor;
 let segments = [];
-let hues= [];
-let saturations= [];
-let brightnesses= [];
-let stepsArray = [];
-let drawWidth, drawHeight;
-let rt;
+let hues = [];
+let saturations = [];
+let brightnesses = [];
 
 function setup() {
 	w = window.innerWidth;
@@ -29,11 +27,32 @@ function setup() {
 	noStroke();
 	colorMode(HSB);
 	angleMode(DEGREES);
+	
+	// Initialize artwork
+	initializeArtwork();
+	
+	// Set up a timer to redraw every minute (60000 milliseconds)
+	setInterval(initializeArtwork, 60000);
+}
+
+function initializeArtwork() {
+	// Generate new token data for each redraw
+	tokenData = generateTokenData();
 	R = new Random();
+	
+	// Initialize parameters and generate artwork
+	initializeParameters();
+	
+	// Generate all random values needed for drawing
+	prepareDrawingValues();
+	
+	// Force a single redraw
+	redraw();
+}
+
+function initializeParameters() {
 	sp = [2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 6, 6, 6, 8, 8, 12];
 	s = sp[R.random_int(0, sp.length - 1)];
-
-	// settings
 	minseg = 0.05;
 	rareprob = 0.02;
 	compprob = 0.02;
@@ -50,13 +69,14 @@ function setup() {
 	vmin = 40;
 	maxsteps = 10;
 	smoothsteps = 1000;
-	rt = 60;
-	
-	// Start the interval timer
-	setInterval(regenerate, rt * 1000);
-
-	// set features
 	rothko = davis = complementary = cycle = tinted = saturated = double = beam = reverse = horizontal = smooth = stepped = false;
+	
+	// Reset arrays
+	segments = [];
+	hues = [];
+	saturations = [];
+	brightnesses = [];
+	lastColor = null;
 	
 	if (R.random_bool(rareprob)) {
 		if (R.random_bool(0.5)) {
@@ -73,7 +93,6 @@ function setup() {
 			smooprob = 0;
 		}
 	}
-	
 	if (R.random_bool(compprob)) {
 		complementary = true;
 	}
@@ -82,7 +101,7 @@ function setup() {
 		beamprob = 0;
 	}
 	if (R.random_bool(tintprob + satuprob)) {
-		if (R.random_bool(tintprob / (tintprob + satuprob))) {
+		if (R.random_bool(tintprob/(tintprob + satuprob))) {
 			tinted = true;
 		} else {
 			saturated = true;
@@ -104,30 +123,34 @@ function setup() {
 	if (rothko) {
 		horizontal = false;
 	}
+	
+	// Generate segments and colors
+	generateSegments();
+	generateColors();
+}
 
-	// build segments
-	if (davis) {
+function generateSegments() {
+	if (davis){
 		segments.push(0);
 		for (let i = 1; i < s; i++) {
-			seg = segments[i - 1] + R.random_int(1, ((1 - segments[i - 1]) / minseg) / (s - i + 1)) * minseg;
+			seg = segments[i - 1] + R.random_int(1, ((1 - segments[i - 1])/minseg)/(s - i + 1)) * minseg;
 			segments.push(seg);
-		}
+		}	
 		segments.push(1);
 	} else {
 		segments.push(0);
 		for (let i = 1; i < s; i ++) {
-			seg = segments[i - 1] + (1 / s) + R.random_num(minseg - (1 / s), ((1 - minseg) / (s - 1)) - (1 / s));
+			seg = segments[i - 1] + (1/s) + R.random_num(minseg - (1/s), ((1 - minseg)/(s - 1)) - (1/s));
 			segments.push(seg);
 		}
-		segments.push(1);
+	segments.push(1);
 	}
-	
-	// build colors
+}
+
+function generateColors() {
 	hdif = 0;
 	vdif = 0;
 	while (hdif < hmin && vdif < vmin) {
-		
-		// intial colors
 		colors = [];
 		for (let i = 0; i < s + 1; i++) {
 			if (R.random_bool(fhueprob)) {
@@ -144,42 +167,30 @@ function setup() {
 			}
 			colors.push(color(hu, sa, br));
 		}
-
-		// 3-cycle
 		if (cycle) {
 			for (let i = 0; i < colors.length - 3; i++) {
 				colors[i + 3] = colors[i];
 			}
 		}
-
-		// tinted
 		if (tinted) {
 			for (let i = 0; i < colors.length; i++) {
 				colors[i] = color(hue(colors[i]), 37, 100);
 			}
 		}
-
-		// saturated
 		if (saturated) {
 			for (let i = 0; i < colors.length; i++) {
 				colors[i] = color(hue(colors[i]), 100, 100);
 			}
 		}
-
-		// complementary
 		if (complementary) {
 			for (let i = 1; i < colors.length; i++) {
 				colors[i] = color((hue(colors[i - 1]) + 180) % 360, saturation(colors[i]), brightness(colors[i]));
 			}
 		}
-
-		// double color
 		if (double) {
 			dbl = R.random_int(1, colors.length - 1);
 			colors[dbl] = colors[dbl - 1];
 		}
-
-		// beams
 		if (beam) {
 			bm = R.random_int(1, colors.length - 2);
 			if (R.random_bool(0.485) || tinted) {
@@ -190,8 +201,6 @@ function setup() {
 				bmcolor = "black";
 			}
 		}
-
-		// color difference
 		for (let i = 0; i < colors.length; i++) {
 			hues[i] = hue(colors[i]);
 			saturations[i] = saturation(colors[i]);
@@ -207,84 +216,106 @@ function setup() {
 				if (hd > hdif) {
 					hdif = hd;
 				}
-				vd = (Math.abs(saturations[j] - saturations[i]) + Math.abs(brightnesses[j] - brightnesses[i])) / 2;
+				vd = (Math.abs(saturations[j] - saturations[i]) + Math.abs(brightnesses[j] - brightnesses[i]))/2;
 				if (vd > vdif) {
 					vdif = vd;
 				}
 			}
 		}
 	}
+}
 
-	// Handle transformations
-	drawWidth = w;
-	drawHeight = h;
-	if (horizontal) {
-		[drawWidth, drawHeight] = [h, w];
-	}
+// Store all random values needed for drawing
+let drawingValues = {};
+
+function prepareDrawingValues() {
+	drawingValues = {
+		dfactor: R.random_int(1, 4),
+		stepsList: [],
+		rothkoValues: []
+	};
 	
-	// Calculate initial steps array
-	stepsArray = [];
+	// Pre-generate all random values needed for drawing
 	for (let i = 0; i < s; i++) {
 		if (R.random_bool(smooprob)) {
-			stepsArray.push(smoothsteps);
-			if (dbl == null || i != dbl - 1) {
-				smooth = true;
-			}
+			drawingValues.stepsList[i] = {
+				steps: smoothsteps,
+				smooth: (dbl == null || i != dbl - 1)
+			};
 		} else {
-			stepsArray.push(R.random_int(3, maxsteps));
-			if (dbl == null || i != dbl - 1) {
-				stepped = true;
-			}
+			drawingValues.stepsList[i] = {
+				steps: R.random_int(3, maxsteps),
+				stepped: (dbl == null || i != dbl - 1)
+			};
+		}
+		
+		if (rothko) {
+			let sh = (segments[i + 1] - segments[i]) * h;
+			drawingValues.rothkoValues[i] = {
+				gs1: R.random_num(0.15, 0.45) * (1 - (sh/h)),
+				gs2: R.random_num(0.15, 0.45) * (1 - (sh/h))
+			};
 		}
 	}
 }
 
 function draw() {
-	// Reset transformations at start of each draw
-	resetMatrix();
+	// Clear the canvas and reset
+	clear();
+	background(0);
 	
-	// reverse direction
+	// Apply transformations
+	push();
 	if (reverse) {
 		translate(w/2, h/2);
 		rotate(180);
 		translate(-w/2, -h/2);
 	}
-	
-	// horizontal
 	if (horizontal) {
 		translate(w/2, h/2);
 		rotate(-90);
-		drawWidth = h;
-		drawHeight = w;
-		translate(-drawWidth/2, -drawHeight/2);
+		translate(-h/2, -w/2);
 	}
 	
 	background(colors[0]);
-	let dfactor = R.random_int(1, 4);
 	
 	for (let i = 0; i < s; i++) {
-		steps = stepsArray[i];
+		steps = drawingValues.stepsList[i].steps;
 		
-		// Draw progressions based on style
 		if (rothko) {
-			let sh = (segments[i + 1] - segments[i]) * drawHeight;
-			let gs1 = R.random_num(0.15, 0.45) * (1 - (sh/drawHeight));
-			let gs2 = R.random_num(0.15, 0.45) * (1 - (sh/drawHeight));
+			let gs1 = drawingValues.rothkoValues[i].gs1;
+			let gs2 = drawingValues.rothkoValues[i].gs2;
 			drawProgression(colors[0], colors[i + 1], segments[i], segments[i] + gs1 * (segments[i + 1] - segments[i]), steps);
 			drawProgression(colors[i + 1], colors[i + 1], segments[i] + gs1 * (segments[i + 1] - segments[i]), segments[i] + (1 - gs2) * (segments[i + 1] - segments[i]), steps);
 			drawProgression(colors[i + 1], colors[0], segments[i] + (1 - gs2) * (segments[i + 1] - segments[i]), segments[i] + (segments[i + 1] - segments[i]), steps);
 		} else if (davis) {
-			drawProgression(colors[i], colors[i + 1], 0, 1, 20 * dfactor);
+			drawProgression(colors[i], colors[i + 1], 0, 1, 20 * drawingValues.dfactor);
 		} else {
 			drawProgression(colors[i], colors[i + 1], segments[i], segments[i + 1], steps);
 		}
 	}
+	pop();
+	
+	// Stop the draw loop after drawing once
+	noLoop();
 }
 
 function drawProgression(p1, p2, a, b, n) {
 	colorMode(RGB);
+	
+	// Get current canvas dimensions based on orientation
+	let currentW, currentH;
+	if (horizontal) {
+		currentW = h;
+		currentH = w;
+	} else {
+		currentW = w;
+		currentH = h;
+	}
+	
 	for (let i = 0; i < n; i++) {
 		if (davis) {
+			// Use the original approach for Davis variant
 			newColor = betterLerp(colors[R.random_int(0, s)], colors[R.random_int(0, s)], R.random_int(0, n)/n);
 			while (lastColor && 
 				   (Math.abs(red(lastColor) - red(newColor)) + 
@@ -297,9 +328,15 @@ function drawProgression(p1, p2, a, b, n) {
 		} else {
 			fill(betterLerp(p1, p2, i/n));
 		}
-		rect(0, Math.floor((a * drawHeight) + i * ((b - a) * drawHeight)/n), drawWidth, Math.ceil(((b - a) * drawHeight)/n));
+		rect(0, Math.floor((a * currentH) + i * ((b - a) * currentH)/n), currentW, Math.ceil(((b - a) * currentH)/n));
 	}
 	colorMode(HSB);
+}
+
+function regenerateArtwork() {
+	// Reset parameters and generate new artwork
+	initializeParameters();
+	redraw();
 }
 
 function rgbToLab(c) {
@@ -451,214 +488,4 @@ class Random {
   random_choice(list) {
     return list[this.random_int(0, list.length - 1)];
   }
-}
-
-// Add regenerate function
-function regenerate() {
-	
-	// Clear canvas and reset transformations
-	background(0);
-	resetMatrix();
-	
-	// Generate new token and reset variables
-	tokenData = generateTokenData();
-	R = new Random();
-	
-	// Reset arrays
-	segments = [];
-	hues = [];
-	saturations = [];
-	brightnesses = [];
-	stepsArray = [];
-	
-	// Re-run setup logic
-	sp = [2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 6, 6, 6, 8, 8, 12];
-	s = sp[R.random_int(0, sp.length - 1)];
-	
-	// Reset all the boolean flags
-	rothko = davis = complementary = cycle = tinted = saturated = double = beam = reverse = horizontal = smooth = stepped = false;
-	
-	// Re-run all the setup logic for features
-	if (R.random_bool(rareprob)) {
-		if (R.random_bool(0.5)) {
-			rothko = true;
-			s = sp[R.random_int(0, 13)];
-			minseg = 0.1;
-			cyclprob = 0;
-			doubprob = 0;
-			smooprob = 1;
-		} else {
-			davis = true;
-			cyclprob = 0;
-			doubprob = 0;
-			smooprob = 0;
-		}
-	}
-	
-	if (R.random_bool(compprob)) {
-		complementary = true;
-	}
-	if (R.random_bool(cyclprob) && s > 4 && !complementary) {
-		cycle = true;
-		beamprob = 0;
-	}
-	if (R.random_bool(tintprob + satuprob)) {
-		if (R.random_bool(tintprob / (tintprob + satuprob))) {
-			tinted = true;
-		} else {
-			saturated = true;
-		}
-		beamprob = 0;
-	}
-	if (R.random_bool(doubprob) && s > 2 && !cycle) {
-		double = true;
-	}
-	if (R.random_bool(beamprob) && s > 2) {
-		beam = true;
-	}
-	if (R.random_bool(0.5)) {
-		reverse = true;
-	}
-	if (R.random_bool(0.5) || davis) {
-		horizontal = true;
-	}
-	if (rothko) {
-		horizontal = false;
-	}
-	
-	// Rebuild segments
-	if (davis) {
-		segments.push(0);
-		for (let i = 1; i < s; i++) {
-			seg = segments[i - 1] + R.random_int(1, ((1 - segments[i - 1]) / minseg) / (s - i + 1)) * minseg;
-			segments.push(seg);
-		}
-		segments.push(1);
-	} else {
-		segments.push(0);
-		for (let i = 1; i < s; i++) {
-			seg = segments[i - 1] + (1 / s) + R.random_num(minseg - (1 / s), ((1 - minseg) / (s - 1)) - (1 / s));
-			segments.push(seg);
-		}
-		segments.push(1);
-	}
-	
-	// Rebuild colors
-	hdif = 0;
-	vdif = 0;
-	while (hdif < hmin && vdif < vmin) {
-		
-		// intial colors
-		colors = [];
-		for (let i = 0; i < s + 1; i++) {
-			if (R.random_bool(fhueprob)) {
-				hu = R.random_num(0, 360);
-			} else {
-				hu = R.random_num(180, 420) % 360;
-			}
-			if (R.random_bool(0.5) || hu < 120) {
-				sa = R.random_num(10, 100);
-				br = 100;
-			} else {
-				sa = 100;
-				br = R.random_num(25, 100);
-			}
-			colors.push(color(hu, sa, br));
-		}
-
-		// 3-cycle
-		if (cycle) {
-			for (let i = 0; i < colors.length - 3; i++) {
-				colors[i + 3] = colors[i];
-			}
-		}
-
-		// tinted
-		if (tinted) {
-			for (let i = 0; i < colors.length; i++) {
-				colors[i] = color(hue(colors[i]), 37, 100);
-			}
-		}
-
-		// saturated
-		if (saturated) {
-			for (let i = 0; i < colors.length; i++) {
-				colors[i] = color(hue(colors[i]), 100, 100);
-			}
-		}
-
-		// complementary
-		if (complementary) {
-			for (let i = 1; i < colors.length; i++) {
-				colors[i] = color((hue(colors[i - 1]) + 180) % 360, saturation(colors[i]), brightness(colors[i]));
-			}
-		}
-
-		// double color
-		if (double) {
-			dbl = R.random_int(1, colors.length - 1);
-			colors[dbl] = colors[dbl - 1];
-		}
-
-		// beams
-		if (beam) {
-			bm = R.random_int(1, colors.length - 2);
-			if (R.random_bool(0.485) || tinted) {
-				colors[bm] = color(0, 0, 100);
-				bmcolor = "white";
-			} else {
-				colors[bm] = color(0, 100, 0);
-				bmcolor = "black";
-			}
-		}
-
-		// color difference
-		for (let i = 0; i < colors.length; i++) {
-			hues[i] = hue(colors[i]);
-			saturations[i] = saturation(colors[i]);
-			brightnesses[i] = brightness(colors[i]);
-		}
-		for (let i = 0; i < colors.length - 1; i++) {
-			for (let j = i + 1; j < colors.length; j++) {
-				hd = Math.abs(hues[j] - hues[i]);
-				hd = Math.min(hd, 360 - hd);
-				if (beam && (i - 1 == bm || i == bm)) {
-					hd = 0;
-				}
-				if (hd > hdif) {
-					hdif = hd;
-				}
-				vd = (Math.abs(saturations[j] - saturations[i]) + Math.abs(brightnesses[j] - brightnesses[i])) / 2;
-				if (vd > vdif) {
-					vdif = vd;
-				}
-			}
-		}
-	}
-	
-	// Handle transformations
-	drawWidth = w;
-	drawHeight = h;
-	if (horizontal) {
-		[drawWidth, drawHeight] = [h, w];
-	}
-	
-	// Calculate steps for each segment before the redraw
-	stepsArray = [];
-	for (let i = 0; i < s; i++) {
-		if (R.random_bool(smooprob)) {
-			stepsArray.push(smoothsteps);
-			if (dbl == null || i != dbl - 1) {
-				smooth = true;
-			}
-		} else {
-			stepsArray.push(R.random_int(3, maxsteps));
-			if (dbl == null || i != dbl - 1) {
-				stepped = true;
-			}
-		}
-	}
-	
-	// Force a redraw
-	redraw();
 }
