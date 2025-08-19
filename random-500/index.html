@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random AB 500</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #000;
+            color: #fff;
+            overflow: hidden;
+        }
+
+        .container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .artwork-frame {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background-color: #111;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            transition: opacity 2s ease-in-out;
+        }
+
+        .artwork-frame.active {
+            opacity: 1;
+            z-index: 2;
+        }
+
+        .artwork-frame.inactive {
+            opacity: 0;
+            z-index: 1;
+        }
+
+        /* COMMENTED OUT - Info panel and controls
+        .info-panel {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            max-width: 400px;
+            z-index: 10;
+            transition: opacity 0.3s ease;
+        }
+
+        .info-panel.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .project-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #fff;
+        }
+
+        .artist-name {
+            font-size: 18px;
+            color: #ccc;
+            margin-bottom: 16px;
+        }
+
+        .project-details {
+            font-size: 14px;
+            line-height: 1.5;
+            color: #aaa;
+        }
+
+        .project-details div {
+            margin-bottom: 6px;
+        }
+
+        .timer-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 4px;
+            background-color: #007AFF;
+            transition: width 1s linear;
+            z-index: 10;
+        }
+
+        .controls {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 10;
+        }
+
+        .btn {
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-left: 10px;
+            backdrop-filter: blur(10px);
+            transition: background-color 0.2s;
+        }
+
+        .btn:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        */
+
+        .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 18px;
+            color: #ccc;
+            z-index: 5;
+        }
+
+        /* COMMENTED OUT - Media queries for overlay elements
+        @media (max-width: 768px) {
+            .info-panel {
+                top: 10px;
+                left: 10px;
+                right: 10px;
+                max-width: none;
+                padding: 15px;
+            }
+
+            .controls {
+                top: 10px;
+                right: 10px;
+                display: flex;
+                flex-direction: column;
+            }
+
+            .btn {
+                margin: 5px 0;
+                margin-left: 0;
+            }
+        }
+        */
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="loading" id="loading">Loading Art Blocks collection...</div>
+        
+        <iframe id="artworkFrame1" class="artwork-frame active" style="display: none;"></iframe>
+        <iframe id="artworkFrame2" class="artwork-frame inactive" style="display: none;"></iframe>
+        
+        <!-- COMMENTED OUT - Info panel and controls
+        <div class="info-panel" id="infoPanel">
+            <div class="project-title" id="projectTitle">Loading...</div>
+            <div class="artist-name" id="artistName">Loading...</div>
+            <div class="project-details">
+                <div><strong>Project ID:</strong> <span id="projectId">-</span></div>
+                <div><strong>Token ID:</strong> <span id="tokenId">-</span></div>
+                <div><strong>Edition:</strong> <span id="edition">- / -</span></div>
+                <div><strong>Contract:</strong> <span id="contractAddress">-</span></div>
+                <div><strong>Next artwork in:</strong> <span id="countdown">30s</span></div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button class="btn" onclick="toggleInfo()">Toggle Info</button>
+            <button class="btn" onclick="loadRandomArtwork()">Next Artwork</button>
+        </div>
+
+        <div class="timer-bar" id="timerBar"></div>
+        -->
+    </div>
+
+    <script>
+        let projects = [];
+        let currentProject = null;
+        let currentTokenId = null;
+        let countdownInterval = null;
+        let timerInterval = null;
+        let secondsRemaining = 30;
+        let activeFrameIndex = 1; // Track which iframe is currently active (1 or 2)
+
+        // Load the Art Blocks projects data
+        async function loadProjectsData() {
+            try {
+                const response = await fetch('artblocks-projects-enhanced.json');
+                const data = await response.json();
+                projects = data.projects;
+                console.log(`Loaded ${projects.length} Art Blocks projects`);
+                
+                // Hide loading and start the gallery
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('artworkFrame1').style.display = 'block';
+                document.getElementById('artworkFrame2').style.display = 'block';
+                
+                // Load first artwork
+                loadRandomArtwork();
+                
+                // Start the auto-rotation timer
+                startAutoRotation();
+                
+            } catch (error) {
+                console.error('Error loading projects data:', error);
+                document.getElementById('loading').textContent = 'Error loading Art Blocks data. Please check the JSON file.';
+            }
+        }
+
+        // Generate a random token ID for a given project
+        function generateTokenId(project) {
+            // Token ID = projectId * 1000000 + random edition number (0 to maxInvocations-1)
+            const editionNumber = Math.floor(Math.random() * project.maxInvocations);
+            const tokenId = project.projectId * 1000000 + editionNumber;
+            return {
+                tokenId: tokenId,
+                edition: editionNumber + 1, // Display as 1-indexed
+                maxInvocations: project.maxInvocations
+            };
+        }
+
+        // Load a random artwork with cross-fade transition
+        function loadRandomArtwork() {
+            if (projects.length === 0) {
+                console.error('No projects loaded');
+                return;
+            }
+
+            // Select a random project
+            const randomIndex = Math.floor(Math.random() * projects.length);
+            currentProject = projects[randomIndex];
+            
+            // Generate token ID
+            const tokenData = generateTokenId(currentProject);
+            currentTokenId = tokenData.tokenId;
+            
+            // Build the Art Blocks generator URL
+            const artworkUrl = `https://generator.artblocks.io/${currentProject.contractAddress}/${currentTokenId}`;
+            
+            // Switch to the inactive frame for loading
+            const currentActiveFrame = document.getElementById(`artworkFrame${activeFrameIndex}`);
+            const nextFrameIndex = activeFrameIndex === 1 ? 2 : 1;
+            const nextFrame = document.getElementById(`artworkFrame${nextFrameIndex}`);
+            
+            // Load the new artwork in the inactive frame
+            nextFrame.src = artworkUrl;
+            
+            // Wait a moment for the iframe to start loading, then begin transition
+            setTimeout(() => {
+                // Start the cross-fade transition
+                currentActiveFrame.classList.remove('active');
+                currentActiveFrame.classList.add('inactive');
+                nextFrame.classList.remove('inactive');
+                nextFrame.classList.add('active');
+                
+                // Update the active frame index
+                activeFrameIndex = nextFrameIndex;
+            }, 100);
+            
+            // Update info panel (COMMENTED OUT - overlay disabled)
+            // updateInfoPanel(currentProject, tokenData);
+            
+            // Reset timer
+            resetTimer();
+            
+            console.log(`Loaded: ${currentProject.projectName} by ${currentProject.artistName} - Token ${currentTokenId}`);
+        }
+
+        // Update the info panel with current project details (COMMENTED OUT - overlay disabled)
+        /*
+        function updateInfoPanel(project, tokenData) {
+            document.getElementById('projectTitle').textContent = project.projectName;
+            document.getElementById('artistName').textContent = `by ${project.artistName}`;
+            document.getElementById('projectId').textContent = project.projectId;
+            document.getElementById('tokenId').textContent = tokenData.tokenId.toLocaleString();
+            document.getElementById('edition').textContent = `${tokenData.edition.toLocaleString()} / ${tokenData.maxInvocations.toLocaleString()}`;
+            document.getElementById('contractAddress').textContent = project.contractAddress.slice(0, 10) + '...';
+        }
+        */
+
+        // Start auto-rotation every 30 seconds
+        function startAutoRotation() {
+            // Clear any existing intervals
+            if (countdownInterval) clearInterval(countdownInterval);
+            if (timerInterval) clearInterval(timerInterval);
+            
+            // Set up 30-second rotation
+            timerInterval = setInterval(() => {
+                loadRandomArtwork();
+            }, 30000); // 30 seconds
+
+            // Start countdown display
+            startCountdown();
+        }
+
+        // Start countdown timer (COMMENTED OUT - overlay disabled)
+        function startCountdown() {
+            secondsRemaining = 30;
+            // updateCountdown();
+            
+            countdownInterval = setInterval(() => {
+                secondsRemaining--;
+                // updateCountdown();
+                // updateTimerBar();
+                
+                if (secondsRemaining <= 0) {
+                    secondsRemaining = 30;
+                }
+            }, 1000);
+        }
+
+        // Update countdown display (COMMENTED OUT - overlay disabled)
+        /*
+        function updateCountdown() {
+            document.getElementById('countdown').textContent = `${secondsRemaining}s`;
+        }
+
+        // Update timer bar (COMMENTED OUT - overlay disabled)
+        function updateTimerBar() {
+            const progress = ((30 - secondsRemaining) / 30) * 100;
+            document.getElementById('timerBar').style.width = `${progress}%`;
+        }
+        */
+
+        // Reset timer when manually loading new artwork
+        function resetTimer() {
+            if (countdownInterval) clearInterval(countdownInterval);
+            if (timerInterval) clearInterval(timerInterval);
+            startAutoRotation();
+        }
+
+        // Toggle info panel visibility (COMMENTED OUT - overlay disabled)
+        /*
+        function toggleInfo() {
+            const infoPanel = document.getElementById('infoPanel');
+            infoPanel.classList.toggle('hidden');
+        }
+        */
+
+        // Keyboard shortcuts (overlay controls commented out)
+        document.addEventListener('keydown', function(event) {
+            switch(event.key) {
+                case ' ': // Spacebar
+                case 'ArrowRight':
+                    event.preventDefault();
+                    loadRandomArtwork();
+                    break;
+                /*
+                case 'i':
+                case 'I':
+                    event.preventDefault();
+                    toggleInfo();
+                    break;
+                case 'Escape':
+                    event.preventDefault();
+                    if (!document.getElementById('infoPanel').classList.contains('hidden')) {
+                        toggleInfo();
+                    }
+                    break;
+                */
+            }
+        });
+
+        // Initialize the gallery when page loads
+        document.addEventListener('DOMContentLoaded', loadProjectsData);
+
+        // Handle iframe load errors for both frames
+        document.getElementById('artworkFrame1').addEventListener('error', function() {
+            console.error('Failed to load artwork in frame 1, trying another...');
+            setTimeout(loadRandomArtwork, 2000);
+        });
+        
+        document.getElementById('artworkFrame2').addEventListener('error', function() {
+            console.error('Failed to load artwork in frame 2, trying another...');
+            setTimeout(loadRandomArtwork, 2000);
+        });
+    </script>
+</body>
+</html>
