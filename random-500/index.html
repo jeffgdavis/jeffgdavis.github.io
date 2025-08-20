@@ -256,11 +256,8 @@
             const nextFrameIndex = activeFrameIndex === 1 ? 2 : 1;
             const nextFrame = document.getElementById(`artworkFrame${nextFrameIndex}`);
             
-            // Load the new artwork in the inactive frame
-            nextFrame.src = artworkUrl;
-            
-            // Wait a moment for the iframe to start loading, then begin transition
-            setTimeout(() => {
+            // Function to handle transition once artwork is loaded
+            function startTransition() {
                 // Start the cross-fade transition
                 currentActiveFrame.classList.remove('active');
                 currentActiveFrame.classList.add('inactive');
@@ -269,7 +266,35 @@
                 
                 // Update the active frame index
                 activeFrameIndex = nextFrameIndex;
-            }, 100);
+                
+                // Clear the previous iframe after transition completes to prevent memory leaks
+                setTimeout(() => {
+                    currentActiveFrame.src = 'about:blank';
+                    console.log('Cleared previous iframe to prevent memory accumulation');
+                }, 3000); // Clear 3 seconds after transition starts (transition takes 2s)
+            }
+            
+            // Set up load event listener for the new iframe
+            function onLoad() {
+                nextFrame.removeEventListener('load', onLoad);
+                clearTimeout(fallbackTimeout);
+                
+                // Small delay to ensure rendering is complete
+                setTimeout(startTransition, 200);
+            }
+            
+            // Fallback timeout in case load event doesn't fire
+            const fallbackTimeout = setTimeout(() => {
+                nextFrame.removeEventListener('load', onLoad);
+                console.warn('Iframe load timeout, proceeding with transition');
+                startTransition();
+            }, 10000); // 10 second fallback
+            
+            // Listen for load event
+            nextFrame.addEventListener('load', onLoad);
+            
+            // Load the new artwork in the inactive frame
+            nextFrame.src = artworkUrl;
             
             // Update info panel (COMMENTED OUT - overlay disabled)
             // updateInfoPanel(currentProject, tokenData);
@@ -277,7 +302,7 @@
             // Reset timer
             resetTimer();
             
-            console.log(`Loaded: ${currentProject.projectName} by ${currentProject.artistName} - Token ${currentTokenId}`);
+            console.log(`Loading: ${currentProject.projectName} by ${currentProject.artistName} - Token ${currentTokenId}`);
         }
 
         // Update the info panel with current project details (COMMENTED OUT - overlay disabled)
