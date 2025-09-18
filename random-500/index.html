@@ -3,8 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Random AB 500</title>
+    <title>Random AB[500]</title>
     <style>
+        @font-face {
+            font-family: 'Founders Grotesk';
+            src: url('FoundersGrotesk-Regular.ttf') format('truetype');
+            font-weight: 400;
+            font-style: normal;
+            font-display: swap;
+        }
+        @font-face {
+            font-family: 'Sohne Breit';
+            src: url('SohneBreit-Kraftig.ttf') format('truetype');
+            font-weight: 400;
+            font-style: normal;
+            font-display: swap;
+        }
+
         body {
             margin: 0;
             padding: 0;
@@ -45,84 +60,6 @@
             z-index: 1;
         }
 
-        /* COMMENTED OUT - Info panel and controls
-        .info-panel {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            background-color: rgba(0, 0, 0, 0.8);
-            padding: 20px;
-            border-radius: 8px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            max-width: 400px;
-            z-index: 10;
-            transition: opacity 0.3s ease;
-        }
-
-        .info-panel.hidden {
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .project-title {
-            font-size: 24px;
-            font-weight: 600;
-            margin-bottom: 8px;
-            color: #fff;
-        }
-
-        .artist-name {
-            font-size: 18px;
-            color: #ccc;
-            margin-bottom: 16px;
-        }
-
-        .project-details {
-            font-size: 14px;
-            line-height: 1.5;
-            color: #aaa;
-        }
-
-        .project-details div {
-            margin-bottom: 6px;
-        }
-
-        .timer-bar {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            height: 4px;
-            background-color: #007AFF;
-            transition: width 1s linear;
-            z-index: 10;
-        }
-
-        .controls {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            z-index: 10;
-        }
-
-        .btn {
-            background-color: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: white;
-            padding: 12px 20px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 14px;
-            margin-left: 10px;
-            backdrop-filter: blur(10px);
-            transition: background-color 0.2s;
-        }
-
-        .btn:hover {
-            background-color: rgba(255, 255, 255, 0.2);
-        }
-        */
-
         .loading {
             position: absolute;
             top: 50%;
@@ -133,67 +70,75 @@
             z-index: 5;
         }
 
-        /* COMMENTED OUT - Media queries for overlay elements
-        @media (max-width: 768px) {
-            .info-panel {
-                top: 10px;
-                left: 10px;
-                right: 10px;
-                max-width: none;
-                padding: 15px;
-            }
-
-            .controls {
-                top: 10px;
-                right: 10px;
-                display: flex;
-                flex-direction: column;
-            }
-
-            .btn {
-                margin: 5px 0;
-                margin-left: 0;
-            }
+        .interstitial {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 15;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+            pointer-events: none;
         }
-        */
+
+        .interstitial.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .interstitial-text {
+            color: #fff;
+            text-align: center;
+            line-height: 1.8;
+            margin: 0 clamp(20px, 4vw, 80px);
+        }
+
+        .interstitial-label {
+            font-family: 'Sohne Breit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-size: clamp(14px, 1.5vw, 24px);
+            font-weight: 400;
+            margin-bottom: clamp(4px, 0.8vw, 16px);
+        }
+
+        .interstitial-info {
+            font-family: 'Founders Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-size: clamp(20px, 3vw, 48px);
+            font-weight: 400;
+            margin-bottom: clamp(20px, 3vw, 60px);
+        }
+
     </style>
 </head>
 <body>
     <div class="container">
         <div class="loading" id="loading">Loading Art Blocks collection...</div>
         
-        <iframe id="artworkFrame1" class="artwork-frame active" style="display: none;"></iframe>
-        <iframe id="artworkFrame2" class="artwork-frame inactive" style="display: none;"></iframe>
-        
-        <!-- COMMENTED OUT - Info panel and controls
-        <div class="info-panel" id="infoPanel">
-            <div class="project-title" id="projectTitle">Loading...</div>
-            <div class="artist-name" id="artistName">Loading...</div>
-            <div class="project-details">
-                <div><strong>Project ID:</strong> <span id="projectId">-</span></div>
-                <div><strong>Token ID:</strong> <span id="tokenId">-</span></div>
-                <div><strong>Edition:</strong> <span id="edition">- / -</span></div>
-                <div><strong>Contract:</strong> <span id="contractAddress">-</span></div>
-                <div><strong>Next artwork in:</strong> <span id="countdown">30s</span></div>
+        <div class="interstitial" id="interstitial">
+            <div class="interstitial-text">
+                <div class="interstitial-label">PREVIOUS</div>
+                <div class="interstitial-info" id="previousProject">Loading...</div>
+                <div class="interstitial-label">NEXT</div>
+                <div class="interstitial-info" id="nextProject">Loading...</div>
             </div>
         </div>
-
-        <div class="controls">
-            <button class="btn" onclick="toggleInfo()">Toggle Info</button>
-            <button class="btn" onclick="loadRandomArtwork()">Next Artwork</button>
-        </div>
-
-        <div class="timer-bar" id="timerBar"></div>
-        -->
+        
+        <iframe id="artworkFrame1" class="artwork-frame active" style="display: none;"></iframe>
+        <iframe id="artworkFrame2" class="artwork-frame inactive" style="display: none;"></iframe>
     </div>
 
     <script>
         let projects = [];
         let currentProject = null;
         let currentTokenId = null;
-        let countdownInterval = null;
+        let previousProject = null;
+        let previousTokenId = null;
         let timerInterval = null;
-        let secondsRemaining = 30;
         let activeFrameIndex = 1; // Track which iframe is currently active (1 or 2)
 
         // Load the Art Blocks projects data
@@ -228,25 +173,70 @@
             const tokenId = project.projectId * 1000000 + editionNumber;
             return {
                 tokenId: tokenId,
-                edition: editionNumber + 1, // Display as 1-indexed
-                maxInvocations: project.maxInvocations
+                edition: editionNumber // Use actual calculated edition number
             };
         }
 
-        // Load a random artwork with cross-fade transition
+        // Show interstitial screen with project information
+        function showInterstitial(prevProject, prevEdition, nextProject, nextEdition) {
+            const interstitial = document.getElementById('interstitial');
+            const previousProjectElement = document.getElementById('previousProject');
+            const nextProjectElement = document.getElementById('nextProject');
+            
+            // Format the artwork/artist info only
+            if (prevProject) {
+                previousProjectElement.textContent = `${prevProject.projectName} #${prevEdition} by ${prevProject.artistName}`;
+            } else {
+                previousProjectElement.textContent = 'None';
+            }
+            
+            if (nextProject) {
+                nextProjectElement.textContent = `${nextProject.projectName} #${nextEdition} by ${nextProject.artistName}`;
+            } else {
+                nextProjectElement.textContent = 'Loading...';
+            }
+            
+            // Show the interstitial
+            interstitial.classList.add('show');
+        }
+
+        // Hide interstitial screen
+        function hideInterstitial() {
+            const interstitial = document.getElementById('interstitial');
+            interstitial.classList.remove('show');
+        }
+
+        // Load a random artwork (used for first load only)
         function loadRandomArtwork() {
             if (projects.length === 0) {
                 console.error('No projects loaded');
                 return;
             }
 
+            // Store current project as previous (if exists)
+            if (currentProject) {
+                previousProject = currentProject;
+                previousTokenId = currentTokenId;
+            }
+
             // Select a random project
             const randomIndex = Math.floor(Math.random() * projects.length);
-            currentProject = projects[randomIndex];
+            const nextProject = projects[randomIndex];
             
-            // Generate token ID
-            const tokenData = generateTokenId(currentProject);
-            currentTokenId = tokenData.tokenId;
+            // Generate token ID for next project
+            const tokenData = generateTokenId(nextProject);
+            const nextTokenId = tokenData.tokenId;
+            const nextEdition = tokenData.edition;
+            
+            // Load artwork directly (no interstitial for manual loading)
+            loadArtworkFrame(nextProject, tokenData, nextTokenId, nextEdition);
+        }
+
+        // Separate function to handle the actual iframe loading
+        function loadArtworkFrame(nextProject, tokenData, nextTokenId, nextEdition) {
+            // Update current project info
+            currentProject = nextProject;
+            currentTokenId = nextTokenId;
             
             // Build the Art Blocks generator URL
             const artworkUrl = `https://generator.artblocks.io/${currentProject.contractAddress}/${currentTokenId}`;
@@ -296,109 +286,56 @@
             // Load the new artwork in the inactive frame
             nextFrame.src = artworkUrl;
             
-            // Update info panel (COMMENTED OUT - overlay disabled)
-            // updateInfoPanel(currentProject, tokenData);
-            
-            // Reset timer
-            resetTimer();
-            
             console.log(`Loading: ${currentProject.projectName} by ${currentProject.artistName} - Token ${currentTokenId}`);
         }
 
-        // Update the info panel with current project details (COMMENTED OUT - overlay disabled)
-        /*
-        function updateInfoPanel(project, tokenData) {
-            document.getElementById('projectTitle').textContent = project.projectName;
-            document.getElementById('artistName').textContent = `by ${project.artistName}`;
-            document.getElementById('projectId').textContent = project.projectId;
-            document.getElementById('tokenId').textContent = tokenData.tokenId.toLocaleString();
-            document.getElementById('edition').textContent = `${tokenData.edition.toLocaleString()} / ${tokenData.maxInvocations.toLocaleString()}`;
-            document.getElementById('contractAddress').textContent = project.contractAddress.slice(0, 10) + '...';
-        }
-        */
-
-        // Start auto-rotation every 30 seconds
+        // Start auto-rotation every 45 seconds (40s artwork + 5s interstitial)
         function startAutoRotation() {
             // Clear any existing intervals
-            if (countdownInterval) clearInterval(countdownInterval);
             if (timerInterval) clearInterval(timerInterval);
             
-            // Set up 30-second rotation
+            // Set up 45-second cycle (40s artwork + 5s interstitial)
             timerInterval = setInterval(() => {
-                loadRandomArtwork();
-            }, 30000); // 30 seconds
-
-            // Start countdown display
-            startCountdown();
+                startTransitionSequence();
+            }, 45000); // 45 seconds total cycle
         }
 
-        // Start countdown timer (COMMENTED OUT - overlay disabled)
-        function startCountdown() {
-            secondsRemaining = 30;
-            // updateCountdown();
-            
-            countdownInterval = setInterval(() => {
-                secondsRemaining--;
-                // updateCountdown();
-                // updateTimerBar();
+        // New function to handle the proper transition sequence
+        function startTransitionSequence() {
+            // Step 1: Fade out current artwork (if any exists)
+            if (currentProject) {
+                const currentActiveFrame = document.getElementById(`artworkFrame${activeFrameIndex}`);
+                currentActiveFrame.classList.remove('active');
+                currentActiveFrame.classList.add('inactive');
                 
-                if (secondsRemaining <= 0) {
-                    secondsRemaining = 30;
-                }
-            }, 1000);
-        }
-
-        // Update countdown display (COMMENTED OUT - overlay disabled)
-        /*
-        function updateCountdown() {
-            document.getElementById('countdown').textContent = `${secondsRemaining}s`;
-        }
-
-        // Update timer bar (COMMENTED OUT - overlay disabled)
-        function updateTimerBar() {
-            const progress = ((30 - secondsRemaining) / 30) * 100;
-            document.getElementById('timerBar').style.width = `${progress}%`;
-        }
-        */
-
-        // Reset timer when manually loading new artwork
-        function resetTimer() {
-            if (countdownInterval) clearInterval(countdownInterval);
-            if (timerInterval) clearInterval(timerInterval);
-            startAutoRotation();
-        }
-
-        // Toggle info panel visibility (COMMENTED OUT - overlay disabled)
-        /*
-        function toggleInfo() {
-            const infoPanel = document.getElementById('infoPanel');
-            infoPanel.classList.toggle('hidden');
-        }
-        */
-
-        // Keyboard shortcuts (overlay controls commented out)
-        document.addEventListener('keydown', function(event) {
-            switch(event.key) {
-                case ' ': // Spacebar
-                case 'ArrowRight':
-                    event.preventDefault();
-                    loadRandomArtwork();
-                    break;
-                /*
-                case 'i':
-                case 'I':
-                    event.preventDefault();
-                    toggleInfo();
-                    break;
-                case 'Escape':
-                    event.preventDefault();
-                    if (!document.getElementById('infoPanel').classList.contains('hidden')) {
-                        toggleInfo();
-                    }
-                    break;
-                */
+                // Step 2: After fade out completes, show interstitial
+                setTimeout(() => {
+                    // Prepare next project info
+                    const randomIndex = Math.floor(Math.random() * projects.length);
+                    const nextProject = projects[randomIndex];
+                    const tokenData = generateTokenId(nextProject);
+                    
+                    // Show interstitial
+                    const currentEdition = currentTokenId % 1000000; // Extract edition from token ID
+                    showInterstitial(currentProject, currentEdition, nextProject, tokenData.edition);
+                    
+                    // Step 3: After 5 seconds, hide interstitial and load new artwork
+                    setTimeout(() => {
+                        hideInterstitial();
+                        
+                        // Step 4: After interstitial fades out, load new artwork
+                        setTimeout(() => {
+                            loadArtworkFrame(nextProject, tokenData, tokenData.tokenId, tokenData.edition);
+                        }, 500); // Wait for interstitial fade out
+                        
+                    }, 5000); // Show interstitial for 5 seconds
+                    
+                }, 2000); // Wait for artwork fade out (2s transition)
+            } else {
+                // First load - go directly to loading
+                loadRandomArtwork();
             }
-        });
+        }
 
         // Initialize the gallery when page loads
         document.addEventListener('DOMContentLoaded', loadProjectsData);
