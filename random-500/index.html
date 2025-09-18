@@ -4,20 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Random AB[500]</title>
+    <!-- Preload critical fonts to eliminate FOUT (Flash of Unstyled Text) -->
+    <link rel="preload" href="FoundersGrotesk-Regular.ttf" as="font" type="font/ttf" crossorigin>
+    <link rel="preload" href="SohneBreit-Kraftig.ttf" as="font" type="font/ttf" crossorigin>
     <style>
         @font-face {
             font-family: 'Founders Grotesk';
             src: url('FoundersGrotesk-Regular.ttf') format('truetype');
             font-weight: 400;
             font-style: normal;
-            font-display: swap;
+            font-display: optional; /* Better for performance - fallback if not loaded quickly */
         }
         @font-face {
             font-family: 'Sohne Breit';
             src: url('SohneBreit-Kraftig.ttf') format('truetype');
             font-weight: 400;
             font-style: normal;
-            font-display: swap;
+            font-display: optional; /* Better for performance - fallback if not loaded quickly */
         }
 
         body {
@@ -41,13 +44,15 @@
             width: 100%;
             height: 100%;
             border: none;
-            background-color: #111;
+            background-color: #000;
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
             transition: opacity 2s ease-in-out;
+            will-change: opacity; /* Optimize for opacity transitions */
+            contain: layout style paint; /* Improve rendering performance */
         }
 
         .artwork-frame.active {
@@ -85,6 +90,8 @@
             opacity: 0;
             transition: opacity 0.5s ease-in-out;
             pointer-events: none;
+            will-change: opacity; /* Optimize for opacity transitions */
+            contain: layout style paint; /* Improve rendering performance */
         }
 
         .interstitial.show {
@@ -104,6 +111,7 @@
             font-size: clamp(14px, 1.5vw, 24px);
             font-weight: 400;
             margin-bottom: clamp(4px, 0.8vw, 16px);
+            letter-spacing: 0.1em; /* 100 tracking - scales proportionally with font size */
         }
 
         .interstitial-info {
@@ -128,8 +136,16 @@
             </div>
         </div>
         
-        <iframe id="artworkFrame1" class="artwork-frame active" style="display: none;"></iframe>
-        <iframe id="artworkFrame2" class="artwork-frame inactive" style="display: none;"></iframe>
+        <iframe id="artworkFrame1" class="artwork-frame active" style="display: none;" 
+                loading="eager" 
+                importance="high"
+                sandbox="allow-scripts allow-same-origin allow-forms"
+                referrerpolicy="no-referrer-when-downgrade"></iframe>
+        <iframe id="artworkFrame2" class="artwork-frame inactive" style="display: none;"
+                loading="eager"
+                importance="high" 
+                sandbox="allow-scripts allow-same-origin allow-forms"
+                referrerpolicy="no-referrer-when-downgrade"></iframe>
     </div>
 
     <script>
@@ -147,7 +163,6 @@
                 const response = await fetch('artblocks-projects-enhanced.json');
                 const data = await response.json();
                 projects = data.projects;
-                console.log(`Loaded ${projects.length} Art Blocks projects`);
                 
                 // Hide loading and start the gallery
                 document.getElementById('loading').style.display = 'none';
@@ -260,7 +275,6 @@
                 // Clear the previous iframe after transition completes to prevent memory leaks
                 setTimeout(() => {
                     currentActiveFrame.src = 'about:blank';
-                    console.log('Cleared previous iframe to prevent memory accumulation');
                 }, 3000); // Clear 3 seconds after transition starts (transition takes 2s)
             }
             
@@ -269,6 +283,23 @@
                 nextFrame.removeEventListener('load', onLoad);
                 clearTimeout(fallbackTimeout);
                 
+                // Optimize iframe for performance
+                try {
+                    // Add performance hints to the iframe content
+                    const iframeDoc = nextFrame.contentDocument || nextFrame.contentWindow.document;
+                    if (iframeDoc && iframeDoc.documentElement) {
+                        // Add viewport meta tag for mobile optimization if not present
+                        if (!iframeDoc.querySelector('meta[name="viewport"]')) {
+                            const viewport = iframeDoc.createElement('meta');
+                            viewport.name = 'viewport';
+                            viewport.content = 'width=device-width, initial-scale=1.0';
+                            iframeDoc.head?.appendChild(viewport);
+                        }
+                    }
+                } catch (e) {
+                    // Cross-origin restrictions may prevent access, that's okay
+                }
+                
                 // Small delay to ensure rendering is complete
                 setTimeout(startTransition, 200);
             }
@@ -276,17 +307,31 @@
             // Fallback timeout in case load event doesn't fire
             const fallbackTimeout = setTimeout(() => {
                 nextFrame.removeEventListener('load', onLoad);
-                console.warn('Iframe load timeout, proceeding with transition');
                 startTransition();
             }, 10000); // 10 second fallback
             
             // Listen for load event
             nextFrame.addEventListener('load', onLoad);
             
+            // Optimize iframe loading
+            nextFrame.setAttribute('fetchpriority', 'high');
+            
+            // Preload the URL as a resource hint
+            const preloadLink = document.createElement('link');
+            preloadLink.rel = 'preload';
+            preloadLink.href = artworkUrl;
+            preloadLink.as = 'document';
+            document.head.appendChild(preloadLink);
+            
+            // Clean up preload link after loading
+            setTimeout(() => {
+                if (preloadLink.parentNode) {
+                    preloadLink.parentNode.removeChild(preloadLink);
+                }
+            }, 5000);
+            
             // Load the new artwork in the inactive frame
             nextFrame.src = artworkUrl;
-            
-            console.log(`Loading: ${currentProject.projectName} by ${currentProject.artistName} - Token ${currentTokenId}`);
         }
 
         // Start auto-rotation every 45 seconds (40s artwork + 5s interstitial)
