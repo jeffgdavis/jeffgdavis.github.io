@@ -1,0 +1,1988 @@
+{
+  "projects": [
+    {
+      "projectName": "Chromie Squiggle",
+      "artistName": "Snowfro",
+      "contractAddress": "0x059edd72cd353df5106d2b9cc5ab83a52287ac3a",
+      "projectId": 0,
+      "maxInvocations": 10000,
+      "aspectRatio": 1.5
+    },
+    {
+      "projectName": "Genesis",
+      "artistName": "DCA",
+      "contractAddress": "0x059edd72cd353df5106d2b9cc5ab83a52287ac3a",
+      "projectId": 1,
+      "maxInvocations": 512,
+      "aspectRatio": 1.3333333333333333
+    },
+    {
+      "projectName": "Construction Token",
+      "artistName": "Jeff Davis",
+      "contractAddress": "0x059edd72cd353df5106d2b9cc5ab83a52287ac3a",
+      "projectId": 2,
+      "maxInvocations": 500,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "923 EMPTY ROOMS",
+      "artistName": "Casey REAS",
+      "contractAddress": "0x145789247973c5d612bf121e9e4eef84b63eb707",
+      "projectId": 1,
+      "maxInvocations": 924,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Petro National",
+      "artistName": "John Gerrard",
+      "contractAddress": "0x64780ce53f6e966e18a22af13a2f97369580ec11",
+      "projectId": 0,
+      "maxInvocations": 196,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Floating World Genesis",
+      "artistName": "A.A. Murakami",
+      "contractAddress": "0x64780ce53f6e966e18a22af13a2f97369580ec11",
+      "projectId": 1,
+      "maxInvocations": 250,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "QWERTY",
+      "artistName": "Tara Donovan",
+      "contractAddress": "0x64780ce53f6e966e18a22af13a2f97369580ec11",
+      "projectId": 2,
+      "maxInvocations": 500,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Contractions",
+      "artistName": "Loie Hollowell",
+      "contractAddress": "0x64780ce53f6e966e18a22af13a2f97369580ec11",
+      "projectId": 3,
+      "maxInvocations": 280,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "New Worlds",
+      "artistName": "Robert Whitman",
+      "contractAddress": "0x64780ce53f6e966e18a22af13a2f97369580ec11",
+      "projectId": 4,
+      "maxInvocations": 500,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Friendship Bracelets",
+      "artistName": "Alexis André",
+      "contractAddress": "0x942bc2d3e7a589fe5bd4a5c6ef9727dfd82f5c8a",
+      "projectId": 0,
+      "maxInvocations": 39000,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Ottocento",
+      "artistName": "Berubara",
+      "contractAddress": "0x99a9b7c1116f9ceeb1652de04d5969cce509b069",
+      "projectId": 374,
+      "maxInvocations": 35,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Tide Predictor",
+      "artistName": "LoVid",
+      "contractAddress": "0x99a9b7c1116f9ceeb1652de04d5969cce509b069",
+      "projectId": 376,
+      "maxInvocations": 400,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Ingress",
+      "artistName": "Paweł Dudko",
+      "contractAddress": "0x99a9b7c1116f9ceeb1652de04d5969cce509b069",
+      "projectId": 377,
+      "maxInvocations": 256,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Fleur",
+      "artistName": "AnaPet",
+      "contractAddress": "0x99a9b7c1116f9ceeb1652de04d5969cce509b069",
+      "projectId": 378,
+      "maxInvocations": 300,
+      "aspectRatio": 1.25
+    },
+    {
+      "projectName": "Seedlings",
+      "artistName": "VES3L",
+      "contractAddress": "0x99a9b7c1116f9ceeb1652de04d5969cce509b069",
+      "projectId": 380,
+      "maxInvocations": 200,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Structures",
+      "artistName": "Hevey",
+      "contractAddress": "0x99a9b7c1116f9ceeb1652de04d5969cce509b069",
+      "projectId": 381,
+      "maxInvocations": 256,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Pre-Process",
+      "artistName": "Casey REAS",
+      "contractAddress": "0x99a9b7c1116f9ceeb1652de04d5969cce509b069",
+      "projectId": 383,
+      "maxInvocations": 120,
+      "aspectRatio": 1.78
+    },
+    {
+      "projectName": "VOXΞL",
+      "artistName": "JEANVASCRIPT",
+      "contractAddress": "0x99a9b7c1116f9ceeb1652de04d5969cce509b069",
+      "projectId": 384,
+      "maxInvocations": 250,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Dipolar",
+      "artistName": "Junia Farquhar",
+      "contractAddress": "0x99a9b7c1116f9ceeb1652de04d5969cce509b069",
+      "projectId": 385,
+      "maxInvocations": 256,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Pointers",
+      "artistName": "Steve Pikelny",
+      "contractAddress": "0x99a9b7c1116f9ceeb1652de04d5969cce509b069",
+      "projectId": 387,
+      "maxInvocations": 100,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Miragem",
+      "artistName": "Third Vision",
+      "contractAddress": "0x99a9b7c1116f9ceeb1652de04d5969cce509b069",
+      "projectId": 389,
+      "maxInvocations": 256,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Race Condition",
+      "artistName": "Jonas Lund",
+      "contractAddress": "0x99a9b7c1116f9ceeb1652de04d5969cce509b069",
+      "projectId": 393,
+      "maxInvocations": 325,
+      "aspectRatio": 1.5
+    },
+    {
+      "projectName": "Volute",
+      "artistName": "RVig",
+      "contractAddress": "0x99a9b7c1116f9ceeb1652de04d5969cce509b069",
+      "projectId": 394,
+      "maxInvocations": 200,
+      "aspectRatio": 1.5
+    },
+    {
+      "projectName": "Implications",
+      "artistName": "ixnayokay",
+      "contractAddress": "0x99a9b7c1116f9ceeb1652de04d5969cce509b069",
+      "projectId": 395,
+      "maxInvocations": 300,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Through Curved Air",
+      "artistName": "Jacob Gold",
+      "contractAddress": "0x99a9b7c1116f9ceeb1652de04d5969cce509b069",
+      "projectId": 397,
+      "maxInvocations": 186,
+      "aspectRatio": 1.77777777
+    },
+    {
+      "projectName": "Libra",
+      "artistName": "Cooper Jamieson",
+      "contractAddress": "0x99a9b7c1116f9ceeb1652de04d5969cce509b069",
+      "projectId": 398,
+      "maxInvocations": 50,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Such A Lovely Time",
+      "artistName": "petitsapin",
+      "contractAddress": "0x99a9b7c1116f9ceeb1652de04d5969cce509b069",
+      "projectId": 400,
+      "maxInvocations": 325,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "NimTeens",
+      "artistName": "Bryan Brinkman",
+      "contractAddress": "0x99a9b7c1116f9ceeb1652de04d5969cce509b069",
+      "projectId": 408,
+      "maxInvocations": 400,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Symbol 1",
+      "artistName": "Emily Weil",
+      "contractAddress": "0x99a9b7c1116f9ceeb1652de04d5969cce509b069",
+      "projectId": 411,
+      "maxInvocations": 153,
+      "aspectRatio": 1.25
+    },
+    {
+      "projectName": "Cerebellum",
+      "artistName": "Laya Mathikshara & Santiago",
+      "contractAddress": "0x99a9b7c1116f9ceeb1652de04d5969cce509b069",
+      "projectId": 412,
+      "maxInvocations": 300,
+      "aspectRatio": 1.3
+    },
+    {
+      "projectName": "Longing",
+      "artistName": "phenomena",
+      "contractAddress": "0x99a9b7c1116f9ceeb1652de04d5969cce509b069",
+      "projectId": 413,
+      "maxInvocations": 247,
+      "aspectRatio": 1.777
+    },
+    {
+      "projectName": "Calian",
+      "artistName": "Eric De Giuli",
+      "contractAddress": "0x99a9b7c1116f9ceeb1652de04d5969cce509b069",
+      "projectId": 416,
+      "maxInvocations": 256,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Ceramics",
+      "artistName": "Charlotte Dann",
+      "contractAddress": "0x99a9b7c1116f9ceeb1652de04d5969cce509b069",
+      "projectId": 417,
+      "maxInvocations": 300,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Coalition",
+      "artistName": "Generative Artworks",
+      "contractAddress": "0x99a9b7c1116f9ceeb1652de04d5969cce509b069",
+      "projectId": 420,
+      "maxInvocations": 37,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Worlds Within",
+      "artistName": "Jason Ting",
+      "contractAddress": "0x99a9b7c1116f9ceeb1652de04d5969cce509b069",
+      "projectId": 424,
+      "maxInvocations": 256,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Cargo",
+      "artistName": "Kim Asendorf",
+      "contractAddress": "0x99a9b7c1116f9ceeb1652de04d5969cce509b069",
+      "projectId": 426,
+      "maxInvocations": 1000,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Memories of Digital Data",
+      "artistName": "Kazuhiro Tanimoto",
+      "contractAddress": "0x99a9b7c1116f9ceeb1652de04d5969cce509b069",
+      "projectId": 428,
+      "maxInvocations": 450,
+      "aspectRatio": 1.67
+    },
+    {
+      "projectName": "ilumz",
+      "artistName": "Wolffia Inc. & Motus Art",
+      "contractAddress": "0x99a9b7c1116f9ceeb1652de04d5969cce509b069",
+      "projectId": 429,
+      "maxInvocations": 57,
+      "aspectRatio": 1.77777778
+    },
+    {
+      "projectName": "Divergence",
+      "artistName": "Loren Bednar",
+      "contractAddress": "0x99a9b7c1116f9ceeb1652de04d5969cce509b069",
+      "projectId": 432,
+      "maxInvocations": 100,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Still Moving",
+      "artistName": "Nathaniel Stern and Sasha Stiles",
+      "contractAddress": "0x99a9b7c1116f9ceeb1652de04d5969cce509b069",
+      "projectId": 433,
+      "maxInvocations": 240,
+      "aspectRatio": 1.5
+    },
+    {
+      "projectName": "Flows",
+      "artistName": "ryley-o.eth",
+      "contractAddress": "0x99a9b7c1116f9ceeb1652de04d5969cce509b069",
+      "projectId": 435,
+      "maxInvocations": 100,
+      "aspectRatio": 1.777778
+    },
+    {
+      "projectName": "Subtle",
+      "artistName": "willstall",
+      "contractAddress": "0x99a9b7c1116f9ceeb1652de04d5969cce509b069",
+      "projectId": 438,
+      "maxInvocations": 256,
+      "aspectRatio": 1.777
+    },
+    {
+      "projectName": "Enigma",
+      "artistName": "RalenArc",
+      "contractAddress": "0x99a9b7c1116f9ceeb1652de04d5969cce509b069",
+      "projectId": 439,
+      "maxInvocations": 32,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Augury",
+      "artistName": "LoVid",
+      "contractAddress": "0x99a9b7c1116f9ceeb1652de04d5969cce509b069",
+      "projectId": 440,
+      "maxInvocations": 126,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Net Net Net",
+      "artistName": "ilithya x Erin Wajufos",
+      "contractAddress": "0x99a9b7c1116f9ceeb1652de04d5969cce509b069",
+      "projectId": 441,
+      "maxInvocations": 33,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Systems Madness",
+      "artistName": "Claudia Hart and Andrew Blanton",
+      "contractAddress": "0x99a9b7c1116f9ceeb1652de04d5969cce509b069",
+      "projectId": 442,
+      "maxInvocations": 42,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Bright",
+      "artistName": "Heeey",
+      "contractAddress": "0x99a9b7c1116f9ceeb1652de04d5969cce509b069",
+      "projectId": 448,
+      "maxInvocations": 360,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Speak To Me",
+      "artistName": "Lisa Orth",
+      "contractAddress": "0x99a9b7c1116f9ceeb1652de04d5969cce509b069",
+      "projectId": 449,
+      "maxInvocations": 290,
+      "aspectRatio": 1.414
+    },
+    {
+      "projectName": "Crypt",
+      "artistName": "The Cyclops Group",
+      "contractAddress": "0x99a9b7c1116f9ceeb1652de04d5969cce509b069",
+      "projectId": 453,
+      "maxInvocations": 54,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Flourish",
+      "artistName": "Sterling Crispin",
+      "contractAddress": "0x99a9b7c1116f9ceeb1652de04d5969cce509b069",
+      "projectId": 454,
+      "maxInvocations": 270,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Spaghetti Bones",
+      "artistName": "Joshua Bagley",
+      "contractAddress": "0x99a9b7c1116f9ceeb1652de04d5969cce509b069",
+      "projectId": 456,
+      "maxInvocations": 600,
+      "aspectRatio": 1.75
+    },
+    {
+      "projectName": "Dopamine Machines",
+      "artistName": "Steve Pikelny",
+      "contractAddress": "0x99a9b7c1116f9ceeb1652de04d5969cce509b069",
+      "projectId": 457,
+      "maxInvocations": 777,
+      "aspectRatio": 1.625
+    },
+    {
+      "projectName": "Seasky",
+      "artistName": "Ralgo",
+      "contractAddress": "0x99a9b7c1116f9ceeb1652de04d5969cce509b069",
+      "projectId": 459,
+      "maxInvocations": 100,
+      "aspectRatio": 1.3
+    },
+    {
+      "projectName": "Exstasis",
+      "artistName": "Grant Oesterling",
+      "contractAddress": "0x99a9b7c1116f9ceeb1652de04d5969cce509b069",
+      "projectId": 460,
+      "maxInvocations": 111,
+      "aspectRatio": 1.666666667
+    },
+    {
+      "projectName": "Sonoran Roadways",
+      "artistName": "Jake Rockland",
+      "contractAddress": "0x99a9b7c1116f9ceeb1652de04d5969cce509b069",
+      "projectId": 461,
+      "maxInvocations": 54,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "l.o",
+      "artistName": "Night Sea",
+      "contractAddress": "0x99a9b7c1116f9ceeb1652de04d5969cce509b069",
+      "projectId": 463,
+      "maxInvocations": 176,
+      "aspectRatio": 1.777778
+    },
+    {
+      "projectName": "Kubikino",
+      "artistName": "Carolina Melis",
+      "contractAddress": "0x99a9b7c1116f9ceeb1652de04d5969cce509b069",
+      "projectId": 464,
+      "maxInvocations": 320,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Glasshouse INAT",
+      "artistName": "Aleksandra Jovanić",
+      "contractAddress": "0x99a9b7c1116f9ceeb1652de04d5969cce509b069",
+      "projectId": 467,
+      "maxInvocations": 20,
+      "aspectRatio": 1.41
+    },
+    {
+      "projectName": "Woman, Life, Freedom",
+      "artistName": "Armaghan Fatemi",
+      "contractAddress": "0x99a9b7c1116f9ceeb1652de04d5969cce509b069",
+      "projectId": 468,
+      "maxInvocations": 37,
+      "aspectRatio": 1.44
+    },
+    {
+      "projectName": "because unless until",
+      "artistName": "ixnayokay",
+      "contractAddress": "0x99a9b7c1116f9ceeb1652de04d5969cce509b069",
+      "projectId": 472,
+      "maxInvocations": 650,
+      "aspectRatio": 1.777777777
+    },
+    {
+      "projectName": "Fluiroso",
+      "artistName": "Sebastián Brocher (CryptoArte)",
+      "contractAddress": "0x99a9b7c1116f9ceeb1652de04d5969cce509b069",
+      "projectId": 473,
+      "maxInvocations": 106,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Life and Love and Nothing",
+      "artistName": "Nat Sarkissian",
+      "contractAddress": "0x99a9b7c1116f9ceeb1652de04d5969cce509b069",
+      "projectId": 476,
+      "maxInvocations": 200,
+      "aspectRatio": 1.33333333
+    },
+    {
+      "projectName": "siempre en mí, siempre en ti",
+      "artistName": "Marcelo Soria-Rodríguez",
+      "contractAddress": "0x99a9b7c1116f9ceeb1652de04d5969cce509b069",
+      "projectId": 477,
+      "maxInvocations": 200,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Bakhoor Assandal",
+      "artistName": "Melissa Wiederrecht",
+      "contractAddress": "0x99a9b7c1116f9ceeb1652de04d5969cce509b069",
+      "projectId": 479,
+      "maxInvocations": 200,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Axo",
+      "artistName": "jiwa",
+      "contractAddress": "0x99a9b7c1116f9ceeb1652de04d5969cce509b069",
+      "projectId": 480,
+      "maxInvocations": 400,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Cytographia",
+      "artistName": "Golan Levin",
+      "contractAddress": "0x99a9b7c1116f9ceeb1652de04d5969cce509b069",
+      "projectId": 487,
+      "maxInvocations": 418,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Twist",
+      "artistName": "Rafaël Rozendaal",
+      "contractAddress": "0x99a9b7c1116f9ceeb1652de04d5969cce509b069",
+      "projectId": 490,
+      "maxInvocations": 250,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Melancholic Magical Maiden",
+      "artistName": "Emi Kusano",
+      "contractAddress": "0x99a9b7c1116f9ceeb1652de04d5969cce509b069",
+      "projectId": 493,
+      "maxInvocations": 300,
+      "aspectRatio": 1.333333
+    },
+    {
+      "projectName": "Cryptoblots",
+      "artistName": "Daïm Aggott-Hönsch",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 3,
+      "maxInvocations": 1921,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Dynamic Slices",
+      "artistName": "pxlq",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 4,
+      "maxInvocations": 512,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Variant Plan",
+      "artistName": "Jeff Davis",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 5,
+      "maxInvocations": 200,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "View Card",
+      "artistName": "Jeff Davis",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 6,
+      "maxInvocations": 41,
+      "aspectRatio": 1.77777778
+    },
+    {
+      "projectName": "Elevated Deconstructions",
+      "artistName": "luxpris",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 7,
+      "maxInvocations": 200,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Singularity",
+      "artistName": "Hideki Tsukamoto",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 8,
+      "maxInvocations": 1024,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Ignition",
+      "artistName": "ge1doot",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 9,
+      "maxInvocations": 512,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "NimBuds",
+      "artistName": "Bryan Brinkman",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 10,
+      "maxInvocations": 400,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "HyperHash",
+      "artistName": "Beervangeer",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 11,
+      "maxInvocations": 369,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Unigrids",
+      "artistName": "Zeblocks",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 12,
+      "maxInvocations": 421,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Ringers",
+      "artistName": "Dmitri Cherniak",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 13,
+      "maxInvocations": 1000,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Cyber Cities",
+      "artistName": "pxlq",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 14,
+      "maxInvocations": 256,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Utopia",
+      "artistName": "ge1doot",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 15,
+      "maxInvocations": 256,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Color Study",
+      "artistName": "Jeff Davis",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 16,
+      "maxInvocations": 2000,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Spectron",
+      "artistName": "Simon De Mai",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 17,
+      "maxInvocations": 400,
+      "aspectRatio": 1.33
+    },
+    {
+      "projectName": "Gen 2",
+      "artistName": "DCA",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 18,
+      "maxInvocations": 256,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "R3sonance",
+      "artistName": "ge1doot",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 19,
+      "maxInvocations": 512,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Sentience",
+      "artistName": "pxlq",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 20,
+      "maxInvocations": 144,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "27-Bit Digital",
+      "artistName": "kai",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 21,
+      "maxInvocations": 1024,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "The Eternal Pump",
+      "artistName": "Dmitri Cherniak",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 22,
+      "maxInvocations": 50,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Pixel Glass",
+      "artistName": "kai",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 24,
+      "maxInvocations": 256,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "EnergySculpture",
+      "artistName": "Beervangeer",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 26,
+      "maxInvocations": 369,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Apparitions",
+      "artistName": "Aaron Penne",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 28,
+      "maxInvocations": 1500,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Hieroglyphs",
+      "artistName": "pxlq",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 30,
+      "maxInvocations": 1000,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Light Beams",
+      "artistName": "Jason Ting",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 32,
+      "maxInvocations": 150,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Ensō",
+      "artistName": "Matto",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 34,
+      "maxInvocations": 1000,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Gazettes",
+      "artistName": "Redlioneye Gazette",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 36,
+      "maxInvocations": 1024,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "♫ ByteBeats",
+      "artistName": "DADABOTS x KAI",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 38,
+      "maxInvocations": 512,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Algobots",
+      "artistName": "Stina Jones",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 40,
+      "maxInvocations": 500,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Void",
+      "artistName": "Alexis André",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 42,
+      "maxInvocations": 500,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "CryptoGodKing",
+      "artistName": "Steve Pikelny",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 44,
+      "maxInvocations": 180,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "70s Pop Series One",
+      "artistName": "Daniel Catt",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 46,
+      "maxInvocations": 256,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Gen 3",
+      "artistName": "DCA",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 48,
+      "maxInvocations": 1024,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "The Opera",
+      "artistName": "Luke Shannon",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 50,
+      "maxInvocations": 256,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Star Flower",
+      "artistName": "Ruben Alexander",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 52,
+      "maxInvocations": 1000,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "P:X",
+      "artistName": "mightymoose",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 54,
+      "maxInvocations": 384,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Aurora IV",
+      "artistName": "ge1doot",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 56,
+      "maxInvocations": 128,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Color Magic Planets",
+      "artistName": "Bård Ionson",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 58,
+      "maxInvocations": 256,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Event Horizon Sunset (Series C)",
+      "artistName": "Jake Brukhman",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 60,
+      "maxInvocations": 500,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Bubble Blobby",
+      "artistName": "Jason Ting",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 62,
+      "maxInvocations": 500,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "AlgoRhythms",
+      "artistName": "Han x Nicolas Daniel",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 64,
+      "maxInvocations": 1000,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Patchwork Saguaros",
+      "artistName": "Jake Rockland",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 66,
+      "maxInvocations": 72,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Messengers",
+      "artistName": "Alexis André",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 68,
+      "maxInvocations": 350,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Antennas",
+      "artistName": "gcrll",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 70,
+      "maxInvocations": 250,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Frammenti",
+      "artistName": "Stefano Contiero",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 72,
+      "maxInvocations": 555,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "The Blocks of Art",
+      "artistName": "Shvembldr",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 74,
+      "maxInvocations": 500,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "dino pals",
+      "artistName": "hideo",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 76,
+      "maxInvocations": 100,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Space Debris [m'aider]",
+      "artistName": "WhaleStreet x pxlq",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 79,
+      "maxInvocations": 93,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Space Debris [ravaged]",
+      "artistName": "WhaleStreet x pxlq",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 81,
+      "maxInvocations": 32,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Panelscape 🅰🅱",
+      "artistName": "Paolo Tonon",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 83,
+      "maxInvocations": 525,
+      "aspectRatio": 1.1
+    },
+    {
+      "projectName": "PrimiDance",
+      "artistName": "wuwa",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 84,
+      "maxInvocations": 256,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Stroming",
+      "artistName": "Bart Simons",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 86,
+      "maxInvocations": 256,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Orthogone",
+      "artistName": "Pandelune",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 88,
+      "maxInvocations": 777,
+      "aspectRatio": 4
+    },
+    {
+      "projectName": "Dreams",
+      "artistName": "Joshua Bagley",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 89,
+      "maxInvocations": 700,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "planets",
+      "artistName": "donnoh",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 91,
+      "maxInvocations": 512,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Sigils",
+      "artistName": "espina",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 93,
+      "maxInvocations": 133,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "CryptoVenetian",
+      "artistName": "Bright Moments",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 95,
+      "maxInvocations": 1000,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "[Dis]entanglement",
+      "artistName": "onlygenerated",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 97,
+      "maxInvocations": 730,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Spaghettification",
+      "artistName": "Owen Moore",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 99,
+      "maxInvocations": 1024,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Enchiridion",
+      "artistName": "Generative Artworks",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 101,
+      "maxInvocations": 1024,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Octo Garden",
+      "artistName": "Rich Lord",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 103,
+      "maxInvocations": 333,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Gizmobotz",
+      "artistName": "Mark Cotton",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 105,
+      "maxInvocations": 1000,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Low Tide",
+      "artistName": "Artem Verkhovskiy x Andy Shaw",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 107,
+      "maxInvocations": 373,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Lava Glow",
+      "artistName": "JEANVASCRIPT",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 110,
+      "maxInvocations": 500,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Alien Clock",
+      "artistName": "Shvembldr",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 112,
+      "maxInvocations": 362,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "glitch crystal monsters",
+      "artistName": "Alida Sun",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 114,
+      "maxInvocations": 1000,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Flowers",
+      "artistName": "RVig",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 116,
+      "maxInvocations": 6158,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "LeWitt Generator Generator",
+      "artistName": "Mitchell F. Chan",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 118,
+      "maxInvocations": 750,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Endless Nameless",
+      "artistName": "Rafaël Rozendaal",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 120,
+      "maxInvocations": 1000,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Nucleus",
+      "artistName": "Hjalmar Åström",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 123,
+      "maxInvocations": 512,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Calendart",
+      "artistName": "steen & n-e-o",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 125,
+      "maxInvocations": 365,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Labyrometry",
+      "artistName": "Eliya Stein",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 127,
+      "maxInvocations": 800,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Scribbled Boundaries",
+      "artistName": "William Tan",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 131,
+      "maxInvocations": 1024,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Organized Disruption",
+      "artistName": "Joshua Davis / PrayStation",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 133,
+      "maxInvocations": 1000,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Brushpops",
+      "artistName": "Matty Mariansky",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 135,
+      "maxInvocations": 1000,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Alien Insects",
+      "artistName": "Shvembldr",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 137,
+      "maxInvocations": 1000,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Geometry Runners",
+      "artistName": "Rich Lord",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 138,
+      "maxInvocations": 1000,
+      "aspectRatio": 1.77777
+    },
+    {
+      "projectName": "Good Vibrations",
+      "artistName": "Aluan Wang",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 140,
+      "maxInvocations": 1024,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Unknown Signals",
+      "artistName": "k0ch",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 142,
+      "maxInvocations": 1000,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "autoRAD",
+      "artistName": "sgt_slaughtermelon & Tartaria Archivist",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 144,
+      "maxInvocations": 1000,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Beatboxes",
+      "artistName": "Zeblocks",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 145,
+      "maxInvocations": 841,
+      "aspectRatio": 1.77
+    },
+    {
+      "projectName": "Trossets",
+      "artistName": "Anna Carreras",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 147,
+      "maxInvocations": 1000,
+      "aspectRatio": 1.7
+    },
+    {
+      "projectName": "Dot Matrix Gradient Study",
+      "artistName": "Jake Rockland",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 149,
+      "maxInvocations": 540,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "High Tide",
+      "artistName": "Artem Verkhovskiy x Andy Shaw",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 151,
+      "maxInvocations": 745,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Fake Internet Money",
+      "artistName": "Steve Pikelny",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 152,
+      "maxInvocations": 1000,
+      "aspectRatio": 1.75
+    },
+    {
+      "projectName": "Moments",
+      "artistName": "r4v3n",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 156,
+      "maxInvocations": 1024,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "a heart and a soul",
+      "artistName": "Roman Janajev",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 158,
+      "maxInvocations": 1024,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Seadragons",
+      "artistName": "Marcin Ignac",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 160,
+      "maxInvocations": 1000,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Phototaxis",
+      "artistName": "Casey REAS",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 164,
+      "maxInvocations": 1000,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Ouroboros",
+      "artistName": "Shane Rich | raregonzo",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 166,
+      "maxInvocations": 1024,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Bloom",
+      "artistName": "Blockchance",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 168,
+      "maxInvocations": 285,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Augmented Sequence",
+      "artistName": "toiminto",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 169,
+      "maxInvocations": 1024,
+      "aspectRatio": 1.77777778
+    },
+    {
+      "projectName": "Himinn",
+      "artistName": "Sarah Ridgley",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 171,
+      "maxInvocations": 536,
+      "aspectRatio": 1.77777778
+    },
+    {
+      "projectName": "Skulptuur",
+      "artistName": "Piter Pasma",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 173,
+      "maxInvocations": 1000,
+      "aspectRatio": 1.2
+    },
+    {
+      "projectName": "Letters to My Future Self",
+      "artistName": "Ryan Struhl",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 174,
+      "maxInvocations": 1000,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Space Birds",
+      "artistName": "Mark Cotton",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 177,
+      "maxInvocations": 48,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "8",
+      "artistName": "Bård Ionson",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 179,
+      "maxInvocations": 128,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "FOCUS",
+      "artistName": "Matto",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 181,
+      "maxInvocations": 567,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Quarantine",
+      "artistName": "Owen Moore",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 183,
+      "maxInvocations": 128,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Blockbob Rorschach",
+      "artistName": "eBoy",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 188,
+      "maxInvocations": 1024,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Mental pathways",
+      "artistName": "fabianospeziari x donnoh",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 190,
+      "maxInvocations": 128,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Murano Fantasy",
+      "artistName": "Pandelune",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 193,
+      "maxInvocations": 41,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Paramecircle",
+      "artistName": "Alexander Reben (artBoffin)",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 195,
+      "maxInvocations": 76,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Parade",
+      "artistName": "Loren Bednar",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 197,
+      "maxInvocations": 400,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Prismatic",
+      "artistName": "Eliya Stein",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 199,
+      "maxInvocations": 218,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "24 Heures",
+      "artistName": "Alexis André",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 201,
+      "maxInvocations": 137,
+      "aspectRatio": 1.77777777777777
+    },
+    {
+      "projectName": "Beauty of Skateboarding",
+      "artistName": "JEANVASCRIPT",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 202,
+      "maxInvocations": 360,
+      "aspectRatio": 1.8
+    },
+    {
+      "projectName": "Scoundrels",
+      "artistName": "Kristy Glas",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 203,
+      "maxInvocations": 2048,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Through the Window",
+      "artistName": "Reva",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 207,
+      "maxInvocations": 500,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Reflection",
+      "artistName": "Jeff Davis",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 208,
+      "maxInvocations": 100,
+      "aspectRatio": 1.777777777777778
+    },
+    {
+      "projectName": "Nebula",
+      "artistName": "RVig",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 210,
+      "maxInvocations": 154,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Dive",
+      "artistName": "Rafaël Rozendaal",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 212,
+      "maxInvocations": 333,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Gazers",
+      "artistName": "Matt Kane",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 215,
+      "maxInvocations": 1000,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Squares and Triangles",
+      "artistName": "Maksim Hapeyenka",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 218,
+      "maxInvocations": 80,
+      "aspectRatio": 1.77
+    },
+    {
+      "projectName": "Time Atlas 🌐",
+      "artistName": "Paolo Tonon",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 219,
+      "maxInvocations": 412,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Spiromorphs",
+      "artistName": "SAB",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 221,
+      "maxInvocations": 200,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Tropism",
+      "artistName": "Neel Shivdasani",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 224,
+      "maxInvocations": 500,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Kai-Gen",
+      "artistName": "Takeshi Murata, Christopher Rutledge, J. Krispy",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 227,
+      "maxInvocations": 2048,
+      "aspectRatio": 1.33333333
+    },
+    {
+      "projectName": "Attraction",
+      "artistName": "Jos Vromans",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 229,
+      "maxInvocations": 444,
+      "aspectRatio": 1.5
+    },
+    {
+      "projectName": "Glow",
+      "artistName": "Jason Ting",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 230,
+      "maxInvocations": 500,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Jiometory No Compute - ジオメトリ ハ ケイサンサレマセン",
+      "artistName": "Samsy",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 232,
+      "maxInvocations": 1024,
+      "aspectRatio": 1.777777777777
+    },
+    {
+      "projectName": "Chimera",
+      "artistName": "mpkoz",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 233,
+      "maxInvocations": 987,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Maps for grief",
+      "artistName": "Louis-André Labadie",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 235,
+      "maxInvocations": 500,
+      "aspectRatio": 1.41428571
+    },
+    {
+      "projectName": "Summoning Ritual",
+      "artistName": "PZS",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 236,
+      "maxInvocations": 110,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "AlphaModica",
+      "artistName": "Danooka",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 238,
+      "maxInvocations": 137,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Pizza 1o1",
+      "artistName": "KALA",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 240,
+      "maxInvocations": 200,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Two Mathematicians",
+      "artistName": "BY MA",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 242,
+      "maxInvocations": 300,
+      "aspectRatio": 1.3
+    },
+    {
+      "projectName": "Freeplan",
+      "artistName": "xnmtrc",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 245,
+      "maxInvocations": 128,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Heavenly Bodies",
+      "artistName": "Ento",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 247,
+      "maxInvocations": 120,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Facets",
+      "artistName": "conundrumer",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 249,
+      "maxInvocations": 267,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Undercover",
+      "artistName": "artplusbrad",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 251,
+      "maxInvocations": 91,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Fernweh",
+      "artistName": "oliveskin",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 254,
+      "maxInvocations": 121,
+      "aspectRatio": 2.073
+    },
+    {
+      "projectName": "Cosmodesias",
+      "artistName": "Santiago",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 258,
+      "maxInvocations": 256,
+      "aspectRatio": 1.6
+    },
+    {
+      "projectName": "Masonry",
+      "artistName": "Eric Davidson",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 259,
+      "maxInvocations": 200,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Haywire Café ",
+      "artistName": "Jess Hewitt",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 262,
+      "maxInvocations": 256,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Thereidoscope",
+      "artistName": "Daïm Aggott-Hönsch",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 264,
+      "maxInvocations": 630,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "PrimiEnd",
+      "artistName": "wuwa",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 268,
+      "maxInvocations": 256,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Time travel in a subconscious mind",
+      "artistName": "Jimmy Herdberg",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 271,
+      "maxInvocations": 256,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Isodream",
+      "artistName": "henrysdev & AMNDA",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 274,
+      "maxInvocations": 186,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Liquid Ruminations",
+      "artistName": "Eliya Stein",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 278,
+      "maxInvocations": 1024,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Window",
+      "artistName": "Jan Robert Leegte",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 280,
+      "maxInvocations": 404,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Ancient Courses of Fictional Rivers",
+      "artistName": "Robert Hodgin",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 284,
+      "maxInvocations": 1000,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Supermental",
+      "artistName": "Rosenlykke",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 285,
+      "maxInvocations": 400,
+      "aspectRatio": 1.778
+    },
+    {
+      "projectName": "Mazinaw",
+      "artistName": "Eric De Giuli",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 288,
+      "maxInvocations": 256,
+      "aspectRatio": 1.25
+    },
+    {
+      "projectName": "AlgoBeats",
+      "artistName": "Han x Nicolas Daniel",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 289,
+      "maxInvocations": 1000,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Corners",
+      "artistName": "Rafaël Rozendaal",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 292,
+      "maxInvocations": 64,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Invasion Percolation",
+      "artistName": "BarabásiLab",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 295,
+      "maxInvocations": 550,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Flux",
+      "artistName": "Owen Moore",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 296,
+      "maxInvocations": 500,
+      "aspectRatio": 1.5
+    },
+    {
+      "projectName": "Mind Maze",
+      "artistName": "Parse/Error",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 298,
+      "maxInvocations": 333,
+      "aspectRatio": 1.4
+    },
+    {
+      "projectName": "Assemblage",
+      "artistName": "SAB & K2xL",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 300,
+      "maxInvocations": 361,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Primordial",
+      "artistName": "Jacob Gold",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 302,
+      "maxInvocations": 333,
+      "aspectRatio": 3
+    },
+    {
+      "projectName": "Zupermat",
+      "artistName": "0xphiiil",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 305,
+      "maxInvocations": 200,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Colorspace",
+      "artistName": "Tabor Robak",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 309,
+      "maxInvocations": 600,
+      "aspectRatio": 1.3333
+    },
+    {
+      "projectName": "Faceless",
+      "artistName": "greatjones",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 311,
+      "maxInvocations": 250,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Rotor",
+      "artistName": "Sebastián Brocher (CryptoArte)",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 315,
+      "maxInvocations": 285,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "montreal friend scale",
+      "artistName": "amon tobin",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 320,
+      "maxInvocations": 500,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "GHOST IN THE CODE",
+      "artistName": "Kazuhiro Tanimoto",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 323,
+      "maxInvocations": 404,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Total Strangers",
+      "artistName": "Artem Verkhovskiy x Andy Shaw",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 326,
+      "maxInvocations": 555,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Sudfah",
+      "artistName": "Melissa Wiederrecht",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 328,
+      "maxInvocations": 401,
+      "aspectRatio": 1.4143
+    },
+    {
+      "projectName": "Squares",
+      "artistName": "Martin Grasser",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 330,
+      "maxInvocations": 196,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Alan Ki Aankhen",
+      "artistName": "Fahad Karim",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 333,
+      "maxInvocations": 500,
+      "aspectRatio": 1.5
+    },
+    {
+      "projectName": "Running Moon",
+      "artistName": "Licia He",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 334,
+      "maxInvocations": 500,
+      "aspectRatio": 1.40023337223
+    },
+    {
+      "projectName": "Scribblines",
+      "artistName": "Orpheusk",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 335,
+      "maxInvocations": 256,
+      "aspectRatio": 1.3
+    },
+    {
+      "projectName": "FAKE IT TILL YOU MAKE IT",
+      "artistName": "Maya Man",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 337,
+      "maxInvocations": 700,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Ieva",
+      "artistName": "Shvembldr",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 339,
+      "maxInvocations": 500,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Being Yourself While Fitting In",
+      "artistName": "LIA",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 342,
+      "maxInvocations": 56,
+      "aspectRatio": 1.777777777777778
+    },
+    {
+      "projectName": "Balletic",
+      "artistName": "Motus Art",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 343,
+      "maxInvocations": 200,
+      "aspectRatio": 1.77777778
+    },
+    {
+      "projectName": "80s Pop Variety Pack - for experts only 🕹",
+      "artistName": "Daniel Catt",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 346,
+      "maxInvocations": 366,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Departed",
+      "artistName": "Alexis André",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 350,
+      "maxInvocations": 350,
+      "aspectRatio": 1.77777777777777
+    },
+    {
+      "projectName": "The Inner World",
+      "artistName": "Dominikus",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 352,
+      "maxInvocations": 400,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Pointila",
+      "artistName": "Phaust",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 353,
+      "maxInvocations": 200,
+      "aspectRatio": 1.77778
+    },
+    {
+      "projectName": "Essenza",
+      "artistName": "Stefano Contiero",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 356,
+      "maxInvocations": 444,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Arcadia",
+      "artistName": "Zachariah Watson",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 358,
+      "maxInvocations": 256,
+      "aspectRatio": 1.5
+    },
+    {
+      "projectName": "Ode to Untitled",
+      "artistName": "artplusbrad",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 359,
+      "maxInvocations": 240,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Erratic",
+      "artistName": "Owen Moore",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 362,
+      "maxInvocations": 400,
+      "aspectRatio": 1.5
+    },
+    {
+      "projectName": "CENTURY 2052",
+      "artistName": "Casey REAS",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 369,
+      "maxInvocations": 50,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "JPEG",
+      "artistName": "Jan Robert Leegte",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 371,
+      "maxInvocations": 275,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "while true",
+      "artistName": "Lars Wander",
+      "contractAddress": "0xab0000000000aa06f89b268d604a9c1c41524ac6",
+      "projectId": 498,
+      "maxInvocations": 60,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "World Flag",
+      "artistName": "John Gerrard",
+      "contractAddress": "0xea698596b6009a622c3ed00dd5a8b5d1cae4fc36",
+      "projectId": 6,
+      "maxInvocations": 195,
+      "aspectRatio": 1
+    },
+    {
+      "projectName": "Schema",
+      "artistName": "DRIFT with Jeff Davis",
+      "contractAddress": "0xea698596b6009a622c3ed00dd5a8b5d1cae4fc36",
+      "projectId": 7,
+      "maxInvocations": 300,
+      "aspectRatio": 1.777777778
+    }
+  ]
+}
