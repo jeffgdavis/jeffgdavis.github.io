@@ -3929,27 +3929,11 @@
       "aspectRatio": 0.5625
     },
     {
-      "projectName": "Bokeh (lamps)",
-      "artistName": "mpkoz",
-      "contractAddress": "0xab0000000000aa06f89b268d604a9c1c41524ac6",
-      "projectId": 495,
-      "maxInvocations": 20,
-      "aspectRatio": 0.5625
-    },
-    {
       "projectName": "INK",
       "artistName": "Iskra Velitchkova",
       "contractAddress": "0xab0000000000aa06f89b268d604a9c1c41524ac6",
       "projectId": 497,
       "maxInvocations": 100,
-      "aspectRatio": 0.666
-    },
-    {
-      "projectName": "INK (fragrances)",
-      "artistName": "Iskra Velitchkova",
-      "contractAddress": "0xab0000000000aa06f89b268d604a9c1c41524ac6",
-      "projectId": 500,
-      "maxInvocations": 6,
       "aspectRatio": 0.666
     },
     {
@@ -3961,27 +3945,11 @@
       "aspectRatio": 1
     },
     {
-      "projectName": "while true (fabric)",
-      "artistName": "Lars Wander",
-      "contractAddress": "0xab0000000000aa06f89b268d604a9c1c41524ac6",
-      "projectId": 501,
-      "maxInvocations": 1,
-      "aspectRatio": 1
-    },
-    {
       "projectName": "Box Light Studies",
       "artistName": "Zach Lieberman",
       "contractAddress": "0xab0000000000aa06f89b268d604a9c1c41524ac6",
       "projectId": 499,
       "maxInvocations": 100,
-      "aspectRatio": 0.8
-    },
-    {
-      "projectName": "Box Light Studies (sculpture)",
-      "artistName": "Zach Lieberman",
-      "contractAddress": "0xab0000000000aa06f89b268d604a9c1c41524ac6",
-      "projectId": 502,
-      "maxInvocations": 1,
       "aspectRatio": 0.8
     },
     {
@@ -3993,12 +3961,12 @@
       "aspectRatio": 0.7333333
     },
     {
-      "projectName": "BUSIEST",
-      "artistName": "James Merrill",
-      "contractAddress": "0xab0000000000aa06f89b268d604a9c1c41524ac6",
-      "projectId": 503,
-      "maxInvocations": 5,
-      "aspectRatio": 2.5
+      "projectName": "Gas Wars",
+      "artistName": "Jack Butcher",
+      "contractAddress": "0xab00000000002ade39f58f9d8278a31574ffbe77",
+      "projectId": 505,
+      "maxInvocations": 500,
+      "aspectRatio": 0.8
     }
   ]
 }
