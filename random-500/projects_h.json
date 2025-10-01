@@ -1983,6 +1983,14 @@
       "projectId": 7,
       "maxInvocations": 300,
       "aspectRatio": 1.777777778
+    },
+    {
+      "projectName": "Woah La Coaster",
+      "artistName": "Blockwares",
+      "contractAddress": "0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270",
+      "projectId": 324,
+      "maxInvocations": 199,
+      "aspectRatio": 1
     }
   ]
 }
