@@ -1975,6 +1975,14 @@
       "projectId": 5,
       "maxInvocations": 250,
       "aspectRatio": 1
+    },
+    {
+      "projectName": "Quine",
+      "artistName": "Larva Labs",
+      "contractAddress": "0xab00000000002ade39f58f9d8278a31574ffbe77",
+      "projectId": 506,
+      "maxInvocations": 497,
+      "aspectRatio": 0.5625
     }
   ]
 }
