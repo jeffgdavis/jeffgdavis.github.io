@@ -274,7 +274,8 @@
             <div class="color-swatch" id="btn-swatch-p3"></div>
             p3
           </button>
-          <button class="full-width" onclick="generateOutlineSVG()">Outline</button>
+          <button onclick="generateOutlineSVG()">Outline</button>
+          <button id="toggleOutlineBtn" onclick="toggleOutline()">Show Grid</button>
         </div>
       </div>
     </div>
@@ -294,6 +295,7 @@
     let p1, p2, p3, p4;
     let p1Name, p2Name, p3Name, p4Name;
     let previewCanvas;
+    let showOutline = false;
     
     // ============ MATERIALS ============
     const materials = [
@@ -426,8 +428,10 @@
       const imgWidth = parseFloat(document.getElementById('imgWidth').value) || 17;
       const imgHeight = parseFloat(document.getElementById('imgHeight').value) || 17;
       
-      // Scale preview to fit
-      const scale = Math.min(PREVIEW_SIZE / imgWidth, PREVIEW_SIZE / imgHeight);
+      // Scale preview to fit (with margin for outline strokes)
+      const margin = 4;
+      const availableSize = PREVIEW_SIZE - margin * 2;
+      const scale = Math.min(availableSize / imgWidth, availableSize / imgHeight);
       const w = imgWidth * scale;
       const h = imgHeight * scale;
       const offsetX = (PREVIEW_SIZE - w) / 2;
@@ -449,7 +453,30 @@
           rect(offsetX + x * w / horizSubs, offsetY + y * h / vertSubs, w / horizSubs + 1, h / vertSubs + 1);
         }
       }
+      
+      // Draw grid outline (0.5mm equivalent, graphite color)
+      if (showOutline) {
+        const strokeW = scale * 0.5; // 0.5mm scaled to preview
+        stroke(100);
+        strokeWeight(strokeW);
+        noFill();
+        for (let col = 0; col <= horizSubs; col++) {
+          const x = offsetX + col * w / horizSubs;
+          line(x, offsetY, x, offsetY + h);
+        }
+        for (let row = 0; row <= vertSubs; row++) {
+          const y = offsetY + row * h / vertSubs;
+          line(offsetX, y, offsetX + w, y);
+        }
+      }
+      
       colorMode(HSB);
+    }
+    
+    function toggleOutline() {
+      showOutline = !showOutline;
+      document.getElementById('toggleOutlineBtn').textContent = showOutline ? 'Hide Grid' : 'Show Grid';
+      redraw();
     }
     
     function updateColorDisplay() {
@@ -759,6 +786,7 @@
       points = dedupePoints(points);
       
       if (points.length >= 2) {
+        points.sort((a, b) => a.y - b.y || a.x - b.x);
         return { x1: points[0].x, y1: points[0].y, x2: points[1].x, y2: points[1].y };
       }
       return null;
@@ -811,6 +839,7 @@
       points = dedupePoints(points);
       
       if (points.length >= 2) {
+        points.sort((a, b) => a.y - b.y || a.x - b.x);
         return { x1: points[0].x, y1: points[0].y, x2: points[1].x, y2: points[1].y };
       }
       return null;
