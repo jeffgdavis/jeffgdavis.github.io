@@ -25,6 +25,7 @@
     }
     .preview-column {
       flex-shrink: 0;
+      max-width: 630px;
     }
     .sidebar {
       width: 420px;
@@ -104,6 +105,10 @@
       background: #333;
       color: white;
     }
+    button.active {
+      background: #333;
+      color: white;
+    }
     button.full-width {
       grid-column: 1 / -1;
     }
@@ -178,7 +183,17 @@
   <div class="center-wrapper">
     <div class="main-layout">
       <div class="preview-column">
+        <h3 style="margin: 0 0 16px 0; font-size: 14px; font-weight: 400; text-transform: uppercase; letter-spacing: 1.5px; color: #333;">Preview</h3>
         <div id="preview-container"></div>
+        <div id="svg-preview-container" style="display: none;"></div>
+        <div id="preview-buttons" class="buttons" style="grid-template-columns: repeat(6, 1fr); margin-top: 12px;">
+          <button class="active" onclick="showColorPreview()">Blend</button>
+          <button onclick="previewSVGForCorner('p1')">p1</button>
+          <button onclick="previewSVGForCorner('p2')">p2</button>
+          <button onclick="previewSVGForCorner('p3')">p3</button>
+          <button onclick="previewSVGForCorner('p4')">p4</button>
+          <button onclick="previewOutlineSVG()">Outline</button>
+        </div>
       </div>
     
     <div class="sidebar">
@@ -275,9 +290,10 @@
             p3
           </button>
           <button onclick="generateOutlineSVG()">Outline</button>
-          <button id="toggleOutlineBtn" onclick="toggleOutline()">Show Grid</button>
+          <button onclick="downloadPreview()">Preview</button>
         </div>
       </div>
+
     </div>
   </div>
   </div>
@@ -288,7 +304,7 @@
       const linesPerUnit = parseInt(document.getElementById('linesPerUnit').value) || 32;
       return 25 / linesPerUnit;
     }
-    const PREVIEW_SIZE = 725;
+    const PREVIEW_SIZE = 630;
     
     // ============ GLOBAL STATE ============
     let tokenData, R;
@@ -428,10 +444,18 @@
       const imgWidth = parseFloat(document.getElementById('imgWidth').value) || 17;
       const imgHeight = parseFloat(document.getElementById('imgHeight').value) || 17;
       
-      // Scale preview to fit (with margin for outline strokes)
-      const margin = 4;
-      const availableSize = PREVIEW_SIZE - margin * 2;
-      const scale = Math.min(availableSize / imgWidth, availableSize / imgHeight);
+      // Scale preview to fit (add precise margin for outline stroke when shown)
+      let scale, margin;
+      if (showOutline) {
+        // Solve: margin = (scale * 0.5) / 2, scale = (PREVIEW_SIZE - 2*margin) / maxDim
+        // => margin = 0.25 * PREVIEW_SIZE / (maxDim + 0.5) where maxDim is the limiting dimension
+        const maxDim = Math.max(imgWidth, imgHeight);
+        margin = 0.25 * PREVIEW_SIZE / (maxDim + 0.5);
+        scale = (PREVIEW_SIZE - 2 * margin) / maxDim;
+      } else {
+        margin = 0;
+        scale = Math.min(PREVIEW_SIZE / imgWidth, PREVIEW_SIZE / imgHeight);
+      }
       const w = imgWidth * scale;
       const h = imgHeight * scale;
       const offsetX = (PREVIEW_SIZE - w) / 2;
@@ -473,10 +497,65 @@
       colorMode(HSB);
     }
     
-    function toggleOutline() {
-      showOutline = !showOutline;
-      document.getElementById('toggleOutlineBtn').textContent = showOutline ? 'Hide Grid' : 'Show Grid';
+    function setActivePreviewButton(index) {
+      const buttons = document.getElementById('preview-buttons').querySelectorAll('button');
+      buttons.forEach((btn, i) => btn.classList.toggle('active', i === index));
+    }
+
+    function showColorPreview() {
+      showOutline = false;
+      setActivePreviewButton(0);
+      document.getElementById('preview-container').style.display = 'block';
+      document.getElementById('svg-preview-container').style.display = 'none';
       redraw();
+    }
+
+    function previewOutlineToggle() {
+      showOutline = !showOutline;
+      setActivePreviewButton(showOutline ? 5 : 0);
+      document.getElementById('preview-container').style.display = 'block';
+      document.getElementById('svg-preview-container').style.display = 'none';
+      redraw();
+    }
+
+    function showSVGPreview(svgContent) {
+      const p5Container = document.getElementById('preview-container');
+      const svgContainer = document.getElementById('svg-preview-container');
+      
+      p5Container.style.display = 'none';
+      svgContainer.style.display = 'block';
+      svgContainer.innerHTML = svgContent;
+      
+      // Scale SVG to match preview size
+      const svg = svgContainer.querySelector('svg');
+      if (svg) {
+        svg.removeAttribute('width');
+        svg.removeAttribute('height');
+        svg.style.width = PREVIEW_SIZE + 'px';
+        svg.style.height = PREVIEW_SIZE + 'px';
+        svg.style.background = 'white';
+      }
+    }
+
+    function previewSVGForCorner(corner) {
+      const buttonIndex = { p1: 1, p2: 2, p3: 3, p4: 4 }[corner];
+      setActivePreviewButton(buttonIndex);
+      const imgWidth = parseFloat(document.getElementById('imgWidth').value);
+      const imgHeight = parseFloat(document.getElementById('imgHeight').value);
+      const horizSubs = parseInt(document.getElementById('horizSubs').value);
+      const vertSubs = parseInt(document.getElementById('vertSubs').value);
+      const cellWidth = imgWidth / horizSubs;
+      const cellHeight = imgHeight / vertSubs;
+      const sharpenThreshold = parseFloat(document.getElementById('sharpenThreshold').value) || 1250;
+      const lineWidth = getLineWidth();
+
+      const cells = generateCellData(imgWidth, imgHeight, horizSubs, vertSubs, cellWidth, cellHeight, corner, lineWidth);
+      const batches = packBatches(cells, sharpenThreshold);
+      showSVGPreview(buildBatchedSVG(imgWidth, imgHeight, batches));
+    }
+
+    function previewOutlineSVG() {
+      previewOutlineToggle();
     }
     
     function updateColorDisplay() {
@@ -901,6 +980,10 @@ ${lineElements}
 ${batchGroups}
   </g>
 </svg>`;
+    }
+
+    function downloadPreview() {
+      saveCanvas(previewCanvas, 'preview', 'png');
     }
 
     function downloadSVG(filename, content) {
