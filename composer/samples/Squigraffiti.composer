@@ -1,4 +1,5 @@
 {
+  "schemaVersion": 2,
   "project": {
     "name": "Squigraffiti",
     "aspectRatio": "4:3",
@@ -43,203 +44,258 @@
       {
         "index": 8,
         "weight": 1
-      },
-      {
-        "index": 9,
-        "weight": 1
-      },
-      {
-        "index": 10,
-        "weight": 1
-      },
-      {
-        "index": 11,
-        "weight": 1
       }
     ]
   },
-  "layers": [
-    {
-      "id": "b33ace75-de5b-48f1-a033-592a75603f2a",
-      "name": "Rainbow",
-      "assets": [
-        {
-          "id": "0b1f6be1-cd1d-4faf-b1b0-61cdd262f8a1",
-          "name": "lil-squig_black",
-          "svgContent": "<svg xmlns=\"http://www.w3.org/2000/svg\" xml:space=\"preserve\" viewBox=\"0 0 144 144\"><switch><foreignObject width=\"1\" height=\"1\" x=\"0\" y=\"0\" requiredExtensions=\"http://ns.adobe.com/AdobeIllustrator/10.0/\"/><g><path d=\"M51.9 135.7c-2.7 0-5.3-1.3-7-3.6-1.9-2.6-3.4-6.3-4.9-12.2-1.2-4.4-2.2-9.5-3.2-14.4-.1-.3-.1-.5-.2-.8-.2.3-.3.5-.5.7-1.4 2.1-3 3.5-4.9 4.3-2.4 1.1-5 1.2-7.4.2-3-1.2-6.3-3.8-10.6-8.4-2.7-2.9-4.7-5.5-4.8-5.6-2.8-3.6-2.2-8.8 1.4-11.6s8.8-2.2 11.6 1.4c0 0 1.6 2.1 3.7 4.3l.2.2c.3-.8.6-1.7.9-2.5.9-2.4 1.7-4.6 2.5-6.4.6-1.3 1.2-2.3 1.8-3.2 2.1-3 4.6-4 6.4-4.2 1.8-.3 3.7 0 5.3.8 1.2.6 2.3 1.5 3.1 2.6 1.8 2.4 3.3 5.8 4.7 11.4.3 1.2.6 2.5 1 3.9.4-2.3.7-4.7 1.1-7.1 2.2-16.3 5-34.5 7.9-48.4 1.5-7.4 2.9-13 4.3-17 .9-2.6 1.8-4.7 2.8-6.3.8-1.3 1.7-2.3 2.7-3.2 1.8-1.5 4-2.3 6.3-2.3 2.7 0 6.6 1 9.9 5.9 1.4 2 2.7 4.7 4 8.1 4 10.5 7.7 27.4 11.2 43.7 1.5 7 3 13.7 4.3 19.4.2.7.3 1.4.5 2.1.5-.9.9-1.9 1.4-2.8 3.4-7 7-14.2 10.4-19.3 2.7-4 5-6.4 7.6-7.7 4.1-2.1 9-.5 11.1 3.6 2 3.9.6 8.7-3.2 10.9-.2.2-.8.9-1.8 2.4-2.8 4.2-6.3 11.2-9.3 17.4-2.3 4.6-4.4 8.9-6.3 12.3-1.2 2.1-2.2 3.6-3.2 4.8q-1.2 1.5-2.4 2.4c-2.2 1.7-4.4 2.1-5.9 2.1-2.3 0-4.5-.8-6.3-2.4-.9-.8-1.7-1.8-2.5-3-.9-1.4-1.7-3.2-2.5-5.7-1.1-3.2-2.3-7.4-3.7-13.2-1.4-5.9-2.9-12.7-4.4-19.8-2.5-11.5-5.2-24.3-8-33.8-.3 1.4-.7 3-1 4.6-2.8 13.5-5.5 31.5-8 47.5-1.7 10.9-3.2 21.1-4.6 28.7-.8 4.2-1.4 7.3-2 9.6-.4 1.5-.8 2.7-1.2 3.7-.4.9-.8 1.6-1.3 2.3-1.6 2.2-3.6 3.1-5 3.4-.7.1-1.3.2-2 .2\"/></g></switch></svg>",
-          "weight": 1,
-          "sizeBytes": 1464
-        }
-      ],
-      "countMin": 1,
-      "countMax": 50,
-      "posXMin": 0,
-      "posXMax": 1,
-      "posYMin": 0,
-      "posYMax": 1,
-      "scaleMin": 0.05,
-      "scaleMax": 1.35,
-      "scaleLinked": true,
-      "scaleWMin": 0.48,
-      "scaleWMax": 0.48,
-      "scaleHMin": 0.5,
-      "scaleHMax": 0.5,
-      "rotationMin": 0,
-      "rotationMax": 360,
-      "flipHProb": 0,
-      "flipVProb": 0,
-      "opacity": 1,
-      "opacityMin": 1,
-      "opacityMax": 1,
-      "visibility": 75,
-      "fillMode": "weighted",
-      "fillIndex": 0,
-      "fillWeighted": [
-        {
-          "index": 0,
-          "weight": 1
-        },
-        {
-          "index": 1,
-          "weight": 1
-        },
-        {
-          "index": 2,
-          "weight": 1
-        },
-        {
-          "index": 3,
-          "weight": 1
-        },
-        {
-          "index": 4,
-          "weight": 1
-        },
-        {
-          "index": 5,
-          "weight": 1
-        },
-        {
-          "index": 6,
-          "weight": 1
-        },
-        {
-          "index": 7,
-          "weight": 1
-        },
-        {
-          "index": 8,
-          "weight": 1
-        },
-        {
-          "index": 9,
-          "weight": 1
-        },
-        {
-          "index": 10,
-          "weight": 1
-        },
-        {
-          "index": 11,
-          "weight": 1
-        },
-        {
-          "index": 12,
-          "weight": 1
-        },
-        {
-          "index": 13,
-          "weight": 1
-        }
-      ],
-      "strokeMode": "none",
-      "strokeIndex": 0,
-      "strokeWeighted": [
-        {
-          "index": 0,
-          "weight": 1
-        },
-        {
-          "index": 1,
-          "weight": 1
-        },
-        {
-          "index": 2,
-          "weight": 1
-        },
-        {
-          "index": 3,
-          "weight": 1
-        }
-      ]
-    },
-    {
-      "id": "87f1926d-afd7-4053-807c-271d9b33e388",
-      "name": "Mono",
-      "assets": [
-        {
-          "id": "0b1f6be1-cd1d-4faf-b1b0-61cdd262f8a1",
-          "name": "lil-squig_black",
-          "svgContent": "<svg xmlns=\"http://www.w3.org/2000/svg\" xml:space=\"preserve\" viewBox=\"0 0 144 144\"><switch><foreignObject width=\"1\" height=\"1\" x=\"0\" y=\"0\" requiredExtensions=\"http://ns.adobe.com/AdobeIllustrator/10.0/\"/><g><path d=\"M51.9 135.7c-2.7 0-5.3-1.3-7-3.6-1.9-2.6-3.4-6.3-4.9-12.2-1.2-4.4-2.2-9.5-3.2-14.4-.1-.3-.1-.5-.2-.8-.2.3-.3.5-.5.7-1.4 2.1-3 3.5-4.9 4.3-2.4 1.1-5 1.2-7.4.2-3-1.2-6.3-3.8-10.6-8.4-2.7-2.9-4.7-5.5-4.8-5.6-2.8-3.6-2.2-8.8 1.4-11.6s8.8-2.2 11.6 1.4c0 0 1.6 2.1 3.7 4.3l.2.2c.3-.8.6-1.7.9-2.5.9-2.4 1.7-4.6 2.5-6.4.6-1.3 1.2-2.3 1.8-3.2 2.1-3 4.6-4 6.4-4.2 1.8-.3 3.7 0 5.3.8 1.2.6 2.3 1.5 3.1 2.6 1.8 2.4 3.3 5.8 4.7 11.4.3 1.2.6 2.5 1 3.9.4-2.3.7-4.7 1.1-7.1 2.2-16.3 5-34.5 7.9-48.4 1.5-7.4 2.9-13 4.3-17 .9-2.6 1.8-4.7 2.8-6.3.8-1.3 1.7-2.3 2.7-3.2 1.8-1.5 4-2.3 6.3-2.3 2.7 0 6.6 1 9.9 5.9 1.4 2 2.7 4.7 4 8.1 4 10.5 7.7 27.4 11.2 43.7 1.5 7 3 13.7 4.3 19.4.2.7.3 1.4.5 2.1.5-.9.9-1.9 1.4-2.8 3.4-7 7-14.2 10.4-19.3 2.7-4 5-6.4 7.6-7.7 4.1-2.1 9-.5 11.1 3.6 2 3.9.6 8.7-3.2 10.9-.2.2-.8.9-1.8 2.4-2.8 4.2-6.3 11.2-9.3 17.4-2.3 4.6-4.4 8.9-6.3 12.3-1.2 2.1-2.2 3.6-3.2 4.8q-1.2 1.5-2.4 2.4c-2.2 1.7-4.4 2.1-5.9 2.1-2.3 0-4.5-.8-6.3-2.4-.9-.8-1.7-1.8-2.5-3-.9-1.4-1.7-3.2-2.5-5.7-1.1-3.2-2.3-7.4-3.7-13.2-1.4-5.9-2.9-12.7-4.4-19.8-2.5-11.5-5.2-24.3-8-33.8-.3 1.4-.7 3-1 4.6-2.8 13.5-5.5 31.5-8 47.5-1.7 10.9-3.2 21.1-4.6 28.7-.8 4.2-1.4 7.3-2 9.6-.4 1.5-.8 2.7-1.2 3.7-.4.9-.8 1.6-1.3 2.3-1.6 2.2-3.6 3.1-5 3.4-.7.1-1.3.2-2 .2\"/></g></switch></svg>",
-          "weight": 1,
-          "sizeBytes": 1464
-        }
-      ],
-      "countMin": 1,
-      "countMax": 75,
-      "posXMin": 0,
-      "posXMax": 1,
-      "posYMin": 0,
-      "posYMax": 1,
-      "scaleMin": 0.05,
-      "scaleMax": 0.6,
-      "scaleLinked": true,
-      "scaleWMin": 0.48,
-      "scaleWMax": 0.48,
-      "scaleHMin": 0.5,
-      "scaleHMax": 0.5,
-      "rotationMin": 0,
-      "rotationMax": 360,
-      "flipHProb": 0,
-      "flipVProb": 0,
-      "opacity": 1,
-      "opacityMin": 1,
-      "opacityMax": 1,
-      "visibility": 100,
-      "fillMode": "weighted",
-      "fillIndex": 0,
-      "fillWeighted": [
-        {
-          "index": 12,
-          "weight": 1
-        },
-        {
-          "index": 13,
-          "weight": 1
-        }
-      ],
-      "strokeMode": "none",
-      "strokeIndex": 0,
-      "strokeWeighted": [
-        {
-          "index": 0,
-          "weight": 1
-        },
-        {
-          "index": 1,
-          "weight": 1
-        },
-        {
-          "index": 2,
-          "weight": 1
-        },
-        {
-          "index": 3,
-          "weight": 1
-        }
-      ]
-    }
-  ],
+  "tree": {
+    "id": "3b5a7392-2b3a-4abc-aee8-16db8e7aa6cf",
+    "type": "group",
+    "kind": "group",
+    "name": "Root",
+    "mode": "independent",
+    "probability": 100,
+    "weight": 1,
+    "children": [
+      {
+        "id": "6f0c7455-ea47-423c-adc3-8959561255a6",
+        "type": "group",
+        "kind": "group",
+        "name": "Graffiti Types",
+        "mode": "pick-one",
+        "probability": 100,
+        "weight": 1,
+        "children": [
+          {
+            "id": "b33ace75-de5b-48f1-a033-592a75603f2a",
+            "type": "group",
+            "kind": "layer",
+            "name": "Rainbow",
+            "mode": "pick-one",
+            "probability": 75,
+            "weight": 3,
+            "children": [
+              {
+                "type": "asset",
+                "id": "0b1f6be1-cd1d-4faf-b1b0-61cdd262f8a1",
+                "name": "lil-squig_black",
+                "svgContent": "<svg xmlns=\"http://www.w3.org/2000/svg\" xml:space=\"preserve\" viewBox=\"0 0 144 144\"><switch><foreignObject width=\"1\" height=\"1\" x=\"0\" y=\"0\" requiredExtensions=\"http://ns.adobe.com/AdobeIllustrator/10.0/\"/><g><path d=\"M51.9 135.7c-2.7 0-5.3-1.3-7-3.6-1.9-2.6-3.4-6.3-4.9-12.2-1.2-4.4-2.2-9.5-3.2-14.4-.1-.3-.1-.5-.2-.8-.2.3-.3.5-.5.7-1.4 2.1-3 3.5-4.9 4.3-2.4 1.1-5 1.2-7.4.2-3-1.2-6.3-3.8-10.6-8.4-2.7-2.9-4.7-5.5-4.8-5.6-2.8-3.6-2.2-8.8 1.4-11.6s8.8-2.2 11.6 1.4c0 0 1.6 2.1 3.7 4.3l.2.2c.3-.8.6-1.7.9-2.5.9-2.4 1.7-4.6 2.5-6.4.6-1.3 1.2-2.3 1.8-3.2 2.1-3 4.6-4 6.4-4.2 1.8-.3 3.7 0 5.3.8 1.2.6 2.3 1.5 3.1 2.6 1.8 2.4 3.3 5.8 4.7 11.4.3 1.2.6 2.5 1 3.9.4-2.3.7-4.7 1.1-7.1 2.2-16.3 5-34.5 7.9-48.4 1.5-7.4 2.9-13 4.3-17 .9-2.6 1.8-4.7 2.8-6.3.8-1.3 1.7-2.3 2.7-3.2 1.8-1.5 4-2.3 6.3-2.3 2.7 0 6.6 1 9.9 5.9 1.4 2 2.7 4.7 4 8.1 4 10.5 7.7 27.4 11.2 43.7 1.5 7 3 13.7 4.3 19.4.2.7.3 1.4.5 2.1.5-.9.9-1.9 1.4-2.8 3.4-7 7-14.2 10.4-19.3 2.7-4 5-6.4 7.6-7.7 4.1-2.1 9-.5 11.1 3.6 2 3.9.6 8.7-3.2 10.9-.2.2-.8.9-1.8 2.4-2.8 4.2-6.3 11.2-9.3 17.4-2.3 4.6-4.4 8.9-6.3 12.3-1.2 2.1-2.2 3.6-3.2 4.8q-1.2 1.5-2.4 2.4c-2.2 1.7-4.4 2.1-5.9 2.1-2.3 0-4.5-.8-6.3-2.4-.9-.8-1.7-1.8-2.5-3-.9-1.4-1.7-3.2-2.5-5.7-1.1-3.2-2.3-7.4-3.7-13.2-1.4-5.9-2.9-12.7-4.4-19.8-2.5-11.5-5.2-24.3-8-33.8-.3 1.4-.7 3-1 4.6-2.8 13.5-5.5 31.5-8 47.5-1.7 10.9-3.2 21.1-4.6 28.7-.8 4.2-1.4 7.3-2 9.6-.4 1.5-.8 2.7-1.2 3.7-.4.9-.8 1.6-1.3 2.3-1.6 2.2-3.6 3.1-5 3.4-.7.1-1.3.2-2 .2\"/></g></switch></svg>",
+                "weight": 1,
+                "sizeBytes": 1464
+              }
+            ],
+            "countMin": 1,
+            "countMax": 50,
+            "posXMin": 0,
+            "posXMax": 1,
+            "posYMin": 0,
+            "posYMax": 1,
+            "scaleLinked": true,
+            "scaleMin": 0.05,
+            "scaleMax": 1.35,
+            "scaleWMin": 0.48,
+            "scaleWMax": 0.48,
+            "scaleHMin": 0.5,
+            "scaleHMax": 0.5,
+            "rotationMin": 0,
+            "rotationMax": 360,
+            "flipHProb": 0,
+            "flipVProb": 0,
+            "opacityMin": 1,
+            "opacityMax": 1,
+            "fillMode": "weighted",
+            "fillIndex": 0,
+            "fillWeighted": [
+              {
+                "index": 0,
+                "weight": 1
+              },
+              {
+                "index": 1,
+                "weight": 1
+              },
+              {
+                "index": 2,
+                "weight": 1
+              },
+              {
+                "index": 3,
+                "weight": 1
+              },
+              {
+                "index": 4,
+                "weight": 1
+              },
+              {
+                "index": 5,
+                "weight": 1
+              },
+              {
+                "index": 6,
+                "weight": 1
+              },
+              {
+                "index": 7,
+                "weight": 1
+              },
+              {
+                "index": 8,
+                "weight": 1
+              },
+              {
+                "index": 9,
+                "weight": 1
+              },
+              {
+                "index": 10,
+                "weight": 1
+              }
+            ],
+            "strokeMode": "none",
+            "strokeIndex": 0,
+            "strokeWeighted": [
+              {
+                "index": 0,
+                "weight": 1
+              },
+              {
+                "index": 1,
+                "weight": 1
+              },
+              {
+                "index": 2,
+                "weight": 1
+              },
+              {
+                "index": 3,
+                "weight": 1
+              }
+            ]
+          },
+          {
+            "id": "87f1926d-afd7-4053-807c-271d9b33e388",
+            "type": "group",
+            "kind": "layer",
+            "name": "Mono",
+            "mode": "pick-one",
+            "probability": 100,
+            "weight": 1,
+            "children": [
+              {
+                "type": "asset",
+                "id": "02d854d9-bc29-4416-b1af-eb198a110794",
+                "name": "lil-squig_black",
+                "svgContent": "<svg xmlns=\"http://www.w3.org/2000/svg\" xml:space=\"preserve\" viewBox=\"0 0 144 144\"><switch><foreignObject width=\"1\" height=\"1\" x=\"0\" y=\"0\" requiredExtensions=\"http://ns.adobe.com/AdobeIllustrator/10.0/\"/><g><path d=\"M51.9 135.7c-2.7 0-5.3-1.3-7-3.6-1.9-2.6-3.4-6.3-4.9-12.2-1.2-4.4-2.2-9.5-3.2-14.4-.1-.3-.1-.5-.2-.8-.2.3-.3.5-.5.7-1.4 2.1-3 3.5-4.9 4.3-2.4 1.1-5 1.2-7.4.2-3-1.2-6.3-3.8-10.6-8.4-2.7-2.9-4.7-5.5-4.8-5.6-2.8-3.6-2.2-8.8 1.4-11.6s8.8-2.2 11.6 1.4c0 0 1.6 2.1 3.7 4.3l.2.2c.3-.8.6-1.7.9-2.5.9-2.4 1.7-4.6 2.5-6.4.6-1.3 1.2-2.3 1.8-3.2 2.1-3 4.6-4 6.4-4.2 1.8-.3 3.7 0 5.3.8 1.2.6 2.3 1.5 3.1 2.6 1.8 2.4 3.3 5.8 4.7 11.4.3 1.2.6 2.5 1 3.9.4-2.3.7-4.7 1.1-7.1 2.2-16.3 5-34.5 7.9-48.4 1.5-7.4 2.9-13 4.3-17 .9-2.6 1.8-4.7 2.8-6.3.8-1.3 1.7-2.3 2.7-3.2 1.8-1.5 4-2.3 6.3-2.3 2.7 0 6.6 1 9.9 5.9 1.4 2 2.7 4.7 4 8.1 4 10.5 7.7 27.4 11.2 43.7 1.5 7 3 13.7 4.3 19.4.2.7.3 1.4.5 2.1.5-.9.9-1.9 1.4-2.8 3.4-7 7-14.2 10.4-19.3 2.7-4 5-6.4 7.6-7.7 4.1-2.1 9-.5 11.1 3.6 2 3.9.6 8.7-3.2 10.9-.2.2-.8.9-1.8 2.4-2.8 4.2-6.3 11.2-9.3 17.4-2.3 4.6-4.4 8.9-6.3 12.3-1.2 2.1-2.2 3.6-3.2 4.8q-1.2 1.5-2.4 2.4c-2.2 1.7-4.4 2.1-5.9 2.1-2.3 0-4.5-.8-6.3-2.4-.9-.8-1.7-1.8-2.5-3-.9-1.4-1.7-3.2-2.5-5.7-1.1-3.2-2.3-7.4-3.7-13.2-1.4-5.9-2.9-12.7-4.4-19.8-2.5-11.5-5.2-24.3-8-33.8-.3 1.4-.7 3-1 4.6-2.8 13.5-5.5 31.5-8 47.5-1.7 10.9-3.2 21.1-4.6 28.7-.8 4.2-1.4 7.3-2 9.6-.4 1.5-.8 2.7-1.2 3.7-.4.9-.8 1.6-1.3 2.3-1.6 2.2-3.6 3.1-5 3.4-.7.1-1.3.2-2 .2\"/></g></switch></svg>",
+                "weight": 1,
+                "sizeBytes": 1464
+              }
+            ],
+            "countMin": 1,
+            "countMax": 75,
+            "posXMin": 0,
+            "posXMax": 1,
+            "posYMin": 0,
+            "posYMax": 1,
+            "scaleLinked": true,
+            "scaleMin": 0.05,
+            "scaleMax": 0.6,
+            "scaleWMin": 0.48,
+            "scaleWMax": 0.48,
+            "scaleHMin": 0.5,
+            "scaleHMax": 0.5,
+            "rotationMin": 0,
+            "rotationMax": 360,
+            "flipHProb": 0,
+            "flipVProb": 0,
+            "opacityMin": 1,
+            "opacityMax": 1,
+            "fillMode": "weighted",
+            "fillIndex": 0,
+            "fillWeighted": [
+              {
+                "index": 9,
+                "weight": 1
+              },
+              {
+                "index": 10,
+                "weight": 1
+              }
+            ],
+            "strokeMode": "none",
+            "strokeIndex": 0,
+            "strokeWeighted": [
+              {
+                "index": 0,
+                "weight": 1
+              },
+              {
+                "index": 1,
+                "weight": 1
+              },
+              {
+                "index": 2,
+                "weight": 1
+              },
+              {
+                "index": 3,
+                "weight": 1
+              }
+            ]
+          }
+        ],
+        "countMin": 1,
+        "countMax": 1,
+        "posXMin": 0.5,
+        "posXMax": 0.5,
+        "posYMin": 0.5,
+        "posYMax": 0.5,
+        "scaleLinked": true,
+        "scaleMin": 1,
+        "scaleMax": 1,
+        "scaleWMin": 1,
+        "scaleWMax": 1,
+        "scaleHMin": 1,
+        "scaleHMax": 1,
+        "rotationMin": 0,
+        "rotationMax": 0,
+        "flipHProb": 0,
+        "flipVProb": 0,
+        "opacityMin": 1,
+        "opacityMax": 1,
+        "fillMode": "none",
+        "fillIndex": 0,
+        "fillWeighted": [],
+        "strokeMode": "none",
+        "strokeIndex": 0,
+        "strokeWeighted": []
+      }
+    ],
+    "countMin": 1,
+    "countMax": 1,
+    "posXMin": 0.5,
+    "posXMax": 0.5,
+    "posYMin": 0.5,
+    "posYMax": 0.5,
+    "scaleLinked": true,
+    "scaleMin": 1,
+    "scaleMax": 1,
+    "scaleWMin": 1,
+    "scaleWMax": 1,
+    "scaleHMin": 1,
+    "scaleHMax": 1,
+    "rotationMin": 0,
+    "rotationMax": 0,
+    "flipHProb": 0,
+    "flipVProb": 0,
+    "opacityMin": 1,
+    "opacityMax": 1,
+    "fillMode": "none",
+    "fillIndex": 0,
+    "fillWeighted": [],
+    "strokeMode": "none",
+    "strokeIndex": 0,
+    "strokeWeighted": [],
+    "isRoot": true
+  },
   "palettes": [
     {
       "id": "02f4a487-c7e1-480c-9755-83597347d461",
@@ -248,27 +304,17 @@
         "#ff0000",
         "#ff8000",
         "#ffff00",
-        "#80ff00",
         "#00FF00",
-        "#00ff80",
         "#00fdff",
         "#0080ff",
         "#0000FF",
         "#8000ff",
         "#ff00ff",
-        "#ff0080",
         "#ffffff",
         "#000000"
       ],
       "weight": 1
     }
   ],
-  "rules": [
-    {
-      "id": "cce42ab6-8150-4196-ba02-2386c5e01835",
-      "ifLayerId": "b33ace75-de5b-48f1-a033-592a75603f2a",
-      "thenLayerId": "87f1926d-afd7-4053-807c-271d9b33e388",
-      "enabled": true
-    }
-  ]
+  "rules": []
 }
