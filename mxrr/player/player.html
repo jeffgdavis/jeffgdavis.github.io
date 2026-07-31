@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>MXRR song</title>
+<!--
+  Self-contained MXRR song player — this file is uploaded to Arweave ONCE and reused as
+  the `animation_url` for every minted token (see scripts/upload-player.mjs). A token's
+  `?m=<manifest-url>` query param points it at that specific song's stems + arrangement.
+
+  No build step, no imports: this has to run standalone from a static file host, so the
+  small amount of scheduling logic below is a deliberate, intentional duplicate of
+  src/lib/audio/schedule.ts (secondsPerBar / dbToGain / musicalLoopBars / scheduleArrangement).
+  If you change the looping or mixing behavior there, mirror the change here too.
+-->
+<style>
+  :root {
+    --background: #0b0710;
+    --surface: #150f20;
+    --surface-2: #1c1430;
+    --border: #2c2140;
+    --foreground: #f1edf9;
+    --muted: #a394bd;
+    --accent: #e879f9;
+    --accent-2: #60a5fa;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    height: 100%;
+    background: var(--background);
+    color: var(--foreground);
+    font-family: -apple-system, "Segoe UI", system-ui, sans-serif;
+  }
+  body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: clamp(12px, 4vw, 32px);
+  }
+  .card {
+    width: 100%;
+    max-width: 420px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .title {
+    font-size: clamp(16px, 3.4vw, 22px);
+    font-weight: 700;
+    line-height: 1.25;
+    overflow-wrap: anywhere;
+  }
+  .description {
+    font-size: 12.5px;
+    color: var(--muted);
+    line-height: 1.4;
+    max-height: 3.6em;
+    overflow: hidden;
+  }
+  .tracks {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .track-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 9px 3px 6px;
+    border-radius: 999px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .track-chip .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    flex: none;
+  }
+  .transport {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 12px;
+  }
+  #playBtn {
+    flex: none;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    border: none;
+    background: var(--accent);
+    color: #1a0b1f;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: filter 0.15s ease, transform 0.1s ease;
+  }
+  #playBtn:disabled {
+    background: var(--border);
+    color: var(--muted);
+    cursor: not-allowed;
+  }
+  #playBtn:not(:disabled):hover { filter: brightness(1.1); }
+  #playBtn:not(:disabled):active { transform: scale(0.94); }
+  .transport-main {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .progress-track {
+    height: 5px;
+    border-radius: 999px;
+    background: var(--surface-2);
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--accent-2), var(--accent));
+    border-radius: 999px;
+  }
+  .transport-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--muted);
+  }
+  #loopBtn {
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    border-radius: 999px;
+    padding: 3px 9px;
+    font-size: 11px;
+    cursor: pointer;
+  }
+  #loopBtn.active {
+    border-color: var(--accent-2);
+    color: var(--accent-2);
+  }
+  .status {
+    font-size: 11px;
+    color: var(--muted);
+    min-height: 1.4em;
+  }
+  .status.error { color: #fb7185; }
+  .footer {
+    font-size: 10px;
+    color: var(--border);
+    text-align: right;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="title" id="title">Loading…</div>
+    <div class="description" id="description"></div>
+    <div class="tracks" id="tracks"></div>
+
+    <div class="transport">
+      <button id="playBtn" disabled aria-label="Play">▶</button>
+      <div class="transport-main">
+        <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+        <div class="transport-meta">
+          <span id="bpmLabel"></span>
+          <button id="loopBtn" class="active" type="button">loop: on</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="status" id="status">Loading song manifest…</div>
+    <div class="footer">mxrr · minted with abx</div>
+  </div>
+
+<script>
+(function () {
+  "use strict";
+
+  var titleEl = document.getElementById("title");
+  var descEl = document.getElementById("description");
+  var tracksEl = document.getElementById("tracks");
+  var statusEl = document.getElementById("status");
+  var playBtn = document.getElementById("playBtn");
+  var loopBtn = document.getElementById("loopBtn");
+  var progressFill = document.getElementById("progressFill");
+  var bpmLabel = document.getElementById("bpmLabel");
+
+  function setStatus(msg, isError) {
+    statusEl.textContent = msg;
+    statusEl.className = "status" + (isError ? " error" : "");
+  }
+
+  function sleep(ms) {
+    return new Promise(function (resolve) { setTimeout(resolve, ms); });
+  }
+
+  /**
+   * Arweave/Turbo uploads settle over minutes before a gateway serves them, so a token
+   * opened right after mint may 404 for a while. Retry with backoff instead of failing
+   * hard — the content becomes permanently available once it propagates, so reloading
+   * the page later always works too.
+   */
+  // A fresh upload took ~10 minutes to become fetchable when timed from the upload itself, so
+  // ramp up quickly for the already-propagated case and then poll every 30s out to ~15
+  // minutes. Giving up sooner just shows a failure for content that is about to appear.
+  var RETRY_DELAYS_MS = (function () {
+    var delays = [0, 2000, 5000, 10000, 20000];
+    while (delays.length < 35) delays.push(30000);
+    return delays;
+  })();
+
+  function fetchWithRetry(url, isJson, onRetry) {
+    var delays = RETRY_DELAYS_MS;
+    var attempt = 0;
+
+    function tryOnce() {
+      attempt++;
+      return fetch(url, { cache: "no-store" }).then(function (res) {
+        if (!res.ok) throw new Error("HTTP " + res.status);
+        return isJson ? res.json() : res.arrayBuffer();
+      });
+    }
+
+    function attemptLoop(i) {
+      return tryOnce().catch(function (err) {
+        if (i >= delays.length - 1) throw err;
+        if (onRetry) onRetry(attempt, delays.length, err);
+        return sleep(delays[i + 1]).then(function () { return attemptLoop(i + 1); });
+      });
+    }
+
+    return attemptLoop(0);
+  }
+
+  /**
+   * Mirrors encodeInlineManifest() in src/lib/player/inline.ts — change the two together.
+   * The whole song rides in the animation_url as a positional array, so a token can play
+   * without waiting on a freshly uploaded manifest to propagate:
+   *
+   *   [1, title, description, bpm, bars, tracks, clips, stems]
+   */
+  function decodeInlineManifest(param) {
+    var base64 = param.replace(/-/g, "+").replace(/_/g, "/");
+    while (base64.length % 4 !== 0) base64 += "=";
+
+    var binary = atob(base64);
+    var bytes = new Uint8Array(binary.length);
+    for (var i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+    var compact = JSON.parse(new TextDecoder().decode(bytes));
+
+    if (!Array.isArray(compact) || compact[0] !== 1) {
+      throw new Error("Unsupported inline song format (v" + (compact && compact[0]) + ")");
+    }
+
+    var tracks = (compact[5] || []).map(function (t, index) {
+      return { id: "t" + index, name: t[0], color: t[1], gainDb: t[2], muted: !!t[3], solo: !!t[4] };
+    });
+    var stems = (compact[7] || []).map(function (s, index) {
+      return { id: "s" + index, name: s[0], url: s[1] };
+    });
+    var clips = (compact[6] || []).map(function (c, index) {
+      return {
+        id: "c" + index,
+        stemId: "s" + c[0],
+        trackId: "t" + c[1],
+        startBar: c[2],
+        lengthBars: c[3],
+      };
+    });
+
+    return {
+      version: 1,
+      title: compact[1],
+      description: compact[2],
+      bpm: compact[3],
+      bars: compact[4],
+      tracks: tracks,
+      clips: clips,
+      stems: stems,
+    };
+  }
+
+  // --- scheduling — intentionally mirrors src/lib/audio/schedule.ts, see file header ---
+
+  function secondsPerBar(bpm) { return (60 / bpm) * 4; }
+  function dbToGain(db) { return Math.pow(10, db / 20); }
+
+  function musicalLoopBars(bufferDurationSec, bpm) {
+    var raw = bufferDurationSec / secondsPerBar(bpm);
+    var snapped = Math.max(0.25, Math.round(raw * 4) / 4);
+    return Math.abs(raw - snapped) / snapped < 0.05 ? snapped : raw;
+  }
+
+  function scheduleArrangement(ctx, destination, manifest, buffers, contextTime) {
+    var spb = secondsPerBar(manifest.bpm);
+    var anySolo = manifest.tracks.some(function (t) { return t.solo; });
+    var sources = [];
+    var trackGainNodes = new Map();
+
+    manifest.tracks.forEach(function (track) {
+      var eligible = anySolo ? track.solo : !track.muted;
+      if (!eligible) return;
+      var gainNode = ctx.createGain();
+      gainNode.gain.value = dbToGain(track.gainDb);
+      gainNode.connect(destination);
+      trackGainNodes.set(track.id, gainNode);
+    });
+
+    manifest.clips.forEach(function (clip) {
+      var gainNode = trackGainNodes.get(clip.trackId);
+      if (!gainNode) return;
+      var buffer = buffers.get(clip.stemId);
+      if (!buffer) return;
+
+      var clipStartSec = clip.startBar * spb;
+      var clipLenSec = clip.lengthBars * spb;
+      if (clipLenSec <= 0) return;
+
+      var source = ctx.createBufferSource();
+      source.buffer = buffer;
+      if (clipLenSec > buffer.duration + 0.001) {
+        var loopBars = musicalLoopBars(buffer.duration, manifest.bpm);
+        source.loop = true;
+        source.loopStart = 0;
+        source.loopEnd = Math.min(loopBars * spb, buffer.duration);
+      }
+      source.connect(gainNode);
+      source.start(contextTime + clipStartSec, 0, clipLenSec);
+      sources.push(source);
+    });
+
+    return sources;
+  }
+
+  function arrangementDurationSeconds(manifest) {
+    return manifest.bars * secondsPerBar(manifest.bpm);
+  }
+
+  // --- transport ---
+
+  var audioCtx = null;
+  var manifest = null;
+  var buffers = new Map();
+  var sources = [];
+  var playing = false;
+  var loopEnabled = true;
+  var startContextTime = 0;
+  var rafId = null;
+
+  function setPlayheadFraction(frac) {
+    progressFill.style.width = Math.max(0, Math.min(1, frac)) * 100 + "%";
+  }
+
+  function updatePlayButton() {
+    playBtn.textContent = playing ? "❙❙" : "▶";
+    playBtn.setAttribute("aria-label", playing ? "Pause" : "Play");
+  }
+
+  function stop() {
+    sources.forEach(function (s) {
+      try { s.stop(); } catch (e) { /* already stopped */ }
+      s.disconnect();
+    });
+    sources = [];
+    playing = false;
+    if (rafId !== null) { cancelAnimationFrame(rafId); rafId = null; }
+    setPlayheadFraction(0);
+    updatePlayButton();
+  }
+
+  function play() {
+    stop();
+    if (audioCtx.state === "suspended") audioCtx.resume();
+
+    var durationSec = arrangementDurationSeconds(manifest);
+    if (durationSec <= 0) return;
+
+    startContextTime = audioCtx.currentTime + 0.05;
+    sources = scheduleArrangement(audioCtx, audioCtx.destination, manifest, buffers, startContextTime);
+    playing = true;
+    updatePlayButton();
+
+    function tick() {
+      if (!playing) return;
+      var elapsed = audioCtx.currentTime - startContextTime;
+      if (elapsed >= durationSec) {
+        if (loopEnabled) { play(); } else { stop(); }
+        return;
+      }
+      setPlayheadFraction(elapsed / durationSec);
+      rafId = requestAnimationFrame(tick);
+    }
+    rafId = requestAnimationFrame(tick);
+  }
+
+  playBtn.addEventListener("click", function () {
+    if (playing) { stop(); } else { play(); }
+  });
+
+  loopBtn.addEventListener("click", function () {
+    loopEnabled = !loopEnabled;
+    loopBtn.classList.toggle("active", loopEnabled);
+    loopBtn.textContent = "loop: " + (loopEnabled ? "on" : "off");
+  });
+
+  function renderTracks(tracks) {
+    tracksEl.innerHTML = "";
+    tracks.forEach(function (t) {
+      var chip = document.createElement("span");
+      chip.className = "track-chip";
+      var dot = document.createElement("span");
+      dot.className = "dot";
+      dot.style.background = t.color || "#a394bd";
+      chip.appendChild(dot);
+      chip.appendChild(document.createTextNode(t.name));
+      tracksEl.appendChild(chip);
+    });
+  }
+
+  function showError(msg) {
+    titleEl.textContent = "MXRR song";
+    setStatus(msg, true);
+  }
+
+  /**
+   * A song arrives either inline (`?d=`, the default — nothing to fetch) or as an uploaded
+   * manifest (`?m=`, the fallback for arrangements too large for a URL, and the form used by
+   * tokens minted before inlining existed).
+   */
+  function loadManifest() {
+    var params = new URLSearchParams(location.search);
+    var inline = params.get("d");
+    if (inline) {
+      return Promise.resolve().then(function () { return decodeInlineManifest(inline); });
+    }
+
+    var manifestUrl = params.get("m");
+    if (!manifestUrl) {
+      return Promise.reject(new Error("No song specified (missing ?d= or ?m= parameter)."));
+    }
+
+    setStatus("Loading song manifest…");
+    return fetchWithRetry(manifestUrl, true, function (attempt, tries) {
+      setStatus(
+        "Waiting for the song data to propagate — this can take ~10 minutes after minting. " +
+          "(attempt " + attempt + "/" + tries + ")"
+      );
+    });
+  }
+
+  function boot() {
+    loadManifest()
+      .then(function (loadedManifest) {
+        manifest = loadedManifest;
+        document.title = manifest.title ? manifest.title + " — MXRR" : "MXRR song";
+        titleEl.textContent = manifest.title || "Untitled";
+        descEl.textContent = manifest.description || "";
+        descEl.style.display = manifest.description ? "" : "none";
+        bpmLabel.textContent = manifest.bpm ? manifest.bpm + " BPM" : "";
+        renderTracks(manifest.tracks || []);
+
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        var stems = manifest.stems || [];
+        var loaded = 0;
+        var failed = [];
+        setStatus("Loading stems… (0/" + stems.length + ")");
+
+        return Promise.all(
+          stems.map(function (stem) {
+            return fetchWithRetry(stem.url, false, function (attempt, tries) {
+              // The stem is stored permanently either way — a retry here means the gateway isn't
+              // serving it yet, so don't imply the upload is still in progress or at risk.
+              setStatus(
+                '"' + stem.name + '" isn\u2019t being served yet — retrying (' + attempt + "/" + tries + "). " +
+                  "It\u2019s stored permanently; reloading later will work."
+              );
+            })
+              .then(function (arrayBuffer) { return audioCtx.decodeAudioData(arrayBuffer); })
+              .then(function (buffer) { buffers.set(stem.id, buffer); })
+              .catch(function () { failed.push(stem.name); })
+              .finally(function () {
+                loaded++;
+                setStatus("Loading stems… (" + loaded + "/" + stems.length + ")");
+              });
+          })
+        ).then(function () {
+          if (buffers.size === 0) {
+            showError("This song's stems could not be loaded.");
+            return;
+          }
+          setStatus(
+            failed.length
+              ? 'Ready — "' + failed.join('", "') + '" didn\u2019t load and will be skipped.'
+              : "Ready"
+          );
+          playBtn.disabled = false;
+        });
+      })
+      .catch(function (err) {
+        showError("Could not load this song: " + (err && err.message ? err.message : err));
+      });
+  }
+
+  boot();
+})();
+</script>
+</body>
+</html>
