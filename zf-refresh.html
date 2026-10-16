@@ -1,0 +1,58 @@
+<!doctype html>
+<!--
+  Auto-refresh wrapper for live generative artworks.
+  Usage:  refresh.html?every=300&bg=000000&src=<URL-encoded generator URL>
+    every  seconds between reloads (default 300, minimum 30)
+    bg     background hex without # (default 000000)
+    src    the page to show, e.g. https%3A%2F%2Fgenerator.artblocks.io%2F1%2F0x...%2F23000023
+  Each reload builds a fresh copy of the artwork behind the current one and
+  crossfades to it once it has loaded, so the screen never flashes white.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Artwork</title>
+<style>
+  html, body { margin: 0; height: 100%; overflow: hidden; background: #000; cursor: none; }
+  iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0;
+           opacity: 0; transition: opacity 1.5s ease; background: transparent; }
+  iframe.on { opacity: 1; }
+</style>
+</head>
+<body>
+<script>
+(function () {
+  var q = new URLSearchParams(location.search);
+  var src = q.get('src');
+  var every = Math.max(30, parseInt(q.get('every') || '300', 10)) * 1000;
+  var bg = (q.get('bg') || '000000').replace(/[^0-9a-fA-F]/g, '');
+  document.body.style.background = '#' + bg;
+  if (!src || !/^https:\/\//.test(src)) {
+    document.body.innerHTML = '<p style="color:#888;font:14px sans-serif;padding:2em">Missing ?src=https://…</p>';
+    return;
+  }
+  var current = null;
+  function load() {
+    var f = document.createElement('iframe');
+    f.setAttribute('allow', 'autoplay; fullscreen');
+    f.setAttribute('scrolling', 'no');
+    var shown = false;
+    function show() {
+      if (shown) return; shown = true;
+      f.className = 'on';
+      var old = current; current = f;
+      if (old) setTimeout(function () { old.remove(); }, 1800);
+    }
+    // give the artwork a moment to draw its first frame before fading in
+    f.onload = function () { setTimeout(show, 1500); };
+    setTimeout(show, 20000); // fallback if onload never fires
+    f.src = src;
+    document.body.appendChild(f);
+  }
+  load();
+  setInterval(load, every);
+})();
+</script>
+</body>
+</html>
