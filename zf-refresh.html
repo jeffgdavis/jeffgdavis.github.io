@@ -1,14 +1,15 @@
 <!doctype html>
 <!--
   Auto-refresh wrapper for live generative artworks.
-  Usage:  refresh.html?every=300&bg=000000&src=<URL-encoded generator URL>
-    every  seconds between reloads (default 300, minimum 30)
-    bg     background hex without # (default 000000)
-    fade   crossfade length in seconds (default 0.5, 0 = hard cut)
-    wait   seconds to hold after the new copy loads before fading (default 0)
-    src    the page to show, e.g. https%3A%2F%2Fgenerator.artblocks.io%2F1%2F0x...%2F23000023
-  Each reload builds a fresh copy of the artwork behind the current one and
-  crossfades to it once it has loaded, so the screen never flashes white.
+  Usage:  zf-refresh.html?every=300&fade=1&src=<URL-encoded generator URL>
+    every   seconds between refreshes (default 300, minimum 30)
+    fade    seconds to fade the artwork out to black before each refresh (default 1)
+    fadein  seconds to fade the fresh copy in once it loads (default 0 = appears
+            immediately, so the redraw is seen from its very first frame)
+    bg      background hex without # (default 000000)
+    src     the page to show, e.g. https%3A%2F%2Fgenerator.artblocks.io%2F1%2F0x...%2F168000023
+  Cycle: artwork plays -> fades to black -> old copy is discarded -> fresh copy
+  loads behind the black and is revealed as soon as it has loaded.
 -->
 <html lang="en">
 <head>
@@ -19,44 +20,55 @@
   html, body { margin: 0; height: 100%; overflow: hidden; background: #000; cursor: none; }
   iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0;
            opacity: 0; background: transparent; }
-  iframe.on { opacity: 1; }
 </style>
 </head>
 <body>
 <script>
 (function () {
   var q = new URLSearchParams(location.search);
+  var num = function (k, d) { var v = parseFloat(q.get(k)); return isFinite(v) && v >= 0 ? v : d; };
   var src = q.get('src');
-  var every = Math.max(30, parseInt(q.get('every') || '300', 10)) * 1000;
+  var every = Math.max(30, num('every', 300)) * 1000;
+  var fade = num('fade', 1);
+  var fadein = num('fadein', 0);
   var bg = (q.get('bg') || '000000').replace(/[^0-9a-fA-F]/g, '');
-  var fade = Math.max(0, parseFloat(q.get('fade') || '0.5')) || 0;
-  var wait = Math.max(0, parseFloat(q.get('wait') || '0')) || 0;
   document.body.style.background = '#' + bg;
   if (!src || !/^https:\/\//.test(src)) {
     document.body.innerHTML = '<p style="color:#888;font:14px sans-serif;padding:2em">Missing ?src=https://…</p>';
     return;
   }
+
   var current = null;
+
+  // Load a fresh copy, hidden until it has loaded, then reveal it.
   function load() {
     var f = document.createElement('iframe');
     f.setAttribute('allow', 'autoplay; fullscreen');
     f.setAttribute('scrolling', 'no');
-    f.style.transition = fade ? 'opacity ' + fade + 's ease' : 'none';
     var shown = false;
     function show() {
       if (shown) return; shown = true;
-      f.className = 'on';
-      var old = current; current = f;
-      if (old) setTimeout(function () { old.remove(); }, fade * 1000 + 300);
+      f.style.transition = fadein ? 'opacity ' + fadein + 's ease' : 'none';
+      f.style.opacity = '1';
     }
-    // give the artwork a moment to draw its first frame before fading in
-    f.onload = function () { setTimeout(show, wait * 1000); };
+    f.onload = show;
     setTimeout(show, 20000); // fallback if onload never fires
     f.src = src;
     document.body.appendChild(f);
+    current = f;
   }
+
+  // Fade the current copy to black, discard it, then load a fresh one.
+  function refresh() {
+    var old = current;
+    if (!old) { load(); return; }
+    old.style.transition = fade ? 'opacity ' + fade + 's ease' : 'none';
+    old.style.opacity = '0';
+    setTimeout(function () { old.remove(); load(); }, fade * 1000 + 100);
+  }
+
   load();
-  setInterval(load, every);
+  setInterval(refresh, every);
 })();
 </script>
 </body>
