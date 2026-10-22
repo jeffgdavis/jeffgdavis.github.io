@@ -1,15 +1,20 @@
 <!doctype html>
 <!--
   Auto-refresh wrapper for live generative artworks.
-  Usage:  zf-refresh.html?every=300&fade=1&src=<URL-encoded generator URL>
-    every   seconds between refreshes (default 300, minimum 30)
-    fade    seconds to fade the artwork out to black before each refresh (default 1)
-    fadein  seconds to fade the fresh copy in once it loads (default 0 = appears
+  Usage:  zf-refresh.html?every=300&fade=2&fadein=1&src=<URL-encoded generator URL>
+    every   seconds between timed refreshes (default 300, minimum 30; 0 = no timer)
+    onshow  1 = start the artwork fresh every time the player brings it back on
+            screen (for works inside a rotating collection)
+    fade    seconds to fade the artwork out to black before a timed refresh (default 1.5)
+    fadein  seconds to fade the fresh copy in once it loads (default 0.5; 0 = appears
             immediately, so the redraw is seen from its very first frame)
     bg      background hex without # (default 000000)
+    debug   1 = small status readout in the corner (for testing only)
     src     the page to show, e.g. https%3A%2F%2Fgenerator.artblocks.io%2F1%2F0x...%2F168000023
-  Cycle: artwork plays -> fades to black -> old copy is discarded -> fresh copy
+  Timed cycle: artwork plays -> fades to black -> old copy is discarded -> fresh copy
   loads behind the black and is revealed as soon as it has loaded.
+  onshow: when the player hides this page the artwork is dropped (black); when the
+  page is shown again a fresh copy loads and fades in.
 -->
 <html lang="en">
 <head>
@@ -20,17 +25,25 @@
   html, body { margin: 0; height: 100%; overflow: hidden; background: #000; cursor: none; }
   iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0;
            opacity: 0; background: transparent; }
+  #probe { position: fixed; left: 50%; top: 50%; width: 2px; height: 2px; z-index: 9;
+           pointer-events: none; }
+  #dbg { position: fixed; left: 8px; bottom: 8px; z-index: 10; font: 12px/1.3 monospace;
+         color: #0f0; background: rgba(0,0,0,.6); padding: 4px 6px; white-space: pre; }
 </style>
 </head>
 <body>
+<div id="probe"></div>
 <script>
 (function () {
   var q = new URLSearchParams(location.search);
   var num = function (k, d) { var v = parseFloat(q.get(k)); return isFinite(v) && v >= 0 ? v : d; };
   var src = q.get('src');
-  var every = Math.max(30, num('every', 300)) * 1000;
-  var fade = num('fade', 1);
-  var fadein = num('fadein', 0);
+  var everyS = num('every', 300);
+  var every = everyS === 0 ? 0 : Math.max(30, everyS) * 1000;
+  var onshow = q.get('onshow') === '1';
+  var fade = num('fade', 1.5);
+  var fadein = num('fadein', 0.5);
+  var debug = q.get('debug') === '1';
   var bg = (q.get('bg') || '000000').replace(/[^0-9a-fA-F]/g, '');
   document.body.style.background = '#' + bg;
   if (!src || !/^https:\/\//.test(src)) {
@@ -38,16 +51,16 @@
     return;
   }
 
-  var current = null;
+  var current = null, loads = 0, hides = 0, lastGap = 0, shown = null, how = '';
 
   // Load a fresh copy, hidden until it has loaded, then reveal it.
   function load() {
     var f = document.createElement('iframe');
     f.setAttribute('allow', 'autoplay; fullscreen');
     f.setAttribute('scrolling', 'no');
-    var shown = false;
+    var done = false;
     function show() {
-      if (shown) return; shown = true;
+      if (done) return; done = true;
       f.style.transition = fadein ? 'opacity ' + fadein + 's ease' : 'none';
       f.style.opacity = '1';
     }
@@ -55,20 +68,75 @@
     setTimeout(show, 20000); // fallback if onload never fires
     f.src = src;
     document.body.appendChild(f);
-    current = f;
+    current = f; loads++; status();
   }
+  function drop() { if (current) { current.remove(); current = null; } status(); }
 
-  // Fade the current copy to black, discard it, then load a fresh one.
+  // Timed refresh: fade the current copy to black, discard it, then load a fresh one.
   function refresh() {
     var old = current;
     if (!old) { load(); return; }
     old.style.transition = fade ? 'opacity ' + fade + 's ease' : 'none';
     old.style.opacity = '0';
-    setTimeout(function () { old.remove(); load(); }, fade * 1000 + 100);
+    setTimeout(function () { if (current === old) { old.remove(); current = null; load(); } }, fade * 1000 + 100);
+  }
+
+  // ---- onshow: notice when the player hides us and when it brings us back ----
+  var hideTimer = null;
+  function setShown(v, why) {
+    if (v === shown) return;
+    var first = shown === null;
+    shown = v; how = why; status();
+    if (!onshow || first) return;
+    if (!v) {                       // hidden: drop the artwork once the player's fade-out is over
+      hides++;
+      clearTimeout(hideTimer);
+      hideTimer = setTimeout(function () { if (shown === false) drop(); }, 2500);
+    } else {                        // back on screen: start fresh
+      clearTimeout(hideTimer);
+      drop(); load();
+    }
+  }
+  if (onshow) {
+    // 1. Visibility of this page inside the player (display:none / off-screen / opacity),
+    //    via IntersectionObserver (v2 adds opacity and occlusion where supported).
+    if ('IntersectionObserver' in window) {
+      var opts = { threshold: [0, 0.5] };
+      try { opts.trackVisibility = true; opts.delay = 100; } catch (e) {}
+      var io;
+      try { io = new IntersectionObserver(cb, opts); } catch (e) { io = new IntersectionObserver(cb, { threshold: [0, 0.5] }); }
+      function cb(entries) {
+        var e = entries[entries.length - 1];
+        var vis = e.isIntersecting && e.intersectionRatio > 0.4 && (e.isVisible === undefined || e.isVisible);
+        setShown(vis, e.isVisible === undefined ? 'io' : 'io2');
+      }
+      io.observe(document.getElementById('probe'));
+    }
+    // 2. Frame-gap check: hidden frames stop painting, so a long gap means we were hidden.
+    var last = performance.now();
+    (function tick(t) {
+      var gap = t - last; last = t;
+      if (gap > 3000) {
+        lastGap = Math.round(gap);
+        if (shown !== false) { setShown(false, 'gap'); setShown(true, 'gap'); }
+      }
+      requestAnimationFrame(tick);
+    })(last);
+    document.addEventListener('visibilitychange', function () {
+      setShown(document.visibilityState === 'visible', 'page');
+    });
+  }
+
+  var dbg = null;
+  function status() {
+    if (!debug) return;
+    if (!dbg) { dbg = document.createElement('div'); dbg.id = 'dbg'; document.body.appendChild(dbg); }
+    dbg.textContent = 'shown=' + shown + ' (' + how + ')  loads=' + loads + '  hides=' + hides +
+      '  gap=' + lastGap + 'ms  onshow=' + onshow + '  every=' + (every / 1000) + 's';
   }
 
   load();
-  setInterval(refresh, every);
+  if (every) setInterval(refresh, every);
 })();
 </script>
 </body>
