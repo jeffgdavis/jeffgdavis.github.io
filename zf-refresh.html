@@ -68,7 +68,7 @@
     setTimeout(show, 20000); // fallback if onload never fires
     f.src = src;
     document.body.appendChild(f);
-    current = f; loads++; status();
+    current = f; loads++; lastLoad = performance.now(); status();
   }
   function drop() { if (current) { current.remove(); current = null; } status(); }
 
@@ -82,28 +82,33 @@
   }
 
   // ---- onshow: notice when the player hides us and when it brings us back ----
-  var hideTimer = null;
-  function setShown(v, why) {
+  // A hide only counts once it has lasted HIDE_MS (ignores overlays, flickers and
+  // stalls); a counted hide drops the artwork, and the next show loads it fresh.
+  var HIDE_MS = 5000, GAP_MS = 20000, COOLDOWN_MS = 20000;
+  var hideTimer = null, away = false, lastLoad = 0, why = '';
+  function setShown(v, src) {
     if (v === shown) return;
-    var first = shown === null;
-    shown = v; how = why; status();
-    if (!onshow || first) return;
-    if (!v) {                       // hidden: drop the artwork once the player's fade-out is over
-      hides++;
+    shown = v; how = src; status();
+    if (!onshow) return;
+    if (!v) {
       clearTimeout(hideTimer);
-      hideTimer = setTimeout(function () { if (shown === false) drop(); }, 2500);
-    } else {                        // back on screen: start fresh
+      hideTimer = setTimeout(function () {
+        if (shown === false && !away) { away = true; hides++; why = 'hidden ' + (HIDE_MS / 1000) + 's+ (' + how + ')'; drop(); }
+      }, HIDE_MS);
+    } else {
       clearTimeout(hideTimer);
-      drop(); load();
+      if (away) { away = false; fresh('back on screen (' + src + ')'); }
     }
+  }
+  function fresh(reason) {
+    if (performance.now() - lastLoad < COOLDOWN_MS && current) return;   // never reload twice in quick succession
+    why = reason; drop(); load();
   }
   if (onshow) {
     // 1. Visibility of this page inside the player (display:none / off-screen / opacity),
     //    via IntersectionObserver (v2 adds opacity and occlusion where supported).
     if ('IntersectionObserver' in window) {
-      var opts = { threshold: [0, 0.5] };
-      try { opts.trackVisibility = true; opts.delay = 100; } catch (e) {}
-      var io;
+      var opts = { threshold: [0, 0.5], trackVisibility: true, delay: 100 }, io;
       try { io = new IntersectionObserver(cb, opts); } catch (e) { io = new IntersectionObserver(cb, { threshold: [0, 0.5] }); }
       function cb(entries) {
         var e = entries[entries.length - 1];
@@ -112,19 +117,14 @@
       }
       io.observe(document.getElementById('probe'));
     }
-    // 2. Frame-gap check: hidden frames stop painting, so a long gap means we were hidden.
+    // 2. Backup: hidden frames stop painting, so a very long gap (20s+) means we were away.
     var last = performance.now();
     (function tick(t) {
       var gap = t - last; last = t;
-      if (gap > 3000) {
-        lastGap = Math.round(gap);
-        if (shown !== false) { setShown(false, 'gap'); setShown(true, 'gap'); }
-      }
+      if (gap > 1000) lastGap = Math.round(gap);
+      if (gap > GAP_MS && shown !== false && !away) fresh('frame gap ' + Math.round(gap / 1000) + 's');
       requestAnimationFrame(tick);
     })(last);
-    document.addEventListener('visibilitychange', function () {
-      setShown(document.visibilityState === 'visible', 'page');
-    });
   }
 
   var dbg = null;
@@ -132,7 +132,7 @@
     if (!debug) return;
     if (!dbg) { dbg = document.createElement('div'); dbg.id = 'dbg'; document.body.appendChild(dbg); }
     dbg.textContent = 'shown=' + shown + ' (' + how + ')  loads=' + loads + '  hides=' + hides +
-      '  gap=' + lastGap + 'ms  onshow=' + onshow + '  every=' + (every / 1000) + 's';
+      '  gap=' + lastGap + 'ms  every=' + (every / 1000) + 's\nlast reload: ' + (why || '-');
   }
 
   load();
